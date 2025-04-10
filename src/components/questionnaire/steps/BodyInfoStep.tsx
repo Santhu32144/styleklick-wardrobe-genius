@@ -43,7 +43,24 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
   return (
     <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Body Type</h3>
+        <h3 className="text-lg font-semibold mb-4">Gender</h3>
+        <p className="text-gray-600 mb-4">Select your gender (for clothing recommendations):</p>
+        <RadioGroup 
+          value={formData.gender} 
+          onValueChange={(value) => updateFormData({ gender: value })}
+          className="space-y-3"
+        >
+          {genders.map((gender) => (
+            <div key={gender.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={gender.id} id={`gender-${gender.id}`} />
+              <Label htmlFor={`gender-${gender.id}`}>{gender.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Body Type (Optional)</h3>
         <p className="text-gray-600 mb-4">Choose the option that best describes your body type:</p>
         <RadioGroup 
           value={formData.bodyType} 
@@ -63,24 +80,7 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Gender</h3>
-        <p className="text-gray-600 mb-4">Select your gender (for clothing recommendations):</p>
-        <RadioGroup 
-          value={formData.gender} 
-          onValueChange={(value) => updateFormData({ gender: value })}
-          className="space-y-3"
-        >
-          {genders.map((gender) => (
-            <div key={gender.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={gender.id} id={`gender-${gender.id}`} />
-              <Label htmlFor={`gender-${gender.id}`}>{gender.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Height</h3>
+        <h3 className="text-lg font-semibold mb-4">Height (Optional)</h3>
         <RadioGroup 
           value={formData.height} 
           onValueChange={(value) => updateFormData({ height: value })}
@@ -96,7 +96,7 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Skin Tone</h3>
+        <h3 className="text-lg font-semibold mb-4">Skin Tone (Optional)</h3>
         <RadioGroup 
           value={formData.skinTone} 
           onValueChange={(value) => updateFormData({ skinTone: value })}

@@ -70,7 +70,7 @@ const QuestionnaireForm = () => {
     } else {
       toast({
         title: "Please complete all required fields",
-        description: "All fields in this step need to be filled before proceeding.",
+        description: "All required fields in this step need to be filled before proceeding.",
         variant: "destructive"
       });
     }
@@ -83,19 +83,19 @@ const QuestionnaireForm = () => {
     }
   };
 
-  // This is a simplified validation function - in a real app you'd want more thorough validation
+  // Updated validation to make specified fields optional
   const validateCurrentStep = () => {
     switch (currentStep) {
-      case 0: // Body Info
-        return formData.bodyType && formData.gender && formData.height && formData.skinTone;
-      case 1: // Style Preferences
-        return formData.stylePreferences.length > 0 && formData.formalityLevel;
-      case 2: // Occasion
+      case 0: // Body Info - Only gender is required
+        return formData.gender !== '';
+      case 1: // Style Preferences - Only stylePreferences is required
+        return formData.stylePreferences.length > 0;
+      case 2: // Occasion - Keep occasion and seasonality required
         return formData.occasion && formData.seasonality;
       case 3: // Destination
         return formData.destination && formData.destinationType;
-      case 4: // Budget
-        return formData.budgetRange !== '';
+      case 4: // Budget - All fields optional
+        return true;
       default:
         return true;
     }
