@@ -1,15 +1,9 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface DestinationStepProps {
   formData: QuestionnaireData;
@@ -46,21 +40,18 @@ const DestinationStep: React.FC<DestinationStepProps> = ({ formData, updateFormD
       <div>
         <h3 className="text-lg font-semibold mb-4">Destination Type</h3>
         <p className="text-gray-600 mb-4">What kind of environment will you be in?</p>
-        <Select
-          value={formData.destinationType}
+        <RadioGroup 
+          value={formData.destinationType} 
           onValueChange={(value) => updateFormData({ destinationType: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select destination type" />
-          </SelectTrigger>
-          <SelectContent>
-            {destinationTypes.map((type) => (
-              <SelectItem key={type.id} value={type.id}>
-                {type.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {destinationTypes.map((type) => (
+            <div key={type.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={type.id} id={`dest-${type.id}`} />
+              <Label htmlFor={`dest-${type.id}`}>{type.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
     </div>
   );

@@ -1,15 +1,9 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface BudgetStepProps {
   formData: QuestionnaireData;
@@ -31,22 +25,18 @@ const BudgetStep: React.FC<BudgetStepProps> = ({ formData, updateFormData }) => 
       <div>
         <h3 className="text-lg font-semibold mb-4">Budget Range</h3>
         <p className="text-gray-600 mb-4">What's your preferred budget range for this outfit?</p>
-        
-        <Select 
+        <RadioGroup 
           value={formData.budgetRange} 
           onValueChange={(value) => updateFormData({ budgetRange: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your budget range" />
-          </SelectTrigger>
-          <SelectContent>
-            {budgetRanges.map((range) => (
-              <SelectItem key={range.id} value={range.id}>
-                {range.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {budgetRanges.map((range) => (
+            <div key={range.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={range.id} id={`budget-${range.id}`} />
+              <Label htmlFor={`budget-${range.id}`}>{range.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
 
       <div>

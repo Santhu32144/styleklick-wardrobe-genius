@@ -1,14 +1,8 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface BodyInfoStepProps {
   formData: QuestionnaireData;
@@ -51,79 +45,70 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
       <div>
         <h3 className="text-lg font-semibold mb-4">Body Type</h3>
         <p className="text-gray-600 mb-4">Choose the option that best describes your body type:</p>
-        <Select 
+        <RadioGroup 
           value={formData.bodyType} 
           onValueChange={(value) => updateFormData({ bodyType: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your body type" />
-          </SelectTrigger>
-          <SelectContent>
-            {bodyTypes.map((type) => (
-              <SelectItem key={type.id} value={type.id}>
-                {type.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {bodyTypes.map((type) => (
+            <div key={type.id} className="flex items-start space-x-2">
+              <RadioGroupItem value={type.id} id={`body-${type.id}`} className="mt-1" />
+              <div className="flex flex-col">
+                <Label htmlFor={`body-${type.id}`} className="font-medium">{type.label}</Label>
+                <p className="text-gray-500 text-sm">{type.description}</p>
+              </div>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
 
       <div>
         <h3 className="text-lg font-semibold mb-4">Gender</h3>
         <p className="text-gray-600 mb-4">Select your gender (for clothing recommendations):</p>
-        <Select 
+        <RadioGroup 
           value={formData.gender} 
           onValueChange={(value) => updateFormData({ gender: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your gender" />
-          </SelectTrigger>
-          <SelectContent>
-            {genders.map((gender) => (
-              <SelectItem key={gender.id} value={gender.id}>
-                {gender.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {genders.map((gender) => (
+            <div key={gender.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={gender.id} id={`gender-${gender.id}`} />
+              <Label htmlFor={`gender-${gender.id}`}>{gender.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
 
       <div>
         <h3 className="text-lg font-semibold mb-4">Height</h3>
-        <Select 
+        <RadioGroup 
           value={formData.height} 
           onValueChange={(value) => updateFormData({ height: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your height range" />
-          </SelectTrigger>
-          <SelectContent>
-            {heights.map((height) => (
-              <SelectItem key={height.id} value={height.id}>
-                {height.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {heights.map((height) => (
+            <div key={height.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={height.id} id={`height-${height.id}`} />
+              <Label htmlFor={`height-${height.id}`}>{height.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
 
       <div>
         <h3 className="text-lg font-semibold mb-4">Skin Tone</h3>
-        <Select 
+        <RadioGroup 
           value={formData.skinTone} 
           onValueChange={(value) => updateFormData({ skinTone: value })}
+          className="space-y-3"
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your skin tone" />
-          </SelectTrigger>
-          <SelectContent>
-            {skinTones.map((tone) => (
-              <SelectItem key={tone.id} value={tone.id}>
-                {tone.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {skinTones.map((tone) => (
+            <div key={tone.id} className="flex items-center space-x-2">
+              <RadioGroupItem value={tone.id} id={`tone-${tone.id}`} />
+              <Label htmlFor={`tone-${tone.id}`}>{tone.label}</Label>
+            </div>
+          ))}
+        </RadioGroup>
       </div>
     </div>
   );
