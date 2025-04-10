@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -15,66 +16,41 @@ interface BodyInfoStepProps {
 }
 
 const bodyTypes = [
-  { id: 'rectangle', label: 'Rectangle (Straight)' },
-  { id: 'hourglass', label: 'Hourglass' },
-  { id: 'pear', label: 'Pear (Triangle)' },
-  { id: 'inverted-triangle', label: 'Inverted Triangle' },
-  { id: 'apple', label: 'Apple (Round)' },
-  { id: 'athletic', label: 'Athletic' },
-  { id: 'petite', label: 'Petite' },
-  { id: 'tall', label: 'Tall' },
-  { id: 'plus-size', label: 'Plus Size' }
+  { id: 'rectangle', label: 'Rectangle (straight)', description: 'Shoulder and hip measurements are about the same with little waist definition' },
+  { id: 'hourglass', label: 'Hourglass', description: 'Well-defined waist with balanced shoulder and hip measurements' },
+  { id: 'pear', label: 'Pear / Triangle', description: 'Hips are wider than shoulders' },
+  { id: 'inverted-triangle', label: 'Inverted Triangle', description: 'Shoulders are wider than hips' },
+  { id: 'apple', label: 'Apple / Round', description: 'Fuller midsection with slimmer legs and hips' }
 ];
 
-const genderOptions = [
-  { id: 'womens', label: 'Women\'s Fashion' },
-  { id: 'mens', label: 'Men\'s Fashion' },
-  { id: 'unisex', label: 'Gender-Neutral Fashion' }
+const genders = [
+  { id: 'female', label: 'Female' },
+  { id: 'male', label: 'Male' },
+  { id: 'non-binary', label: 'Non-Binary' },
+  { id: 'prefer-not-to-say', label: 'Prefer not to say' }
 ];
 
-const heightOptions = [
-  { id: 'petite', label: 'Petite (Under 5\'4")' },
-  { id: 'average', label: 'Average (5\'4" - 5\'7")' },
-  { id: 'tall', label: 'Tall (5\'8" - 6\'0")' },
-  { id: 'very-tall', label: 'Very Tall (Over 6\'0")' }
+const heights = [
+  { id: 'petite', label: 'Petite (under 5\'4")' },
+  { id: 'average', label: 'Average (5\'4" - 5\'9")' },
+  { id: 'tall', label: 'Tall (above 5\'9")' }
 ];
 
-const skinToneOptions = [
+const skinTones = [
   { id: 'fair', label: 'Fair' },
   { id: 'light', label: 'Light' },
   { id: 'medium', label: 'Medium' },
   { id: 'olive', label: 'Olive' },
   { id: 'tan', label: 'Tan' },
-  { id: 'deep', label: 'Deep' },
-  { id: 'dark', label: 'Dark' }
+  { id: 'deep', label: 'Deep' }
 ];
 
 const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData }) => {
   return (
     <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Gender Preference</h3>
-        <p className="text-gray-600 mb-4">What type of fashion are you looking for?</p>
-        <Select 
-          value={formData.gender} 
-          onValueChange={(value) => updateFormData({ gender: value })}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select gender preference" />
-          </SelectTrigger>
-          <SelectContent>
-            {genderOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Body Type (Optional)</h3>
-        <p className="text-gray-600 mb-4">Select the body type that best represents you:</p>
+        <h3 className="text-lg font-semibold mb-4">Body Type</h3>
+        <p className="text-gray-600 mb-4">Choose the option that best describes your body type:</p>
         <Select 
           value={formData.bodyType} 
           onValueChange={(value) => updateFormData({ bodyType: value })}
@@ -93,8 +69,27 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Height (Optional)</h3>
-        <p className="text-gray-600 mb-4">What is your height range?</p>
+        <h3 className="text-lg font-semibold mb-4">Gender</h3>
+        <p className="text-gray-600 mb-4">Select your gender (for clothing recommendations):</p>
+        <Select 
+          value={formData.gender} 
+          onValueChange={(value) => updateFormData({ gender: value })}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your gender" />
+          </SelectTrigger>
+          <SelectContent>
+            {genders.map((gender) => (
+              <SelectItem key={gender.id} value={gender.id}>
+                {gender.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Height</h3>
         <Select 
           value={formData.height} 
           onValueChange={(value) => updateFormData({ height: value })}
@@ -103,9 +98,9 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
             <SelectValue placeholder="Select your height range" />
           </SelectTrigger>
           <SelectContent>
-            {heightOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.label}
+            {heights.map((height) => (
+              <SelectItem key={height.id} value={height.id}>
+                {height.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -113,8 +108,7 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Skin Tone (Optional)</h3>
-        <p className="text-gray-600 mb-4">What is your skin tone?</p>
+        <h3 className="text-lg font-semibold mb-4">Skin Tone</h3>
         <Select 
           value={formData.skinTone} 
           onValueChange={(value) => updateFormData({ skinTone: value })}
@@ -123,9 +117,9 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
             <SelectValue placeholder="Select your skin tone" />
           </SelectTrigger>
           <SelectContent>
-            {skinToneOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.label}
+            {skinTones.map((tone) => (
+              <SelectItem key={tone.id} value={tone.id}>
+                {tone.label}
               </SelectItem>
             ))}
           </SelectContent>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -69,7 +70,7 @@ const QuestionnaireForm = () => {
     } else {
       toast({
         title: "Please complete all required fields",
-        description: "All required fields in this step need to be filled before proceeding.",
+        description: "All fields in this step need to be filled before proceeding.",
         variant: "destructive"
       });
     }
@@ -82,19 +83,19 @@ const QuestionnaireForm = () => {
     }
   };
 
-  // Updated validation to make specific fields optional
+  // This is a simplified validation function - in a real app you'd want more thorough validation
   const validateCurrentStep = () => {
     switch (currentStep) {
-      case 0: // Body Info - Make bodyType, height, skinTone optional
-        return formData.gender !== ''; // Only gender is required
-      case 1: // Style Preferences - Make formalityLevel and colors optional
-        return formData.stylePreferences.length > 0; // Only style preference is required
+      case 0: // Body Info
+        return formData.bodyType && formData.gender && formData.height && formData.skinTone;
+      case 1: // Style Preferences
+        return formData.stylePreferences.length > 0 && formData.formalityLevel;
       case 2: // Occasion
         return formData.occasion && formData.seasonality;
       case 3: // Destination
         return formData.destination && formData.destinationType;
-      case 4: // Budget - Make budgetRange optional
-        return true; // All fields optional in this step
+      case 4: // Budget
+        return formData.budgetRange !== '';
       default:
         return true;
     }
