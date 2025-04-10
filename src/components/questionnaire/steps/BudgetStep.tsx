@@ -29,7 +29,7 @@ const BudgetStep: React.FC<BudgetStepProps> = ({ formData, updateFormData }) => 
   return (
     <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Budget Range</h3>
+        <h3 className="text-lg font-semibold mb-4">Budget Range (Optional)</h3>
         <p className="text-gray-600 mb-4">What's your preferred budget range for this outfit?</p>
         
         <Select 
