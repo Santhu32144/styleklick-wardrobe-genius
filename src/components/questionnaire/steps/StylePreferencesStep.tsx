@@ -1,9 +1,15 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface StylePreferencesStepProps {
   formData: QuestionnaireData;
@@ -72,53 +78,62 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
     <div className="space-y-8">
       <div>
         <h3 className="text-lg font-semibold mb-4">Style Preferences</h3>
-        <p className="text-gray-600 mb-4">Select all styles you're interested in (select 2-4 for best results):</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {styleOptions.map((style) => (
-            <div key={style.id} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`style-${style.id}`} 
-                checked={formData.stylePreferences.includes(style.id)}
-                onCheckedChange={(checked) => handleStyleChange(style.id, checked as boolean)}
-              />
-              <Label htmlFor={`style-${style.id}`}>{style.label}</Label>
-            </div>
-          ))}
-        </div>
+        <p className="text-gray-600 mb-4">Select the style you're most interested in:</p>
+        <Select
+          value={formData.stylePreferences[0] || ''}
+          onValueChange={(value) => updateFormData({ stylePreferences: [value] })}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your preferred style" />
+          </SelectTrigger>
+          <SelectContent>
+            {styleOptions.map((style) => (
+              <SelectItem key={style.id} value={style.id}>
+                {style.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
         <h3 className="text-lg font-semibold mb-4">Formality Level</h3>
         <p className="text-gray-600 mb-4">How formal should your outfit be?</p>
-        <RadioGroup 
-          value={formData.formalityLevel} 
+        <Select
+          value={formData.formalityLevel}
           onValueChange={(value) => updateFormData({ formalityLevel: value })}
-          className="space-y-3"
         >
-          {formalityLevels.map((level) => (
-            <div key={level.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={level.id} id={`formality-${level.id}`} />
-              <Label htmlFor={`formality-${level.id}`}>{level.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select formality level" />
+          </SelectTrigger>
+          <SelectContent>
+            {formalityLevels.map((level) => (
+              <SelectItem key={level.id} value={level.id}>
+                {level.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Color Preferences</h3>
-        <p className="text-gray-600 mb-4">Select colors you prefer to wear:</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {colorOptions.map((color) => (
-            <div key={color.id} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`color-${color.id}`} 
-                checked={formData.colors.includes(color.id)}
-                onCheckedChange={(checked) => handleColorChange(color.id, checked as boolean)}
-              />
-              <Label htmlFor={`color-${color.id}`}>{color.label}</Label>
-            </div>
-          ))}
-        </div>
+        <h3 className="text-lg font-semibold mb-4">Color Preference</h3>
+        <p className="text-gray-600 mb-4">Select your preferred color palette:</p>
+        <Select
+          value={formData.colors[0] || ''}
+          onValueChange={(value) => updateFormData({ colors: [value] })}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your color preference" />
+          </SelectTrigger>
+          <SelectContent>
+            {colorOptions.map((color) => (
+              <SelectItem key={color.id} value={color.id}>
+                {color.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
