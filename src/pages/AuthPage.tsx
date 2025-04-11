@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -58,11 +57,12 @@ const AuthPage: React.FC = () => {
   const handleVerifyOTP = async (otp: string) => {
     setIsLoading(true);
     try {
-      const params = contactMethod === 'phone' 
-        ? { phone: contactValue, token: otp } 
-        : { email: contactValue, token: otp };
-      
-      const { data, error } = await supabase.auth.verifyOtp(params);
+      const { data, error } = await supabase.auth.verifyOtp({
+        type: contactMethod === 'phone' ? 'sms' : 'email',
+        phone: contactMethod === 'phone' ? contactValue : undefined,
+        email: contactMethod === 'email' ? contactValue : undefined,
+        token: otp
+      });
       
       if (error) throw error;
       

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { z } from 'zod';
@@ -14,6 +14,7 @@ interface PhoneEmailFormProps {
 }
 
 const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({ type, onSubmit, isLoading }) => {
+  // Define separate schemas for phone and email
   const phoneSchema = z.object({
     phone: z.string()
       .min(10, { message: "Phone number must be at least 10 digits" })
@@ -27,18 +28,24 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({ type, onSubmit, isLoadi
       .email({ message: "Please enter a valid email address" })
   });
 
+  // Use the appropriate schema based on the type
   const formSchema = type === 'phone' ? phoneSchema : emailSchema;
   
-  const form = useForm<z.infer<typeof formSchema>>({
+  type FormValues = z.infer<typeof formSchema>;
+  
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phone: '',
-      email: '',
+      ...(type === 'phone' ? { phone: '' } : { email: '' })
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    const value = type === 'phone' ? values.phone : values.email;
+  const handleSubmit = (values: FormValues) => {
+    // Correctly extract the value based on the form type
+    const value = type === 'phone' 
+      ? (values as z.infer<typeof phoneSchema>).phone 
+      : (values as z.infer<typeof emailSchema>).email;
+    
     onSubmit(value);
   };
 
@@ -47,7 +54,7 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({ type, onSubmit, isLoadi
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name={type}
+          name={type as any}
           render={({ field }) => (
             <FormItem>
               <FormLabel>{type === 'phone' ? 'Phone Number' : 'Email Address'}</FormLabel>
