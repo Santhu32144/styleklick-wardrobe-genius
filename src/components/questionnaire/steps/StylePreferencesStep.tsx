@@ -4,7 +4,7 @@ import { QuestionnaireData } from '../QuestionnaireForm';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Shirt, Briefcase, TShirt, Palette } from 'lucide-react';
+import { Shirt, Briefcase, Palette } from 'lucide-react';
 
 interface StylePreferencesStepProps {
   formData: QuestionnaireData;
@@ -26,8 +26,8 @@ const styleOptions = [
 ];
 
 const formalityLevels = [
-  { id: 'very-casual', label: 'Very Casual', icon: TShirt, description: 'Loungewear, errands' },
-  { id: 'casual', label: 'Casual', icon: TShirt, description: 'Everyday wear' },
+  { id: 'very-casual', label: 'Very Casual', icon: Shirt, description: 'Loungewear, errands' },
+  { id: 'casual', label: 'Casual', icon: Shirt, description: 'Everyday wear' },
   { id: 'smart-casual', label: 'Smart Casual', icon: Shirt, description: 'Nice dinner, casual office' },
   { id: 'business-casual', label: 'Business Casual', icon: Shirt, description: 'Professional setting' },
   { id: 'formal', label: 'Formal', icon: Briefcase, description: 'Business formal, cocktail' },
