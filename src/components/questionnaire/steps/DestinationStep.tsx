@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { 
+  Mountain, Umbrella, TreePine, Building2, Palmtree
+} from 'lucide-react';
 
 interface DestinationStepProps {
   formData: QuestionnaireData;
@@ -11,47 +12,92 @@ interface DestinationStepProps {
 }
 
 const destinationTypes = [
-  { id: 'city', label: 'City / Urban' },
-  { id: 'beach', label: 'Beach / Coastal' },
-  { id: 'mountains', label: 'Mountains / Hiking' },
-  { id: 'countryside', label: 'Countryside / Rural' },
-  { id: 'resort', label: 'Resort / Luxury Destination' },
-  { id: 'cruise', label: 'Cruise Ship' },
-  { id: 'desert', label: 'Desert' },
-  { id: 'cold-weather', label: 'Cold Weather Destination' },
-  { id: 'tropical', label: 'Tropical Destination' },
-  { id: 'not-applicable', label: 'Not Applicable / General' }
+  { 
+    id: 'mountains', 
+    label: 'Mountains', 
+    icon: Mountain,
+    image: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&fit=crop&w=800&q=80',
+    description: 'Hiking, trekking, or enjoying mountain views'
+  },
+  { 
+    id: 'beach', 
+    label: 'Beach & Coast', 
+    icon: Umbrella,
+    image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=800&q=80',
+    description: 'Seaside, ocean, or coastal areas'
+  },
+  { 
+    id: 'urban', 
+    label: 'Urban/City', 
+    icon: Building2,
+    image: 'https://images.unsplash.com/photo-1452960962994-acf4fd70b632?auto=format&fit=crop&w=800&q=80',
+    description: 'City exploration and metropolitan areas'
+  },
+  { 
+    id: 'forest', 
+    label: 'Forest/Nature', 
+    icon: TreePine,
+    image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80',
+    description: 'Woodland areas and natural reserves'
+  },
+  { 
+    id: 'desert', 
+    label: 'Desert', 
+    icon: Palmtree,
+    image: 'https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?auto=format&fit=crop&w=800&q=80',
+    description: 'Arid landscapes and desert adventures'
+  }
 ];
 
 const DestinationStep: React.FC<DestinationStepProps> = ({ formData, updateFormData }) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Destination</h3>
-        <p className="text-gray-600 mb-4">Where will you be wearing this outfit? (Optional)</p>
-        <Input
-          placeholder="E.g., Paris, New York, beach resort in Bali, etc."
-          value={formData.destination}
-          onChange={(e) => updateFormData({ destination: e.target.value })}
-          className="w-full p-3 border border-gray-300 rounded-md focus:ring-styleklick-purple focus:border-styleklick-purple"
-        />
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Destination Type</h3>
-        <p className="text-gray-600 mb-4">What kind of environment will you be in?</p>
-        <RadioGroup 
-          value={formData.destinationType} 
-          onValueChange={(value) => updateFormData({ destinationType: value })}
-          className="space-y-3"
-        >
-          {destinationTypes.map((type) => (
-            <div key={type.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={type.id} id={`dest-${type.id}`} />
-              <Label htmlFor={`dest-${type.id}`}>{type.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
+        <h3 className="text-xl font-semibold mb-4">Your Destination</h3>
+        <p className="text-gray-600 mb-6">
+          Select the type of environment you'll be in.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {destinationTypes.map((destination) => {
+            const Icon = destination.icon;
+            const isSelected = formData.destinationType === destination.id;
+            
+            return (
+              <Card 
+                key={destination.id}
+                onClick={() => updateFormData({ destinationType: destination.id })}
+                className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
+                  isSelected ? 'ring-2 ring-styleklick-purple' : ''
+                }`}
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={destination.image} 
+                    alt={destination.label} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Icon size={20} />
+                      <h4 className="text-lg font-semibold">{destination.label}</h4>
+                    </div>
+                    <p className="text-sm text-white/80">{destination.description}</p>
+                  </div>
+                  
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

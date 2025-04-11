@@ -1,9 +1,11 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { 
+  Sparkles, Briefcase, Backpack, Umbrella, Calendar, 
+  Snowflake, Sun, Leaf, Flower
+} from 'lucide-react';
 
 interface OccasionStepProps {
   formData: QuestionnaireData;
@@ -11,71 +13,160 @@ interface OccasionStepProps {
 }
 
 const occasions = [
-  { id: 'daily-casual', label: 'Daily Casual / Everyday Wear' },
-  { id: 'work', label: 'Work / Office' },
-  { id: 'date', label: 'Date Night' },
-  { id: 'party', label: 'Party / Night Out' },
-  { id: 'formal-event', label: 'Formal Event (Wedding, Gala)' },
-  { id: 'interview', label: 'Job Interview / Meeting' },
-  { id: 'vacation', label: 'Vacation / Travel' },
-  { id: 'outdoor-activity', label: 'Outdoor Activity' },
-  { id: 'workout', label: 'Workout / Fitness' }
+  { 
+    id: 'wedding', 
+    label: 'Wedding', 
+    icon: Sparkles,
+    image: 'https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'business', 
+    label: 'Business', 
+    icon: Briefcase,
+    image: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'adventure', 
+    label: 'Adventure', 
+    icon: Backpack,
+    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'beach-party', 
+    label: 'Beach Party', 
+    icon: Umbrella,
+    image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'work-trip', 
+    label: 'Work Trip', 
+    icon: Calendar,
+    image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80'
+  }
 ];
 
 const seasons = [
-  { id: 'spring', label: 'Spring' },
-  { id: 'summer', label: 'Summer' },
-  { id: 'fall', label: 'Fall / Autumn' },
-  { id: 'winter', label: 'Winter' },
-  { id: 'all-season', label: 'All Season / Year-round' }
+  { 
+    id: 'winter', 
+    label: 'Winter', 
+    icon: Snowflake,
+    image: 'https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'summer', 
+    label: 'Summer', 
+    icon: Sun,
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'fall', 
+    label: 'Fall / Autumn', 
+    icon: Leaf,
+    image: 'https://images.unsplash.com/photo-1508264165352-258db2ebd59b?auto=format&fit=crop&w=800&q=80'
+  },
+  { 
+    id: 'spring', 
+    label: 'Spring', 
+    icon: Flower,
+    image: 'https://images.unsplash.com/photo-1482376292551-62dc5894cf0e?auto=format&fit=crop&w=800&q=80'
+  }
 ];
 
 const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData }) => {
   return (
     <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Occasion</h3>
-        <p className="text-gray-600 mb-4">What occasion are you dressing for?</p>
-        <RadioGroup 
-          value={formData.occasion} 
-          onValueChange={(value) => updateFormData({ occasion: value })}
-          className="space-y-3"
-        >
-          {occasions.map((occasion) => (
-            <div key={occasion.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={occasion.id} id={`occasion-${occasion.id}`} />
-              <Label htmlFor={`occasion-${occasion.id}`}>{occasion.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
+        <h3 className="text-xl font-semibold mb-4">What's the Occasion?</h3>
+        <p className="text-gray-600 mb-6">
+          Select the type of event or occasion you're dressing for.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          {occasions.map((occasion) => {
+            const Icon = occasion.icon;
+            const isSelected = formData.occasion === occasion.id;
+            
+            return (
+              <Card 
+                key={occasion.id}
+                onClick={() => updateFormData({ occasion: occasion.id })}
+                className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
+                  isSelected ? 'ring-2 ring-styleklick-purple' : ''
+                }`}
+              >
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src={occasion.image} 
+                    alt={occasion.label} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <div className="flex items-center gap-2">
+                      <Icon size={20} />
+                      <h4 className="text-lg font-semibold">{occasion.label}</h4>
+                    </div>
+                  </div>
+                  
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4">Season / Weather</h3>
-        <p className="text-gray-600 mb-4">What season are you dressing for?</p>
-        <RadioGroup 
-          value={formData.seasonality} 
-          onValueChange={(value) => updateFormData({ seasonality: value })}
-          className="space-y-3"
-        >
-          {seasons.map((season) => (
-            <div key={season.id} className="flex items-center space-x-2">
-              <RadioGroupItem value={season.id} id={`season-${season.id}`} />
-              <Label htmlFor={`season-${season.id}`}>{season.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Additional Details</h3>
-        <p className="text-gray-600 mb-4">Anything specific about this occasion we should know?</p>
-        <Textarea
-          placeholder="E.g., outdoor wedding in the evening, casual office with no dress code, etc."
-          value={formData.specifics || ''}
-          onChange={(e) => updateFormData({ specifics: e.target.value })}
-          className="w-full p-3 border border-gray-300 rounded-md focus:ring-styleklick-purple focus:border-styleklick-purple"
-        />
+        <h3 className="text-xl font-semibold mb-4">What Season?</h3>
+        <p className="text-gray-600 mb-6">
+          Select the season you'll be dressing for.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {seasons.map((season) => {
+            const Icon = season.icon;
+            const isSelected = formData.seasonality === season.id;
+            
+            return (
+              <Card 
+                key={season.id}
+                onClick={() => updateFormData({ seasonality: season.id })}
+                className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
+                  isSelected ? 'ring-2 ring-styleklick-purple' : ''
+                }`}
+              >
+                <div className="relative h-32 overflow-hidden">
+                  <img 
+                    src={season.image} 
+                    alt={season.label} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                    <div className="flex items-center gap-2">
+                      <Icon size={16} />
+                      <h4 className="font-medium">{season.label}</h4>
+                    </div>
+                  </div>
+                  
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
