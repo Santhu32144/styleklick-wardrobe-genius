@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Mountain, Beach, TreePine, Building2, Palmtree, Waves, Snowflake } from 'lucide-react';
+import { Mountain, Umbrella, TreePine, Building2, Palmtree, Waves, Snowflake } from 'lucide-react';
 
 interface LocationSelectorProps {
   locations: LocationType[];
@@ -21,7 +21,7 @@ const getLocationIcon = (locationId: string) => {
     case 'mountains':
       return <Mountain className="h-6 w-6" />;
     case 'beaches':
-      return <Beach className="h-6 w-6" />;
+      return <Umbrella className="h-6 w-6" />;
     case 'forests':
       return <TreePine className="h-6 w-6" />;
     case 'urban':
