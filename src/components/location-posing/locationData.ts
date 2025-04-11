@@ -1,4 +1,3 @@
-
 // Define types for our location data
 export interface PoseSuggestion {
   id: string;
@@ -343,7 +342,7 @@ export const locationData: LocationType[] = [
       {
         id: 'waterfall-pose-3',
         image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=800&q=80',
-        title: 'Water's Edge',
+        title: "Water's Edge",
         description: 'Standing at the edge of a pool or river, partly in the water'
       }
     ],
