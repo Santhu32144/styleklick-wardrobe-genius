@@ -39,9 +39,13 @@ const AuthPage: React.FC = () => {
       setOtpSentTo(value);
       setAuthStep(AuthStep.VERIFY);
       
+      const messageText = type === 'phone' 
+        ? `We've sent a 6-digit code to ${value}. Please enter it to continue.` 
+        : `We've sent a 6-digit verification code to ${value}. Please check your inbox and spam folder, and enter the code to continue. Do not click on any links in the email.`;
+      
       toast({
         title: "Verification code sent",
-        description: `We've sent a code to ${value}. Please enter it to continue.`,
+        description: messageText,
       });
     } catch (error: any) {
       console.error('Error sending OTP:', error);
