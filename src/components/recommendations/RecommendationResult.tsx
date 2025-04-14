@@ -4,23 +4,69 @@ import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Share2, ArrowLeft, RefreshCw } from 'lucide-react';
+import { 
+  Heart, Share2, ArrowLeft, RefreshCw, Shirt, Camera, 
+  Footprints, BookmarkPlus, Copy, Image 
+} from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Badge } from "@/components/ui/badge";
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
 }
 
+// Footwear type
+interface Footwear {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  suitability: string[];
+}
+
+// Posing suggestion type
+interface PosingSuggestion {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  tips: string[];
+}
+
+// Enhanced outfit type with footwear options and posing suggestions
+interface EnhancedOutfit {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  items: { name: string; description: string }[];
+  explanation: string;
+  season: string;
+  occasion: string;
+  destinationType: string;
+  footwearOptions: string[]; // IDs of compatible footwear
+  posingSuggestions: string[]; // IDs of compatible posing suggestions
+  accessories: string[];
+  captionIdeas: string[];
+}
+
 // This is a placeholder - in a real app you'd fetch these from your backend
-const generateOutfitSuggestions = (formData: QuestionnaireData) => {
+const generateEnhancedOutfitSuggestions = (formData: QuestionnaireData): EnhancedOutfit[] => {
   // In a real app, this would use the formData to generate appropriate recommendations
-  return [
+  const outfits: EnhancedOutfit[] = [
     {
       id: '1',
       title: 'Casual Elegance',
       description: 'A balanced outfit that flatters your body shape while providing comfort and style.',
-      imageUrl: 'https://images.unsplash.com/photo-1600717535275-0b18ede2f7fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1600717535275-0b18ede2f7fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
       items: [
         { name: 'Fitted white blouse', description: 'A crisp, tailored white blouse that accentuates your shape' },
         { name: 'High-waisted dark wash jeans', description: 'Slim-fit dark jeans that elongate your legs' },
@@ -28,13 +74,20 @@ const generateOutfitSuggestions = (formData: QuestionnaireData) => {
         { name: 'Oversized beige cardigan', description: 'Soft, draped cardigan for layering and added warmth' },
         { name: 'Gold minimalist necklace', description: 'Simple pendant necklace to complete the look' }
       ],
-      explanation: 'This outfit is designed to flatter your body type while incorporating your style preferences. The high-waisted jeans create a balanced silhouette, while the fitted blouse accentuates your shape. The color palette complements your skin tone, and the overall look is versatile enough for your destination.'
+      explanation: 'This outfit is designed to flatter your body type while incorporating your style preferences. The high-waisted jeans create a balanced silhouette, while the fitted blouse accentuates your shape. The color palette complements your skin tone, and the overall look is versatile enough for your destination.',
+      season: formData.seasonality || 'fall',
+      occasion: formData.occasion || 'casual',
+      destinationType: formData.destinationType || 'urban',
+      footwearOptions: ['1', '3', '5'],
+      posingSuggestions: ['1', '4', '7'],
+      accessories: ['Minimalist gold hoop earrings', 'Leather crossbody bag', 'Slim leather belt'],
+      captionIdeas: ['Simple elegance for everyday moments', 'Casual yet put-together', 'Finding balance in simplicity']
     },
     {
       id: '2',
       title: 'Modern Sophistication',
       description: 'An elevated look that combines modern trends with timeless elements.',
-      imageUrl: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
       items: [
         { name: 'Tailored black blazer', description: 'Structured blazer with slight padding at shoulders' },
         { name: 'Silk camisole in blush', description: 'Lightweight silk top in a flattering tone' },
@@ -42,13 +95,20 @@ const generateOutfitSuggestions = (formData: QuestionnaireData) => {
         { name: 'Pointed leather mules', description: 'Sophisticated footwear with walkable heel' },
         { name: 'Statement earrings', description: 'Eye-catching yet elegant accessories' }
       ],
-      explanation: 'This sophisticated outfit creates a balanced silhouette while incorporating your preferred formality level. The blazer adds structure to your upper body, while the slim trousers elongate your legs. The color palette is versatile and complements your skin tone, creating a polished look suitable for your occasion.'
+      explanation: 'This sophisticated outfit creates a balanced silhouette while incorporating your preferred formality level. The blazer adds structure to your upper body, while the slim trousers elongate your legs. The color palette is versatile and complements your skin tone, creating a polished look suitable for your occasion.',
+      season: formData.seasonality || 'spring',
+      occasion: formData.occasion || 'business',
+      destinationType: formData.destinationType || 'urban',
+      footwearOptions: ['2', '4', '6'],
+      posingSuggestions: ['2', '5', '8'],
+      accessories: ['Structured leather handbag', 'Delicate layered necklaces', 'Simple metal bangle'],
+      captionIdeas: ['Power dressing with a soft edge', 'Boardroom to bistro', 'Embracing feminine strength']
     },
     {
       id: '3',
       title: 'Effortless Style',
       description: 'A relaxed yet put-together look that emphasizes comfort without sacrificing style.',
-      imageUrl: 'https://images.unsplash.com/photo-1591374790133-55a463a2d546?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1591374790133-55a463a2d546?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
       items: [
         { name: 'Oversized knit sweater', description: 'Soft, slouchy sweater in a neutral tone' },
         { name: 'Straight leg jeans', description: 'Classic denim with a modern cut' },
@@ -56,15 +116,195 @@ const generateOutfitSuggestions = (formData: QuestionnaireData) => {
         { name: 'Crossbody leather bag', description: 'Practical yet stylish accessory' },
         { name: 'Layered delicate necklaces', description: 'Simple jewelry to complete the look' }
       ],
-      explanation: 'This relaxed outfit prioritizes comfort while maintaining a stylish appearance that aligns with your preferences. The oversized sweater balances your proportions, while the straight leg jeans create a modern silhouette. The neutral color palette works well with your skin tone and can be mixed and matched easily for travel.'
+      explanation: 'This relaxed outfit prioritizes comfort while maintaining a stylish appearance that aligns with your preferences. The oversized sweater balances your proportions, while the straight leg jeans create a modern silhouette. The neutral color palette works well with your skin tone and can be mixed and matched easily for travel.',
+      season: formData.seasonality || 'winter',
+      occasion: formData.occasion || 'casual',
+      destinationType: formData.destinationType || 'urban',
+      footwearOptions: ['3', '5', '7'],
+      posingSuggestions: ['3', '6', '9'],
+      accessories: ['Beanie hat', 'Chunky scarf', 'Simple stud earrings'],
+      captionIdeas: ['Comfort never looked so good', 'Casual days, stylish ways', 'The art of looking effortless']
+    }
+  ];
+
+  return outfits;
+};
+
+const generateFootwearOptions = (): Footwear[] => {
+  return [
+    {
+      id: '1',
+      name: 'Strappy Neutral Sandals',
+      description: 'Elegant and beach-friendly sandals with adjustable straps',
+      imageUrl: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['beach', 'casual', 'summer']
+    },
+    {
+      id: '2',
+      name: 'Block Heel Mules',
+      description: 'Sophisticated heels with modern silhouette, perfect for city strolls',
+      imageUrl: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['urban', 'business', 'spring', 'fall']
+    },
+    {
+      id: '3',
+      name: 'White Leather Sneakers',
+      description: 'Clean, versatile sneakers that go with almost any casual outfit',
+      imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['urban', 'casual', 'adventure', 'all-season']
+    },
+    {
+      id: '4',
+      name: 'Pointed Loafers',
+      description: 'Classic loafers with a modern pointed toe for elegant occasions',
+      imageUrl: 'https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['urban', 'business', 'fall', 'spring']
+    },
+    {
+      id: '5',
+      name: 'Ankle Boots',
+      description: 'Versatile boots with a low heel for all-day comfort',
+      imageUrl: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['urban', 'mountains', 'fall', 'winter']
+    },
+    {
+      id: '6',
+      name: 'Elegant Flats',
+      description: 'Refined pointed flats that work for both office and evening events',
+      imageUrl: 'https://images.unsplash.com/photo-1536830220630-ce146cccac84?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['urban', 'business', 'all-season']
+    },
+    {
+      id: '7',
+      name: 'Espadrille Wedges',
+      description: 'Summer-perfect wedges with braided detail and ankle ties',
+      imageUrl: 'https://images.unsplash.com/photo-1554238113-6d3dbed5cf6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      suitability: ['beach', 'casual', 'summer']
+    }
+  ];
+};
+
+const generatePosingIdeas = (): PosingSuggestion[] => {
+  return [
+    {
+      id: '1',
+      title: 'Urban Casual Lean',
+      description: 'Lean casually against a building wall, one foot crossed over the other',
+      imageUrl: 'https://images.unsplash.com/photo-1507114845806-0347040042a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Relax your shoulders and facial expression',
+        'Try different angles - straight-on, profile, or 45 degrees',
+        'Let your hands rest naturally in pockets or at your sides',
+        'Gaze slightly away from the camera for a candid feel'
+      ]
+    },
+    {
+      id: '2',
+      title: 'Confident Stride',
+      description: 'Capture a mid-step walking pose showing movement and confidence',
+      imageUrl: 'https://images.unsplash.com/photo-1604604557577-4e27a33e57da?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Keep your stride natural but slightly elongated',
+        'Look straight ahead rather than at the camera',
+        'Allow clothing to show natural movement',
+        'Capture from both side and front angles'
+      ]
+    },
+    {
+      id: '3',
+      title: 'Seated Elegance',
+      description: 'Sit elegantly on a bench or chair with a natural, relaxed posture',
+      imageUrl: 'https://images.unsplash.com/photo-1581338834647-b0fb40704e21?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Sit at an angle rather than straight-on',
+        'Elongate your neck and maintain good posture',
+        'Cross legs or ankles for a polished look',
+        'Rest hands gently on lap or beside you'
+      ]
+    },
+    {
+      id: '4',
+      title: 'Beach Horizon Gaze',
+      description: 'Stand facing the ocean, looking out at the horizon with a relaxed stance',
+      imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Allow the wind to create natural movement in your hair and clothes',
+        'Keep your silhouette visible against the background',
+        'Try both standing straight and with a slight hip shift',
+        'Capture during golden hour for warm, flattering light'
+      ]
+    },
+    {
+      id: '5',
+      title: 'Mountain Victory',
+      description: 'Stand on an elevated point with arms slightly raised in a subtle victory pose',
+      imageUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Find stable footing before attempting this pose',
+        'Keep the pose subtle - slightly raised arms rather than fully extended',
+        'Look out at the view rather than at the camera',
+        'Consider a silhouette shot with the sun behind you'
+      ]
+    },
+    {
+      id: '6',
+      title: 'City Coffee Moment',
+      description: 'Candid pose holding a coffee cup while strolling or seated at a cafe',
+      imageUrl: 'https://images.unsplash.com/photo-1573612664822-d7d347da7b80?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Hold the cup naturally, not too posed',
+        'Create a candid moment - looking away, mid-sip, or mid-conversation',
+        'Include interesting architectural elements in the background',
+        'Try both seated and walking variations'
+      ]
+    },
+    {
+      id: '7',
+      title: 'Natural Laugh',
+      description: 'Capture a genuine laughing moment for an authentic, joyful shot',
+      imageUrl: 'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Think of something genuinely funny rather than forcing a laugh',
+        'Have the photographer capture a series of shots to get the most natural moment',
+        'Let your body language be relaxed and open',
+        'Don\'t worry about being "perfect" - authenticity is the goal'
+      ]
+    },
+    {
+      id: '8',
+      title: 'Thoughtful Gaze',
+      description: 'A contemplative pose looking slightly downward or to the side',
+      imageUrl: 'https://images.unsplash.com/photo-1504703395950-b89145a5425b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Keep your expression soft and natural',
+        'Try different gaze directions to find what feels most comfortable',
+        'Slightly tilt your head for added dimension',
+        'This works well in both urban and natural settings'
+      ]
+    },
+    {
+      id: '9',
+      title: 'Forest Pathway',
+      description: 'Walking along a forest path with a relaxed, exploratory posture',
+      imageUrl: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+      tips: [
+        'Look around at your surroundings rather than at the camera',
+        'Keep your pace slow and deliberate',
+        'Allow natural movement in your clothing',
+        'Try shots from behind, showing both you and the path ahead'
+      ]
     }
   ];
 };
 
 const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData }) => {
-  const [outfits] = useState(generateOutfitSuggestions(formData));
+  const [outfits] = useState(generateEnhancedOutfitSuggestions(formData));
+  const [footwearOptions] = useState(generateFootwearOptions());
+  const [posingIdeas] = useState(generatePosingIdeas());
   const [selectedOutfit, setSelectedOutfit] = useState(outfits[0]);
   const [savedOutfits, setSavedOutfits] = useState<string[]>([]);
+  const [selectedFootwear, setSelectedFootwear] = useState<string | null>(null);
+  const [selectedPose, setSelectedPose] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleSaveOutfit = (outfitId: string) => {
@@ -84,11 +324,30 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
   };
 
   const handleShareOutfit = () => {
-    // In a real app, this would implement social sharing functionality
-    toast({
-      title: "Share feature",
-      description: "Sharing functionality would be implemented here in the full version.",
-    });
+    const outfit = selectedOutfit.title;
+    const footwear = selectedFootwear 
+      ? footwearOptions.find(f => f.id === selectedFootwear)?.name 
+      : 'No footwear selected';
+    const pose = selectedPose
+      ? posingIdeas.find(p => p.id === selectedPose)?.title
+      : 'No pose selected';
+      
+    navigator.clipboard.writeText(`Check out this amazing outfit I created with StyleKlick: 
+${outfit} with ${footwear} 
+Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
+      .then(() => {
+        toast({
+          title: "Outfit details copied!",
+          description: "Share your style creation with friends!",
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Couldn't copy to clipboard",
+          description: "Please try again or copy manually.",
+          variant: "destructive"
+        });
+      });
   };
 
   const handleRegenerateOutfits = () => {
@@ -99,8 +358,60 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
     });
   };
 
+  const handleSelectFootwear = (footwearId: string) => {
+    setSelectedFootwear(footwearId === selectedFootwear ? null : footwearId);
+    toast({
+      title: "Footwear selected",
+      description: `You've selected ${footwearOptions.find(f => f.id === footwearId)?.name}.`,
+    });
+  };
+
+  const handleSelectPose = (poseId: string) => {
+    setSelectedPose(poseId === selectedPose ? null : poseId);
+    toast({
+      title: "Posing idea selected",
+      description: `You've selected ${posingIdeas.find(p => p.id === poseId)?.title}.`,
+    });
+  };
+
+  const getCompatibleFootwear = () => {
+    return footwearOptions.filter(footwear => 
+      selectedOutfit.footwearOptions.includes(footwear.id)
+    );
+  };
+
+  const getCompatiblePoses = () => {
+    return posingIdeas.filter(pose => 
+      selectedOutfit.posingSuggestions.includes(pose.id)
+    );
+  };
+
+  const handleSaveToLookbook = () => {
+    toast({
+      title: "Saved to lookbook!",
+      description: "This complete look has been saved to your personal lookbook.",
+    });
+  };
+
+  const handleCopyCaption = (caption: string) => {
+    navigator.clipboard.writeText(caption)
+      .then(() => {
+        toast({
+          title: "Caption copied!",
+          description: "Ready to paste in your social media post.",
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Couldn't copy caption",
+          description: "Please try again or copy manually.",
+          variant: "destructive"
+        });
+      });
+  };
+
   return (
-    <div className="max-w-5xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4">
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl md:text-3xl font-bold gradient-heading">Your Style Recommendations</h2>
@@ -112,14 +423,17 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
           </Button>
         </div>
         <p className="text-gray-600 mt-2">
-          Based on your preferences, here are personalized outfit recommendations for you.
+          Based on your preferences, here are personalized outfit recommendations including matching footwear and posing suggestions.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 order-2 lg:order-1">
           <div className="sticky top-24">
-            <h3 className="text-xl font-semibold mb-4">Outfit Options</h3>
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <Shirt className="mr-2 h-5 w-5 text-styleklick-purple" />
+              <span>Outfit Options</span>
+            </h3>
             <div className="space-y-4">
               {outfits.map((outfit) => (
                 <Card 
@@ -134,11 +448,19 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
                       <img 
                         src={outfit.imageUrl} 
                         alt={outfit.title} 
-                        className="w-16 h-16 object-cover rounded-md"
+                        className="w-20 h-20 object-cover rounded-md"
                       />
                       <div>
                         <h4 className="font-medium">{outfit.title}</h4>
                         <p className="text-sm text-gray-500 line-clamp-1">{outfit.description}</p>
+                        <div className="flex mt-1 gap-1">
+                          <Badge variant="outline" className="text-xs">
+                            {outfit.season}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {outfit.occasion}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -156,16 +478,26 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
                 <span>Regenerate Outfits</span>
               </Button>
             </div>
+
+            <div className="mt-8">
+              <Button 
+                className="w-full flex items-center justify-center space-x-2"
+                onClick={handleSaveToLookbook}
+              >
+                <BookmarkPlus size={16} />
+                <span>Save Complete Look to Lookbook</span>
+              </Button>
+            </div>
           </div>
         </div>
         
         <div className="lg:col-span-2 order-1 lg:order-2">
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden mb-8">
             <div className="relative">
               <img 
                 src={selectedOutfit.imageUrl} 
                 alt={selectedOutfit.title} 
-                className="w-full h-80 object-cover"
+                className="w-full h-[500px] object-cover object-center"
               />
               <div className="absolute top-4 right-4 flex space-x-2">
                 <Button 
@@ -193,14 +525,33 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
             
             <CardContent className="p-6">
               <div className="mb-6">
-                <h3 className="text-2xl font-bold mb-2">{selectedOutfit.title}</h3>
-                <p className="text-gray-600">{selectedOutfit.description}</p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">{selectedOutfit.title}</h3>
+                    <p className="text-gray-600">{selectedOutfit.description}</p>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Badge className="bg-styleklick-purple hover:bg-styleklick-purple">{selectedOutfit.season}</Badge>
+                    <Badge variant="outline">{selectedOutfit.occasion}</Badge>
+                    <Badge variant="outline">{selectedOutfit.destinationType}</Badge>
+                  </div>
+                </div>
               </div>
               
               <Tabs defaultValue="outfit">
-                <TabsList className="mb-6">
-                  <TabsTrigger value="outfit">Outfit Details</TabsTrigger>
-                  <TabsTrigger value="explanation">Style Explanation</TabsTrigger>
+                <TabsList className="mb-6 grid w-full grid-cols-3">
+                  <TabsTrigger value="outfit" className="flex items-center">
+                    <Shirt className="mr-2 h-4 w-4" />
+                    <span>Outfit Details</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="footwear" className="flex items-center">
+                    <Footprints className="mr-2 h-4 w-4" />
+                    <span>Footwear Options</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="posing" className="flex items-center">
+                    <Camera className="mr-2 h-4 w-4" />
+                    <span>Posing Ideas</span>
+                  </TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="outfit" className="space-y-6">
@@ -215,13 +566,160 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData })
                       ))}
                     </ul>
                   </div>
-                </TabsContent>
-                
-                <TabsContent value="explanation">
+
+                  {selectedOutfit.accessories.length > 0 && (
+                    <div>
+                      <h4 className="text-lg font-semibold mb-4">Suggested Accessories</h4>
+                      <ul className="space-y-2">
+                        {selectedOutfit.accessories.map((accessory, index) => (
+                          <li key={index} className="text-gray-700 flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>{accessory}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedOutfit.captionIdeas.length > 0 && (
+                    <div>
+                      <h4 className="text-lg font-semibold mb-4">Caption Ideas</h4>
+                      <div className="space-y-2">
+                        {selectedOutfit.captionIdeas.map((caption, index) => (
+                          <div key={index} className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
+                            <p className="text-gray-700 italic">"{caption}"</p>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-gray-500"
+                              onClick={() => handleCopyCaption(caption)}
+                            >
+                              <Copy size={14} className="mr-1" /> Copy
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="prose max-w-none">
                     <h4 className="text-lg font-semibold mb-4">Why This Works For You</h4>
                     <p className="text-gray-700">{selectedOutfit.explanation}</p>
                   </div>
+                </TabsContent>
+                
+                <TabsContent value="footwear">
+                  <h4 className="text-lg font-semibold mb-6">Select Footwear for This Outfit</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {getCompatibleFootwear().map(footwear => (
+                      <Card 
+                        key={footwear.id}
+                        className={`cursor-pointer overflow-hidden transition-all ${
+                          selectedFootwear === footwear.id ? 'ring-2 ring-styleklick-purple' : 'hover:shadow-md'
+                        }`}
+                        onClick={() => handleSelectFootwear(footwear.id)}
+                      >
+                        <div className="aspect-square relative">
+                          <img 
+                            src={footwear.imageUrl} 
+                            alt={footwear.name}
+                            className="w-full h-full object-cover" 
+                          />
+                          {selectedFootwear === footwear.id && (
+                            <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <CardContent className="p-4">
+                          <h5 className="font-medium">{footwear.name}</h5>
+                          <p className="text-sm text-gray-600 mt-1">{footwear.description}</p>
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {footwear.suitability.map((tag, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="posing">
+                  <div className="flex justify-between items-center mb-6">
+                    <h4 className="text-lg font-semibold">Posing Ideas for {selectedOutfit.destinationType}</h4>
+                    <Link to="/location-posing" className="text-styleklick-purple text-sm hover:underline">
+                      View more pose ideas
+                    </Link>
+                  </div>
+                  
+                  <Carousel className="w-full">
+                    <CarouselContent>
+                      {getCompatiblePoses().map(pose => (
+                        <CarouselItem key={pose.id} className="md:basis-1/2">
+                          <Card 
+                            className={`cursor-pointer overflow-hidden h-full transition-all ${
+                              selectedPose === pose.id ? 'ring-2 ring-styleklick-purple' : 'hover:shadow-md'
+                            }`}
+                            onClick={() => handleSelectPose(pose.id)}
+                          >
+                            <div className="aspect-video relative">
+                              <img 
+                                src={pose.imageUrl} 
+                                alt={pose.title}
+                                className="w-full h-full object-cover" 
+                              />
+                              {selectedPose === pose.id && (
+                                <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                            <CardContent className="p-4">
+                              <h5 className="font-medium">{pose.title}</h5>
+                              <p className="text-sm text-gray-600 mt-1">{pose.description}</p>
+                              
+                              {selectedPose === pose.id && (
+                                <div className="mt-4">
+                                  <h6 className="text-sm font-medium mb-2">Posing Tips:</h6>
+                                  <ul className="text-xs text-gray-600 space-y-1">
+                                    {pose.tips.map((tip, index) => (
+                                      <li key={index} className="flex items-start">
+                                        <span className="mr-1">•</span>
+                                        <span>{tip}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="-left-4 md:-left-5" />
+                    <CarouselNext className="-right-4 md:-right-5" />
+                  </Carousel>
+                  
+                  {selectedPose && (
+                    <div className="mt-6">
+                      <Button variant="outline" className="w-full" onClick={() => {
+                        toast({
+                          title: "Pose saved!",
+                          description: "This pose has been saved to your inspiration board.",
+                        });
+                      }}>
+                        <Image className="mr-2 h-4 w-4" />
+                        <span>Save Pose to Inspiration Board</span>
+                      </Button>
+                    </div>
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>

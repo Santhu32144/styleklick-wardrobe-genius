@@ -16,7 +16,7 @@ const RecommendationsPage = () => {
 
   return (
     <Layout>
-      <div className="py-12 bg-gray-50">
+      <div className="py-12 bg-gray-50 min-h-screen">
         <RecommendationResult formData={formData} />
       </div>
     </Layout>
