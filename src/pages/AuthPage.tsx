@@ -41,7 +41,10 @@ const AuthPage: React.FC = () => {
       
       const messageText = type === 'phone' 
         ? `We've sent a 6-digit code to ${value}. Please enter it to continue.` 
-        : `We've sent a 6-digit verification code to ${value}. Please check your inbox and spam folder, and enter the code to continue. Look for a code like "123456" in the email body. Do not click on any links in the email.`;
+        : `We've sent a 6-digit verification code to ${value}. Please check your inbox and spam folder.
+           The code should look like "123456" in the email body. 
+           NOTE: If you're testing and the email template doesn't show the code, please check Supabase Auth > Users to find the verification code.
+           Do not click on any links in the email.`;
       
       toast({
         title: "Verification code sent",
