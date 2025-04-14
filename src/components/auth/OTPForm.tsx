@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface OTPFormProps {
   onVerify: (otp: string) => void;
@@ -53,6 +55,15 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <Alert className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Important</AlertTitle>
+          <AlertDescription>
+            For email verification, you'll need to copy the 6-digit code from the email.
+            If you don't see the code, check your spam folder or try requesting a new code.
+          </AlertDescription>
+        </Alert>
+        
         <FormField
           control={form.control}
           name="otp"
