@@ -62,7 +62,8 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
             <p>For email verification, you'll need to copy the 6-digit code from the email.</p>
             <p className="mt-1">The code should be a 6-digit number like "123456" in the email body.</p>
             <p className="mt-1">If you don't see the code, check your spam folder or try requesting a new code.</p>
-            <p className="mt-1 font-semibold">Note: The email template might not be displaying the code correctly. If you're testing, please log into your Supabase dashboard to get the verification code.</p>
+            <p className="mt-1 font-semibold">Note: The email template might not be displaying the code correctly. In Supabase email templates, use <code>{{ "{{" }} .Token {{ "}}" }}</code> as the placeholder for the verification code.</p>
+            <p className="mt-1">If you're testing and can't see the code in the email, please log into your Supabase dashboard to get the verification code from Auth > Users > User details.</p>
           </AlertDescription>
         </Alert>
         
