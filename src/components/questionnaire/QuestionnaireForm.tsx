@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import BodyInfoStep from './steps/BodyInfoStep';
 import StylePreferencesStep from './steps/StylePreferencesStep';
 import OccasionStep from './steps/OccasionStep';
 import DestinationStep from './steps/DestinationStep';
+import GenderSelectionStep from './steps/GenderSelectionStep';
 import { Check, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,6 +22,7 @@ export interface QuestionnaireData {
 }
 
 const steps = [
+  { name: 'Gender', description: 'Select your gender' },
   { name: 'About You', description: 'Tell us a bit about yourself' },
   { name: 'Style', description: 'Your style preferences and tastes' },
   { name: 'Occasion', description: 'What you\'re dressing for' },
@@ -69,10 +72,12 @@ const QuestionnaireForm = () => {
       case 0:
         return formData.gender !== '';
       case 1:
-        return formData.stylePreferences.length > 0;
+        return true; // Body info is optional
       case 2:
-        return formData.occasion !== '' && formData.seasonality !== '';
+        return formData.stylePreferences.length > 0;
       case 3:
+        return formData.occasion !== '' && formData.seasonality !== '';
+      case 4:
         return formData.destinationType !== '';
       default:
         return true;
@@ -91,12 +96,14 @@ const QuestionnaireForm = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <BodyInfoStep formData={formData} updateFormData={updateFormData} />;
+        return <GenderSelectionStep formData={formData} updateFormData={updateFormData} />;
       case 1:
-        return <StylePreferencesStep formData={formData} updateFormData={updateFormData} />;
+        return <BodyInfoStep formData={formData} updateFormData={updateFormData} />;
       case 2:
-        return <OccasionStep formData={formData} updateFormData={updateFormData} />;
+        return <StylePreferencesStep formData={formData} updateFormData={updateFormData} />;
       case 3:
+        return <OccasionStep formData={formData} updateFormData={updateFormData} />;
+      case 4:
         return <DestinationStep formData={formData} updateFormData={updateFormData} />;
       default:
         return null;

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,9 +17,13 @@ const LocationBasedPosingSuggestions = () => {
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
-  const returnTo = location.state?.returnTo || '/recommendations';
+  
+  // Get the returnTo path from location state, defaulting to '/recommendations#outfits'
+  // This ensures we go back to the recommendations section with the outfits anchor
+  const returnTo = location.state?.returnTo || '/recommendations#outfits';
 
   const handleBackToRecommendations = () => {
+    // Navigate back to the recommendations page, preserving the anchor
     navigate(returnTo);
   };
 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
