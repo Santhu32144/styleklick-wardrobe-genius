@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
-import { Woman, Man, User } from 'lucide-react';
+import { FemaleIcon, MaleIcon, UserIcon } from 'lucide-react';
 
 interface GenderSelectionStepProps {
   formData: QuestionnaireData;
@@ -9,9 +9,9 @@ interface GenderSelectionStepProps {
 }
 
 const genders = [
-  { id: 'female', label: 'Female', icon: Woman },
-  { id: 'male', label: 'Male', icon: Man },
-  { id: 'other', label: 'Other', icon: User }
+  { id: 'female', label: 'Female', icon: FemaleIcon },
+  { id: 'male', label: 'Male', icon: MaleIcon },
+  { id: 'other', label: 'Other', icon: UserIcon }
 ];
 
 const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({ formData, updateFormData }) => {
