@@ -77,14 +77,12 @@ const RecommendationsPage = () => {
   return (
     <Layout>
       <div className="py-12 bg-gray-50 min-h-screen">
-        <div id="outfits">
-          <RecommendationResult 
-            formData={formData} 
-            activeTheme={activeTheme}
-            setActiveTheme={setActiveTheme}
-            onSaveToLookbook={handleSaveToLookbook}
-          />
-        </div>
+        <RecommendationResult 
+          formData={formData} 
+          activeTheme={activeTheme}
+          setActiveTheme={setActiveTheme}
+          onSaveToLookbook={handleSaveToLookbook}
+        />
       </div>
     </Layout>
   );

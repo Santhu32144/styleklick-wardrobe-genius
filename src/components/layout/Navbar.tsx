@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,7 @@ const Navbar = () => {
           <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium">How It Works</Link>
           <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium">Get Started</Link>
           <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium">Style Lab</Link>
+          <Link to="/location-posing" className="text-gray-700 hover:text-styleklick-purple font-medium">Location Style</Link>
           
           {user ? (
             <div className="flex items-center space-x-4">
@@ -105,6 +107,9 @@ const Navbar = () => {
             <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Get Started</Link>
             <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
               <Shirt className="inline mr-1 h-4 w-4" /> Style Lab
+            </Link>
+            <Link to="/location-posing" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+              Location Style
             </Link>
             
             {user ? (
