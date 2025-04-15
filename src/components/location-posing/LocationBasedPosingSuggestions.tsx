@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,11 +8,19 @@ import OutfitSuggestions from './OutfitSuggestions';
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from 'lucide-react';
 import { locationData, LocationType } from './locationData';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LocationBasedPosingSuggestions = () => {
   const [selectedLocation, setSelectedLocation] = useState<LocationType | null>(null);
   const [currentView, setCurrentView] = useState<'locations' | 'suggestions'>('locations');
   const { toast } = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const returnTo = location.state?.returnTo || '/recommendations';
+
+  const handleBackToRecommendations = () => {
+    navigate(returnTo);
+  };
 
   const handleLocationSelect = (location: LocationType) => {
     setSelectedLocation(location);
@@ -36,12 +43,10 @@ const LocationBasedPosingSuggestions = () => {
           <Button 
             variant="outline" 
             className="border-styleklick-purple text-styleklick-purple" 
-            asChild
+            onClick={handleBackToRecommendations}
           >
-            <Link to="/recommendations">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Recommendations
-            </Link>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Recommendations
           </Button>
         </div>
         <p className="text-gray-600 mt-2">
