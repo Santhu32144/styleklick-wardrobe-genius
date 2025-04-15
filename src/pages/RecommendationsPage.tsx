@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
@@ -76,7 +77,6 @@ const RecommendationsPage = () => {
   return (
     <Layout>
       <div className="py-12 bg-gray-50 min-h-screen">
-        {/* Add an id to the outfits section for direct navigation */}
         <div id="outfits">
           <RecommendationResult 
             formData={formData} 
