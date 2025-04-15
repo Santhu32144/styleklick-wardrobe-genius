@@ -1,15 +1,13 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Shirt, Pants, ShoppingBag, Heart, Check, 
+  Shirt, ShoppingBag, Heart, Check, 
   RefreshCcw, Bookmark, Image, Paintbrush 
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
-// Define types for clothing items
 interface ClothingItem {
   id: string;
   name: string;
@@ -21,7 +19,6 @@ interface ClothingItem {
   category: 'top' | 'bottom';
 }
 
-// Sample data for tops
 const tops: ClothingItem[] = [
   {
     id: 't1',
@@ -65,7 +62,6 @@ const tops: ClothingItem[] = [
   }
 ];
 
-// Sample data for bottoms
 const bottoms: ClothingItem[] = [
   {
     id: 'b1',
@@ -109,7 +105,6 @@ const bottoms: ClothingItem[] = [
   }
 ];
 
-// Define color matching rules
 const colorMatches: Record<string, string[]> = {
   'white': ['black', 'navy', 'blue', 'gray', 'khaki'],
   'black': ['white', 'gray', 'red'],
@@ -119,7 +114,6 @@ const colorMatches: Record<string, string[]> = {
   'khaki': ['white', 'navy', 'blue', 'black']
 };
 
-// Define style matching rules
 const styleMatches: Record<string, string[]> = {
   'formal': ['formal', 'smart casual'],
   'smart casual': ['smart casual', 'formal', 'casual'],
@@ -132,7 +126,6 @@ const OutfitCoordinator: React.FC = () => {
   const [savedOutfits, setSavedOutfits] = useState<{top: ClothingItem, bottom: ClothingItem}[]>([]);
   const { toast } = useToast();
   
-  // Function to get suggested tops based on selected bottom
   const getSuggestedTops = () => {
     if (!selectedBottom) return tops;
     
@@ -144,7 +137,6 @@ const OutfitCoordinator: React.FC = () => {
     });
   };
   
-  // Function to get suggested bottoms based on selected top
   const getSuggestedBottoms = () => {
     if (!selectedTop) return bottoms;
     
@@ -159,7 +151,6 @@ const OutfitCoordinator: React.FC = () => {
   const handleSelectTop = (top: ClothingItem) => {
     setSelectedTop(top);
     
-    // If no bottom is selected, suggest one
     if (!selectedBottom) {
       const suggestedBottoms = getSuggestedBottoms();
       if (suggestedBottoms.length > 0) {
@@ -174,7 +165,6 @@ const OutfitCoordinator: React.FC = () => {
   const handleSelectBottom = (bottom: ClothingItem) => {
     setSelectedBottom(bottom);
     
-    // If no top is selected, suggest one
     if (!selectedTop) {
       const suggestedTops = getSuggestedTops();
       if (suggestedTops.length > 0) {
@@ -231,7 +221,7 @@ const OutfitCoordinator: React.FC = () => {
                   <span>Tops</span>
                 </TabsTrigger>
                 <TabsTrigger value="bottoms" className="flex items-center">
-                  <Pants className="mr-2 h-4 w-4" />
+                  <span className="mr-2">👖</span>
                   <span>Bottoms</span>
                 </TabsTrigger>
               </TabsList>
