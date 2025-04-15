@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User } from 'lucide-react';
+import { Menu, X, LogIn, LogOut, User, Shirt } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 
 const Navbar = () => {
@@ -25,12 +25,19 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-styleklick-purple font-medium">Home</Link>
           <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium">How It Works</Link>
           <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium">Get Started</Link>
+          <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium">Style Lab</Link>
           
           {user ? (
-            <Button variant="outline" onClick={signOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Link to="/outfit-coordination" className="flex items-center text-styleklick-purple">
+                <User className="h-4 w-4 mr-1" />
+                <span>My Profile</span>
+              </Link>
+              <Button variant="outline" onClick={signOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            </div>
           ) : (
             <Button className="btn-primary">
               <Link to="/auth" className="flex items-center">
@@ -56,12 +63,20 @@ const Navbar = () => {
             <Link to="/" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Home</Link>
             <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>How It Works</Link>
             <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Get Started</Link>
+            <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+              <Shirt className="inline mr-1 h-4 w-4" /> Style Lab
+            </Link>
             
             {user ? (
-              <Button variant="outline" onClick={() => { signOut(); toggleMenu(); }}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
+              <>
+                <Link to="/outfit-coordination" className="text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+                  <User className="inline mr-1 h-4 w-4" /> My Profile
+                </Link>
+                <Button variant="outline" onClick={() => { signOut(); toggleMenu(); }}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </>
             ) : (
               <Button className="btn-primary w-full">
                 <Link to="/auth" className="flex items-center justify-center w-full" onClick={toggleMenu}>

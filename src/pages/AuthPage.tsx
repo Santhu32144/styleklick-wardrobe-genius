@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +10,7 @@ import PhoneEmailForm from '@/components/auth/PhoneEmailForm';
 import OAuthButtons from '@/components/auth/OAuthButtons';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/components/auth/AuthContext';
 
 enum AuthStep {
   INPUT = 'input',
@@ -24,6 +25,21 @@ const AuthPage: React.FC = () => {
   const [otpSentTo, setOtpSentTo] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  // Get return path and form data from location state if available
+  const returnTo = location.state?.returnTo || '/';
+  const formData = location.state?.formData;
+
+  // Redirect authenticated users away from auth page
+  useEffect(() => {
+    if (user) {
+      const redirectPath = returnTo;
+      const state = formData ? { formData } : undefined;
+      navigate(redirectPath, { state, replace: true });
+    }
+  }, [user, navigate, returnTo, formData]);
 
   const handleSendOTP = async (type: 'phone' | 'email', value: string) => {
     setIsLoading(true);
@@ -44,7 +60,7 @@ const AuthPage: React.FC = () => {
         : `We've sent a 6-digit verification code to ${value}. Please check your inbox and spam folder.
            The code should look like "123456" in the email body.
            NOTE: If you're testing and cannot see the code in the email, please check the Supabase email template. 
-           Make sure it uses ${"`{{ .Token }}`"} as the placeholder for the verification code.
+           Make sure it uses {{".Token"}} as the placeholder for the verification code.
            You can also find the code in the Supabase dashboard under Auth > Users > [your email] > View.
            Do not click on any links in the email.`;
       
@@ -87,8 +103,7 @@ const AuthPage: React.FC = () => {
         description: "You have been successfully logged in.",
       });
       
-      // Redirect to home or dashboard page
-      navigate('/');
+      // Redirect will be handled by the useEffect when user state updates
     } catch (error: any) {
       console.error('Error verifying OTP:', error);
       toast({
