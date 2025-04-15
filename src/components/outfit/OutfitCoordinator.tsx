@@ -311,7 +311,7 @@ const OutfitCoordinator: React.FC = () => {
                 </div>
               ) : (
                 <div className="border border-dashed border-gray-300 bg-white rounded-md p-8 text-center">
-                  <Pants className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                  <span className="h-12 w-12 mx-auto text-gray-400 mb-2">👖</span>
                   <p className="text-gray-500">Select bottoms</p>
                 </div>
               )}
