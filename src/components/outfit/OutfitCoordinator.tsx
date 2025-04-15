@@ -7,6 +7,7 @@ import {
   RefreshCcw, Bookmark, Image, Paintbrush 
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { Link } from 'react-router-dom';
 
 interface ClothingItem {
   id: string;
@@ -178,11 +179,24 @@ const OutfitCoordinator: React.FC = () => {
   
   const handleSaveOutfit = () => {
     if (selectedTop && selectedBottom) {
-      setSavedOutfits([...savedOutfits, {top: selectedTop, bottom: selectedBottom}]);
+      const newOutfit = {
+        id: Date.now().toString(),
+        top: selectedTop,
+        bottom: selectedBottom,
+        dateSaved: new Date().toISOString().split('T')[0],
+        tags: [selectedTop.style, selectedBottom.style],
+      };
+      
+      setSavedOutfits([...savedOutfits, newOutfit]);
       
       toast({
         title: "Outfit Saved",
         description: "Your coordinated outfit has been saved to your lookbook.",
+        action: (
+          <Link to="/lookbook" className="text-styleklick-purple hover:underline">
+            View Lookbook
+          </Link>
+        ),
       });
     } else {
       toast({
