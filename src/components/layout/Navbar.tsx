@@ -4,13 +4,29 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogIn, LogOut, User, Shirt } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Get user initials for avatar
+  const getInitials = () => {
+    if (!user) return "?";
+    const email = user.email || "";
+    return email.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -26,17 +42,43 @@ const Navbar = () => {
           <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium">How It Works</Link>
           <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium">Get Started</Link>
           <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium">Style Lab</Link>
+          <Link to="/location-posing" className="text-gray-700 hover:text-styleklick-purple font-medium">Location Style</Link>
           
           {user ? (
             <div className="flex items-center space-x-4">
-              <Link to="/outfit-coordination" className="flex items-center text-styleklick-purple">
-                <User className="h-4 w-4 mr-1" />
-                <span>My Profile</span>
-              </Link>
-              <Button variant="outline" onClick={signOut}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10 border border-gray-200">
+                      <AvatarImage src="" alt={user.email || "User"} />
+                      <AvatarFallback className="bg-styleklick-purple text-white">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/outfit-coordination" className="flex items-center cursor-pointer">
+                      <Shirt className="mr-2 h-4 w-4" />
+                      <span>Style Lab</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-red-500">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <Button className="btn-primary">
@@ -66,13 +108,16 @@ const Navbar = () => {
             <Link to="/outfit-coordination" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
               <Shirt className="inline mr-1 h-4 w-4" /> Style Lab
             </Link>
+            <Link to="/location-posing" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+              Location Style
+            </Link>
             
             {user ? (
               <>
-                <Link to="/outfit-coordination" className="text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+                <Link to="/profile" className="text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
                   <User className="inline mr-1 h-4 w-4" /> My Profile
                 </Link>
-                <Button variant="outline" onClick={() => { signOut(); toggleMenu(); }}>
+                <Button variant="outline" onClick={() => { signOut(); toggleMenu(); }} className="justify-start">
                   <LogOut className="mr-2 h-4 w-4" />
                   Logout
                 </Button>

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import RecommendationResult from '../components/recommendations/RecommendationResult';
@@ -19,6 +19,7 @@ const RecommendationsPage = () => {
   const [activeTheme, setActiveTheme] = useState<ThemeType>('fall');
   const { user } = useAuth();
   const { toast } = useToast();
+  const authContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Show toast when redirected to login
@@ -27,6 +28,15 @@ const RecommendationsPage = () => {
         title: "Login Required",
         description: "Please login to see your personalized style recommendations.",
       });
+      
+      // Scroll to auth container
+      setTimeout(() => {
+        if (authContainerRef.current) {
+          authContainerRef.current.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
     }
   }, [user, formData, toast]);
 
@@ -40,7 +50,7 @@ const RecommendationsPage = () => {
     return (
       <Layout>
         <div className="py-20 bg-gray-50 min-h-screen">
-          <div className="max-w-md mx-auto text-center bg-white p-8 rounded-lg shadow-md">
+          <div ref={authContainerRef} className="max-w-md mx-auto text-center bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4">Login Required</h2>
             <p className="text-gray-600 mb-6">
               Please login or create an account to view your personalized style recommendations.
@@ -57,6 +67,13 @@ const RecommendationsPage = () => {
     );
   }
 
+  const handleSaveToLookbook = () => {
+    toast({
+      title: "Look saved!",
+      description: "Lookbook coming soon – stay stylish!",
+    });
+  };
+
   return (
     <Layout>
       <div className="py-12 bg-gray-50 min-h-screen">
@@ -64,6 +81,7 @@ const RecommendationsPage = () => {
           formData={formData} 
           activeTheme={activeTheme}
           setActiveTheme={setActiveTheme}
+          onSaveToLookbook={handleSaveToLookbook}
         />
       </div>
     </Layout>

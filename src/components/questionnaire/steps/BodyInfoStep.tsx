@@ -4,6 +4,7 @@ import { QuestionnaireData } from '../QuestionnaireForm';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { User, UserRound, Users } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthContext';
 
 interface BodyInfoStepProps {
   formData: QuestionnaireData;
@@ -18,6 +19,25 @@ const genders = [
 ];
 
 const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData }) => {
+  const { user, profile, updateProfile } = useAuth();
+
+  // Update user's profile with the selected gender if they're logged in
+  const handleGenderSelect = (gender: string) => {
+    updateFormData({ gender });
+    
+    // If user is logged in, update their profile
+    if (user && updateProfile && gender !== 'prefer-not-to-say') {
+      updateProfile({ gender: gender as 'male' | 'female' });
+    }
+  };
+
+  // If user is logged in and has a gender set in their profile, use that as default
+  React.useEffect(() => {
+    if (profile?.gender && !formData.gender) {
+      updateFormData({ gender: profile.gender });
+    }
+  }, [profile, formData.gender, updateFormData]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -34,7 +54,7 @@ const BodyInfoStep: React.FC<BodyInfoStepProps> = ({ formData, updateFormData })
             return (
               <div 
                 key={gender.id}
-                onClick={() => updateFormData({ gender: gender.id })}
+                onClick={() => handleGenderSelect(gender.id)}
                 className={`cursor-pointer border rounded-lg p-4 flex flex-col items-center transition-all ${
                   isSelected 
                     ? 'border-styleklick-purple bg-styleklick-purple bg-opacity-10' 
