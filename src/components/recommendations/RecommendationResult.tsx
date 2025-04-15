@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,7 @@ interface RecommendationResultProps {
   formData: QuestionnaireData;
   activeTheme: ThemeType;
   setActiveTheme: (theme: ThemeType) => void;
+  onSaveToLookbook?: () => void;
 }
 
 // Footwear type
@@ -412,7 +412,12 @@ const generatePosingIdeas = (): PosingSuggestion[] => {
   ];
 };
 
-const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData, activeTheme, setActiveTheme }) => {
+const RecommendationResult: React.FC<RecommendationResultProps> = ({ 
+  formData, 
+  activeTheme, 
+  setActiveTheme,
+  onSaveToLookbook 
+}) => {
   const [allOutfits] = useState(generateEnhancedOutfitSuggestions(formData));
   const [filteredOutfits, setFilteredOutfits] = useState<EnhancedOutfit[]>([]);
   const [allFootwearOptions] = useState(generateFootwearOptions());
@@ -424,11 +429,9 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData, a
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { toast } = useToast();
 
-  // Filter outfits based on the active theme
   useEffect(() => {
     setIsTransitioning(true);
     
-    // Short delay for animation
     const transitionTimer = setTimeout(() => {
       const newFilteredOutfits = allOutfits.filter(outfit => 
         outfit.themes.includes(activeTheme)
@@ -436,10 +439,8 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({ formData, a
       
       setFilteredOutfits(newFilteredOutfits);
       
-      // If there are filtered outfits, select the first one
       if (newFilteredOutfits.length > 0) {
         setSelectedOutfit(newFilteredOutfits[0]);
-        // Reset footwear and pose selections
         setSelectedFootwear(null);
         setSelectedPose(null);
       }
@@ -500,7 +501,6 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
   };
 
   const handleRegenerateOutfits = () => {
-    // In a real app, this would call the API to generate new recommendations
     toast({
       title: "Regenerating outfits",
       description: "In the full version, this would generate new outfit recommendations.",
@@ -542,10 +542,14 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
   };
 
   const handleSaveToLookbook = () => {
-    toast({
-      title: "Saved to lookbook!",
-      description: "This complete look has been saved to your personal lookbook.",
-    });
+    if (onSaveToLookbook) {
+      onSaveToLookbook();
+    } else {
+      toast({
+        title: "Saved to lookbook!",
+        description: "This complete look has been saved to your personal lookbook.",
+      });
+    }
   };
 
   const handleCopyCaption = (caption: string) => {
@@ -565,7 +569,6 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
       });
   };
 
-  // Get theme icon based on theme name
   const getThemeIcon = (theme: ThemeType) => {
     switch(theme) {
       case 'fall':
@@ -579,12 +582,10 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
     }
   };
 
-  // Get theme display name
   const getThemeDisplayName = (theme: ThemeType) => {
     return theme.charAt(0).toUpperCase() + theme.slice(1);
   };
 
-  // Fallback message if no outfits are found for the selected theme
   const renderNoOutfitsMessage = () => (
     <div className="flex flex-col items-center justify-center p-12 text-center">
       <div className="rounded-full bg-gray-100 p-4 mb-4">
@@ -614,7 +615,6 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
           Based on your preferences, here are personalized outfit recommendations including matching footwear and posing suggestions.
         </p>
         
-        {/* Theme toggle buttons */}
         <div className="mb-8">
           <h3 className="text-lg font-medium mb-4">Select a style theme:</h3>
           <ToggleGroup type="single" value={activeTheme} onValueChange={(value) => value && handleThemeChange(value as ThemeType)}>
