@@ -14,6 +14,7 @@ import HowItWorksPage from "./pages/HowItWorksPage";
 import LocationPosingSuggestionsPage from "./pages/LocationPosingSuggestionsPage";
 import OutfitCoordinationPage from "./pages/OutfitCoordinationPage";
 import ProfilePage from "./pages/ProfilePage";
+import LookbookPage from "./pages/LookbookPage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/location-posing" element={<LocationPosingSuggestionsPage />} />
             <Route path="/outfit-coordination" element={<OutfitCoordinationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/lookbook" element={<LookbookPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
