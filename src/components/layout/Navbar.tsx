@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User, Shirt } from 'lucide-react';
+import { Menu, X, LogIn, LogOut, User, Shirt, BookOpen } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -65,6 +66,12 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link to="/lookbook" className="flex items-center cursor-pointer">
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      <span>My Lookbook</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/outfit-coordination" className="flex items-center cursor-pointer">
                       <Shirt className="mr-2 h-4 w-4" />
                       <span>Style Lab</span>
@@ -111,6 +118,9 @@ const Navbar = () => {
               <>
                 <Link to="/profile" className="text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
                   <User className="inline mr-1 h-4 w-4" /> My Profile
+                </Link>
+                <Link to="/lookbook" className="text-styleklick-purple font-medium py-2" onClick={toggleMenu}>
+                  <BookOpen className="inline mr-1 h-4 w-4" /> My Lookbook
                 </Link>
                 <Button variant="outline" onClick={() => { signOut(); toggleMenu(); }} className="justify-start">
                   <LogOut className="mr-2 h-4 w-4" />
