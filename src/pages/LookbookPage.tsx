@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -92,12 +91,11 @@ const LookbookPage = () => {
       const { data, error } = await supabase
         .from('lookbook')
         .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
+        .eq('user_id', user?.id);
       
       if (error) throw error;
       
-      setLookbookItems(data || []);
+      setLookbookItems(data as LookbookEntry[] || []);
     } catch (error: any) {
       console.error('Error fetching lookbook items:', error);
       toast({
