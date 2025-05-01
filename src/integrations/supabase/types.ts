@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      lookbook: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          outfit_data: Json
+          tags: string[]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          outfit_data: Json
+          tags?: string[]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          outfit_data?: Json
+          tags?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
