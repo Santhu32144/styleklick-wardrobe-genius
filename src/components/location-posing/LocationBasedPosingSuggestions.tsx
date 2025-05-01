@@ -9,23 +9,11 @@ import OutfitSuggestions from './OutfitSuggestions';
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from 'lucide-react';
 import { locationData, LocationType } from './locationData';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const LocationBasedPosingSuggestions = () => {
   const [selectedLocation, setSelectedLocation] = useState<LocationType | null>(null);
   const [currentView, setCurrentView] = useState<'locations' | 'suggestions'>('locations');
   const { toast } = useToast();
-  const location = useLocation();
-  const navigate = useNavigate();
-  
-  // Get the returnTo path from location state, defaulting to '/recommendations#outfits'
-  // This ensures we go back to the recommendations section with the outfits anchor
-  const returnTo = location.state?.returnTo || '/recommendations#outfits';
-
-  const handleBackToRecommendations = () => {
-    // Navigate back to the recommendations page, preserving the anchor
-    navigate(returnTo);
-  };
 
   const handleLocationSelect = (location: LocationType) => {
     setSelectedLocation(location);
@@ -48,10 +36,12 @@ const LocationBasedPosingSuggestions = () => {
           <Button 
             variant="outline" 
             className="border-styleklick-purple text-styleklick-purple" 
-            onClick={handleBackToRecommendations}
+            asChild
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Recommendations
+            <Link to="/recommendations">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Recommendations
+            </Link>
           </Button>
         </div>
         <p className="text-gray-600 mt-2">

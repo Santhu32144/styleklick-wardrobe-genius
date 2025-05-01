@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -429,7 +428,6 @@ const RecommendationResult: React.FC<RecommendationResultProps> = ({
   const [selectedPose, setSelectedPose] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setIsTransitioning(true);
@@ -601,17 +599,8 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
     </div>
   );
 
-  const handleViewMorePoses = () => {
-    navigate('/location-posing', { 
-      state: { 
-        returnTo: '/recommendations#outfits',
-        formData 
-      }
-    });
-  };
-
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-6xl mx-auto p-4">
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl md:text-3xl font-bold gradient-heading">Your Style Recommendations</h2>
@@ -979,16 +968,6 @@ Perfect for a ${selectedOutfit.occasion} in ${selectedOutfit.season}!`)
           )}
         </div>
       )}
-      <div className="mt-8 text-center">
-        <Button 
-          variant="outline" 
-          className="border-styleklick-purple text-styleklick-purple"
-          onClick={handleViewMorePoses}
-        >
-          <Image className="mr-2 h-4 w-4" />
-          View More Pose Ideas
-        </Button>
-      </div>
     </div>
   );
 };
