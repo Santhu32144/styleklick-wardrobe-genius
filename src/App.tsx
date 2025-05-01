@@ -15,6 +15,11 @@ import LocationPosingSuggestionsPage from "./pages/LocationPosingSuggestionsPage
 import OutfitCoordinationPage from "./pages/OutfitCoordinationPage";
 import ProfilePage from "./pages/ProfilePage";
 import LookbookPage from "./pages/LookbookPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
+import FAQPage from "./pages/FAQPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +40,11 @@ const App = () => (
             <Route path="/outfit-coordination" element={<OutfitCoordinationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/lookbook" element={<LookbookPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
