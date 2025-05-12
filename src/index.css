@@ -33,7 +33,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 258 90% 66%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -111,5 +111,34 @@
   
   .card-styleklick {
     @apply bg-white rounded-xl shadow-md p-6 border border-styleklick-neutral-light hover:shadow-lg transition-all duration-300;
+  }
+
+  /* Airbnb-inspired components */
+  .airbnb-card {
+    @apply bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-airbnb-hover;
+  }
+  
+  .airbnb-tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-styleklick-soft-blue text-styleklick-airbnb-navy;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+  
+  .location-card {
+    @apply relative overflow-hidden rounded-xl shadow-md hover:shadow-airbnb transition-all duration-300 hover:scale-[1.02];
+  }
+
+  .outfit-card {
+    @apply relative rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-airbnb transition-all duration-300;
+  }
+
+  .style-calendar {
+    @apply bg-white rounded-xl shadow-md border border-gray-100 p-4;
+  }
+
+  .profile-card {
+    @apply bg-white rounded-xl shadow-md overflow-hidden;
   }
 }

@@ -19,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -74,6 +77,30 @@ export default {
 						light: '#F1F0FB',
 						gray: '#8E9196',
 						dark: '#403E43'
+					},
+					// Airbnb-inspired soft colors
+					airbnb: {
+						red: '#FF5A5F',
+						pink: '#FF385C',
+						beige: '#FFF8F6',
+						navy: '#1F365C',
+						gray: {
+							light: '#F7F7F7',
+							medium: '#DDDDDD',
+							dark: '#717171'
+						},
+					},
+					// Soft, airy colors
+					soft: {
+						blue: '#D3E4FD',
+						green: '#F2FCE2',
+						yellow: '#FEF7CD',
+						orange: '#FEC6A1',
+						peach: '#FDE1D3',
+						pink: '#FFDEE2',
+						white: '#FFFFFF',
+						cream: '#FAF8F1',
+						sand: '#F5F0E5'
 					}
 				}
 			},
@@ -110,6 +137,10 @@ export default {
 				'slide-in': {
 					'0%': { transform: 'translateX(-100%)' },
 					'100%': { transform: 'translateX(0)' }
+				},
+				'hover-lift': {
+					'0%': { transform: 'translateY(0)' },
+					'100%': { transform: 'translateY(-4px)' }
 				}
 			},
 			animation: {
@@ -117,7 +148,12 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
 				'scale-in': 'scale-in 0.3s ease-out',
-				'slide-in': 'slide-in 0.5s ease-out'
+				'slide-in': 'slide-in 0.5s ease-out',
+				'hover-lift': 'hover-lift 0.2s ease-out forwards'
+			},
+			boxShadow: {
+				'airbnb': '0 6px 16px rgba(0, 0, 0, 0.12)',
+				'airbnb-hover': '0 6px 20px rgba(0, 0, 0, 0.2)',
 			}
 		}
 	},

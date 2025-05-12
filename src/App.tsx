@@ -20,6 +20,7 @@ import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
+import StyleCalendarPage from "./pages/StyleCalendarPage";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/outfit-coordination" element={<OutfitCoordinationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/lookbook" element={<LookbookPage />} />
+            <Route path="/style-calendar" element={<StyleCalendarPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
