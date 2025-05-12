@@ -27,6 +27,7 @@ export interface LocationType {
   image: string;
   poses: PoseSuggestion[];
   outfits: OutfitSuggestion[];
+  tags?: string[]; // Add the optional tags property
 }
 
 // Sample data for location-based suggestions
