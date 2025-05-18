@@ -40,6 +40,12 @@ const ProfilePage = () => {
     }
   };
 
+  // Get user's name or display email as fallback
+  const getUserDisplayName = () => {
+    if (profile?.name) return profile.name;
+    return user?.email?.split('@')[0] || "User";
+  };
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -97,6 +103,14 @@ const ProfilePage = () => {
 
   // Get user initials for avatar fallback
   const getInitials = () => {
+    if (profile?.name) {
+      const nameParts = profile.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return profile.name.substring(0, 2).toUpperCase();
+    }
+    
     if (!user) return "?";
     const email = user.email || "";
     return email.substring(0, 2).toUpperCase();
@@ -130,7 +144,7 @@ const ProfilePage = () => {
                 <div className="relative">
                   <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                     {avatarPreview ? (
-                      <AvatarImage src={avatarPreview} alt={user?.email || "User"} />
+                      <AvatarImage src={avatarPreview} alt={getUserDisplayName()} />
                     ) : (
                       <AvatarFallback className="bg-styleklick-purple text-white text-4xl">
                         {getInitials()}
@@ -151,7 +165,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
                 <div className="mt-4 md:mt-0 md:ml-6">
-                  <CardTitle className="text-2xl">{user?.email}</CardTitle>
+                  <CardTitle className="text-2xl">{getUserDisplayName()}</CardTitle>
                   <CardDescription>Member since {new Date(profile?.created_at || Date.now()).toLocaleDateString()}</CardDescription>
                 </div>
                 <div className="flex-grow"></div>
