@@ -44,6 +44,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       
       if (data) {
+        // If there's a name field with a value, use it
+        // Otherwise, try to set a name from email if email exists
+        if (!data.name && user?.email) {
+          // Extract name from email
+          const email = user.email;
+          const name = email.split('@')[0];
+          // Set name with first letter capitalized
+          data.name = name.charAt(0).toUpperCase() + name.slice(1);
+          
+          // Update the profile in the database with the extracted name
+          await supabase
+            .from('profiles')
+            .update({ name: data.name })
+            .eq('id', userId);
+        }
+        
         setProfile(data as UserProfile);
       }
     } catch (error: any) {

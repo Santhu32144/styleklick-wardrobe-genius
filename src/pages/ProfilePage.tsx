@@ -222,6 +222,10 @@ const ProfilePage = () => {
                   ) : (
                     <div className="space-y-6">
                       <div className="space-y-1">
+                        <p className="text-sm text-gray-500">Username</p>
+                        <p>{getUserDisplayName()}</p>
+                      </div>
+                      <div className="space-y-1">
                         <p className="text-sm text-gray-500">Email</p>
                         <p>{user?.email || "Not provided"}</p>
                       </div>

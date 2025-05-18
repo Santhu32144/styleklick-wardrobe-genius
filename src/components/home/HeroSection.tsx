@@ -12,6 +12,7 @@ const HeroSection = () => {
     if (profile?.name) return profile.name;
     if (user && user.email) {
       const email = user.email;
+      // Extract name before @ in email
       const name = email.split('@')[0];
       return name.charAt(0).toUpperCase() + name.slice(1);
     }
