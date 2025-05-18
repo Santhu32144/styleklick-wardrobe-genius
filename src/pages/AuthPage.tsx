@@ -5,6 +5,8 @@ import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import OTPForm from '@/components/auth/OTPForm';
 import PhoneEmailForm from '@/components/auth/PhoneEmailForm';
 import OAuthButtons from '@/components/auth/OAuthButtons';
@@ -14,6 +16,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 
 enum AuthStep {
   INPUT = 'input',
+  NAME = 'name',
   VERIFY = 'verify'
 }
 
@@ -22,11 +25,12 @@ const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [contactMethod, setContactMethod] = useState<'phone' | 'email'>('phone');
   const [contactValue, setContactValue] = useState('');
+  const [userName, setUserName] = useState('');
   const [otpSentTo, setOtpSentTo] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   
   // Get return path and form data from location state if available
   const returnTo = location.state?.returnTo || '/';
@@ -53,16 +57,11 @@ const AuthPage: React.FC = () => {
       setContactMethod(type);
       setContactValue(value);
       setOtpSentTo(value);
-      setAuthStep(AuthStep.VERIFY);
+      setAuthStep(AuthStep.NAME);
       
       const messageText = type === 'phone' 
-        ? `We've sent a 6-digit code to ${value}. Please enter it to continue.` 
-        : `We've sent a 6-digit verification code to ${value}. Please check your inbox and spam folder.
-           The code should look like "123456" in the email body.
-           NOTE: If you're testing and cannot see the code in the email, please check the Supabase email template. 
-           Make sure it uses {{".Token"}} as the placeholder for the verification code.
-           You can also find the code in the Supabase dashboard under Auth > Users > [your email] > View.
-           Do not click on any links in the email.`;
+        ? `We've sent a 6-digit code to ${value}. Please enter your name, and then the code to continue.` 
+        : `We've sent a 6-digit verification code to ${value}. Please enter your name, and then the code to verify.`;
       
       toast({
         title: "Verification code sent",
@@ -78,6 +77,19 @@ const AuthPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleContinueWithName = () => {
+    if (!userName.trim()) {
+      toast({
+        title: "Name required",
+        description: "Please enter your name to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setAuthStep(AuthStep.VERIFY);
   };
 
   const handleVerifyOTP = async (otp: string) => {
@@ -98,9 +110,14 @@ const AuthPage: React.FC = () => {
       
       if (error) throw error;
       
+      // After successful verification, update the user profile with the name
+      if (data.user) {
+        await updateProfile({ name: userName });
+      }
+      
       toast({
         title: "Authentication successful",
-        description: "You have been successfully logged in.",
+        description: `Welcome ${userName}! You have been successfully logged in.`,
       });
       
       // Redirect will be handled by the useEffect when user state updates
@@ -119,6 +136,7 @@ const AuthPage: React.FC = () => {
   const handleChangeContact = () => {
     setAuthStep(AuthStep.INPUT);
     setOtpSentTo('');
+    setUserName('');
   };
 
   return (
@@ -130,6 +148,8 @@ const AuthPage: React.FC = () => {
             <CardDescription className="text-center">
               {authStep === AuthStep.INPUT 
                 ? "Enter your phone or email to get started" 
+                : authStep === AuthStep.NAME
+                ? "Please tell us your name"
                 : `Enter the verification code sent to ${otpSentTo}`}
             </CardDescription>
           </CardHeader>
@@ -155,6 +175,33 @@ const AuthPage: React.FC = () => {
                   />
                 </TabsContent>
               </Tabs>
+            ) : authStep === AuthStep.NAME ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Your Name</Label>
+                  <Input 
+                    id="name"
+                    placeholder="Enter your name" 
+                    value={userName} 
+                    onChange={(e) => setUserName(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                <Button 
+                  onClick={handleContinueWithName} 
+                  className="w-full" 
+                  disabled={isLoading || !userName.trim()}
+                >
+                  Continue
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleChangeContact} 
+                  className="w-full"
+                >
+                  Back
+                </Button>
+              </div>
             ) : (
               <OTPForm 
                 onVerify={handleVerifyOTP} 

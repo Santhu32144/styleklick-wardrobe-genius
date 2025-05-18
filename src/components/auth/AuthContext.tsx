@@ -10,6 +10,7 @@ type UserProfile = {
   email?: string | null;
   phone?: string | null;
   gender?: 'male' | 'female' | null;
+  name?: string | null;
   created_at?: string;
   updated_at?: string;
 };

@@ -7,14 +7,34 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const RecommendationGrid = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
-  // Get first name from email or default welcome
-  const getUserFirstName = () => {
-    if (!user || !user.email) return "Fashion";
-    const email = user.email;
-    const name = email.split('@')[0];
-    return name.charAt(0).toUpperCase() + name.slice(1);
+  // Get user name or default welcome
+  const getUserName = () => {
+    if (profile?.name) return profile.name;
+    if (user && user.email) {
+      const email = user.email;
+      const name = email.split('@')[0];
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+    return "Fashion";
+  };
+
+  // Get initials for avatar
+  const getInitials = () => {
+    if (profile?.name) {
+      const nameParts = profile.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return profile.name.substring(0, 2).toUpperCase();
+    }
+    
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase();
+    }
+    
+    return "FK";
   };
 
   // Fashion items for the grid
@@ -64,9 +84,9 @@ const RecommendationGrid = () => {
               <div className="flex items-center mb-6">
                 {user && (
                   <Avatar className="h-12 w-12 border-2 border-white shadow-sm mr-4">
-                    <AvatarImage src="" alt={user.email || "User"} />
+                    <AvatarImage src="" alt={getUserName()} />
                     <AvatarFallback className="bg-styleklick-purple text-white">
-                      {getUserFirstName().substring(0, 2).toUpperCase()}
+                      {getInitials()}
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -76,7 +96,7 @@ const RecommendationGrid = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                Welcome<br />Recommendations
+                Hi {getUserName()}<br />Recommendations
               </h1>
               <p className="text-gray-600 mb-6 max-w-md">
                 Personalized style recommendations tailored just for you. Browse your suggestions and save your favorite looks.

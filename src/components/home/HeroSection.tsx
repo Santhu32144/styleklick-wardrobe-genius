@@ -5,14 +5,17 @@ import { useAuth } from '@/components/auth/AuthContext';
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
-  // Get first name from email or default welcome
-  const getUserFirstName = () => {
-    if (!user || !user.email) return "Fashion";
-    const email = user.email;
-    const name = email.split('@')[0];
-    return name.charAt(0).toUpperCase() + name.slice(1);
+  // Get user name or default welcome
+  const getUserName = () => {
+    if (profile?.name) return profile.name;
+    if (user && user.email) {
+      const email = user.email;
+      const name = email.split('@')[0];
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+    return "Fashion";
   };
 
   return (
@@ -31,7 +34,7 @@ const HeroSection = () => {
       <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
         <div className="max-w-4xl">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-            Welcome {getUserFirstName()}
+            Welcome {getUserName()}
           </h1>
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 inline-block mb-8">
