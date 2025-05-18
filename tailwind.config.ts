@@ -93,7 +93,7 @@ export default {
 					// Soft, airy colors
 					soft: {
 						blue: '#D3E4FD',
-						green: '#F2FCE2',
+						green: '#B8E1DD',
 						yellow: '#FEF7CD',
 						orange: '#FEC6A1',
 						peach: '#FDE1D3',

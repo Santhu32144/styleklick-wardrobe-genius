@@ -14,13 +14,13 @@ const CallToAction = () => {
           Our AI-powered fashion assistant is ready to help you look your best.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="btn-primary" asChild>
+          <Button className="bg-styleklick-soft-green hover:bg-styleklick-soft-green/90 text-gray-800 rounded-full px-8 py-6 h-auto" asChild>
             <Link to="/questionnaire" className="flex items-center space-x-2">
               <span>Start Style Quiz</span>
               <ArrowRight size={18} />
             </Link>
           </Button>
-          <Button variant="outline" className="border-styleklick-purple text-styleklick-purple hover:bg-styleklick-purple hover:text-white" asChild>
+          <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-full px-8 py-6 h-auto" asChild>
             <Link to="/how-it-works">How It Works</Link>
           </Button>
         </div>

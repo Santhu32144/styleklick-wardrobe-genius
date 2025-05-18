@@ -1,14 +1,14 @@
 
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import HeroSection from '../components/home/HeroSection';
+import RecommendationGrid from '../components/home/RecommendationGrid';
 import OutfitCategories from '../components/home/OutfitCategories';
 import CallToAction from '../components/home/CallToAction';
 
 const Index = () => {
   return (
     <Layout>
-      <HeroSection />
+      <RecommendationGrid />
       <OutfitCategories />
       <CallToAction />
     </Layout>
