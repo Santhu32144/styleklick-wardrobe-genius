@@ -123,6 +123,9 @@ const AuthPage: React.FC = () => {
         await updateProfile({
           name: userName
         });
+        
+        // Log to check if the name is being sent correctly
+        console.log("Updating profile with name:", userName);
       }
       
       toast({

@@ -9,13 +9,19 @@ const HeroSection = () => {
   
   // Get user name or default welcome
   const getUserName = () => {
-    if (profile?.name) return profile.name;
+    if (profile?.name) {
+      console.log("Using profile name:", profile.name);
+      return profile.name;
+    }
     if (user && user.email) {
       const email = user.email;
       // Extract name before @ in email
       const name = email.split('@')[0];
-      return name.charAt(0).toUpperCase() + name.slice(1);
+      const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+      console.log("Using name from email:", formattedName);
+      return formattedName;
     }
+    console.log("No user name found, using default");
     return "Fashion";
   };
 

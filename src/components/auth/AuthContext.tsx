@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -44,23 +45,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       
       if (data) {
-        // If there's a name field with a value, use it
-        // Otherwise, try to set a name from email if email exists
+        console.log("Fetched profile data:", data);
+        setProfile(data as UserProfile);
+        
+        // If there's no name field with a value, try to set a name from email if email exists
         if (!data.name && user?.email) {
           // Extract name from email
           const email = user.email;
           const name = email.split('@')[0];
           // Set name with first letter capitalized
-          data.name = name.charAt(0).toUpperCase() + name.slice(1);
+          const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+          
+          console.log("Setting default name from email:", formattedName);
           
           // Update the profile in the database with the extracted name
-          await supabase
-            .from('profiles')
-            .update({ name: data.name })
-            .eq('id', userId);
+          await updateProfile({ name: formattedName });
         }
-        
-        setProfile(data as UserProfile);
       }
     } catch (error: any) {
       console.error('Error fetching user profile:', error.message);
@@ -71,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log("Auth state changed:", event);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -90,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Existing session check:", session ? "Found session" : "No session");
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -121,9 +123,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateProfile = async (data: Partial<UserProfile>) => {
-    if (!user) return;
+    if (!user) {
+      console.error("Cannot update profile: No user is logged in");
+      return;
+    }
     
     try {
+      console.log("Updating profile for user", user.id, "with data:", data);
+      
       const { error } = await supabase
         .from('profiles')
         .update(data)
@@ -134,6 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Update local profile state
       setProfile(prev => prev ? { ...prev, ...data } : null);
       
+      console.log("Profile updated successfully");
       toast({
         title: "Profile updated",
         description: "Your profile has been successfully updated.",
