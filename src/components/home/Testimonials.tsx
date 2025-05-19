@@ -24,7 +24,7 @@ const testimonials = [
   {
     name: 'Miguel Rodriguez',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80',
-    text: 'Their pose suggestions transformed my Instagram feed. I've never gotten so many compliments on my photos before!',
+    text: "Their pose suggestions transformed my Instagram feed. I've never gotten so many compliments on my photos before!",
     rating: 4
   }
 ];
