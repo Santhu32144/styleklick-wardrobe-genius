@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
@@ -53,7 +52,7 @@ const HeroSection = () => {
               </Link>
             </Button>
             
-            <Button variant="outline" className="border-white text-styleklick-soft-yellow hover:bg-white/20 rounded-full px-8 py-6 h-auto text-lg" asChild>
+            <Button variant="outline" className="border-white text-styleklick-airbnb-red hover:bg-white/20 rounded-full px-8 py-6 h-auto text-lg" asChild>
               <Link to="/how-it-works">Explore How It Works</Link>
             </Button>
           </div>
