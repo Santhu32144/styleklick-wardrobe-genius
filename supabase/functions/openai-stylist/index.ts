@@ -59,6 +59,10 @@ serve(async (req) => {
         systemMessage = 'You are a helpful fashion assistant.';
     }
 
+    console.log(`Making OpenAI request with type: ${type}`);
+    console.log(`System message: ${systemMessage.substring(0, 100)}...`);
+    console.log(`Prompt (truncated): ${prompt.substring(0, 100)}...`);
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -66,21 +70,32 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // Using the recommended model
+        model: 'gpt-4o-mini', // Using the newer, supported model
         messages: [
           { role: 'system', content: systemMessage },
           { role: 'user', content: prompt }
         ],
+        temperature: 0.7, // Add some creativity but not too much
+        max_tokens: 800, // Ensure we get a complete response
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error(`OpenAI API Error: Status ${response.status}`, errorData);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`);
+    }
+
     const data = await response.json();
+    console.log("OpenAI response received successfully");
     
     if (!data.choices || !data.choices[0]) {
+      console.error("Invalid OpenAI response format:", JSON.stringify(data));
       throw new Error('Invalid response from OpenAI API');
     }
     
     const content = data.choices[0].message.content;
+    console.log(`Response content (truncated): ${content.substring(0, 100)}...`);
 
     // Try to parse JSON for style suggestions, but don't fail if it's not valid JSON
     let result = content;
