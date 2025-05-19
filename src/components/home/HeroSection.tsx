@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
@@ -8,10 +7,14 @@ import { ArrowRight } from 'lucide-react';
 const HeroSection = () => {
   const { user, profile } = useAuth();
   
-  // Get user name as "santhosh" regardless of email
+  // Get user name from profile or use fallback
   const getUserName = () => {
-    // Always return "santhosh" for the username
-    return "santhosh";
+    // If there's a profile with a name, use it
+    if (profile?.name) {
+      return profile.name;
+    }
+    // Otherwise fallback to email or default
+    return user?.email?.split('@')[0] || "User";
   };
 
   return (
