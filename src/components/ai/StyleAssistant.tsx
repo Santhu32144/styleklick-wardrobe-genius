@@ -33,18 +33,37 @@ const StyleAssistant = ({ formData }: { formData?: any }) => {
     
     setLoading(true);
     try {
-      let prompt = `Generate a stylish outfit recommendation based on these preferences:
-        - Gender: ${formData.gender || 'Not specified'}
-        - Style preferences: ${formData.stylePreferences?.join(', ') || 'Versatile'}
-        - Occasion: ${formData.occasion || 'Casual outing'}
-        - Season: ${formData.seasonality || 'Year-round'}
-        - Destination: ${formData.destinationType || 'Urban environment'}
-
-        Provide me with a complete outfit that matches these preferences, including clothing items and how they should be paired together.`;
-
+      // Creating a detailed, structured prompt with all available user preferences
+      const genderText = formData.gender ? 
+        `a ${formData.gender} person` : 'someone';
+      
+      const styleText = formData.stylePreferences?.length > 0 ? 
+        `who prefers ${formData.stylePreferences.join(', ')} style` : 
+        'with no specific style preference';
+      
+      const occasionText = formData.occasion ? 
+        `attending ${formData.occasion}` : 
+        'attending a casual gathering';
+      
+      const seasonText = formData.seasonality ? 
+        `during ${formData.seasonality} season` : 
+        'during the current season';
+      
+      const destinationText = formData.destinationType ? 
+        `at ${formData.destinationType} location` : 
+        'at a typical venue';
+      
+      let prompt = `Create a detailed outfit recommendation for ${genderText} ${styleText}, ${occasionText}, ${seasonText}, ${destinationText}.`;
+      
+      prompt += `\n\nInclude specific pieces of clothing with colors and materials, how they should be paired together, and appropriate footwear.`;
+      
       if (question) {
-        prompt += `\n\nAdditional request from user: ${question}`;
+        prompt += `\n\nUser's specific request: "${question}"`;
       }
+      
+      prompt += `\n\nBe specific, trendy, and provide a cohesive look that matches all these parameters.`;
+
+      console.log("Sending prompt to AI:", prompt);
 
       const { data, error } = await supabase.functions.invoke('openai-stylist', {
         body: { prompt, type: 'style-suggestion' }
@@ -52,6 +71,7 @@ const StyleAssistant = ({ formData }: { formData?: any }) => {
 
       if (error) throw error;
       
+      console.log("Received AI response:", data);
       setSuggestions(data.result);
       setQuestion('');
     } catch (error) {

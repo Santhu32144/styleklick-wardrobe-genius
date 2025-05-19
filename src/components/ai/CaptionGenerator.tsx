@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 import { MessageSquare, Copy, CheckCheck, Clock, RefreshCw } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface CaptionGeneratorProps {
   outfitDescription?: string;
@@ -17,6 +19,8 @@ interface CaptionGeneratorProps {
 const CaptionGenerator = ({ outfitDescription, occasion, style }: CaptionGeneratorProps) => {
   const [loading, setLoading] = useState(false);
   const [outfitDetails, setOutfitDetails] = useState(outfitDescription || '');
+  const [occasionInput, setOccasionInput] = useState(occasion || '');
+  const [styleInput, setStyleInput] = useState(style || '');
   const [caption, setCaption] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -35,15 +39,17 @@ const CaptionGenerator = ({ outfitDescription, occasion, style }: CaptionGenerat
     try {
       let prompt = `Generate a catchy, engaging Instagram caption for this outfit: ${outfitDetails}`;
       
-      if (occasion) {
-        prompt += `\nThe occasion is: ${occasion}`;
+      if (occasionInput) {
+        prompt += `\nThe occasion is: ${occasionInput}`;
       }
       
-      if (style) {
-        prompt += `\nThe style is: ${style}`;
+      if (styleInput) {
+        prompt += `\nThe style is: ${styleInput}`;
       }
       
-      prompt += "\nInclude 3-5 relevant hashtags at the end.";
+      prompt += "\nInclude 3-5 relevant, trendy hashtags at the end. Keep the caption concise but impactful.";
+      
+      console.log("Sending caption prompt to AI:", prompt);
 
       const { data, error } = await supabase.functions.invoke('openai-stylist', {
         body: { prompt, type: 'caption' }
@@ -51,6 +57,7 @@ const CaptionGenerator = ({ outfitDescription, occasion, style }: CaptionGenerat
 
       if (error) throw error;
       
+      console.log("Received caption from AI:", data.result);
       setCaption(data.result);
     } catch (error) {
       console.error('Error generating caption:', error);
@@ -92,9 +99,9 @@ const CaptionGenerator = ({ outfitDescription, occasion, style }: CaptionGenerat
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="outfitDetails" className="text-sm font-medium">
+          <Label htmlFor="outfitDetails" className="text-sm font-medium">
             Describe your outfit
-          </label>
+          </Label>
           <Textarea
             id="outfitDetails"
             placeholder="E.g., A floral summer dress with white sandals and a straw hat..."
@@ -102,6 +109,32 @@ const CaptionGenerator = ({ outfitDescription, occasion, style }: CaptionGenerat
             onChange={(e) => setOutfitDetails(e.target.value)}
             rows={3}
           />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="occasion" className="text-sm font-medium">
+              Occasion (optional)
+            </Label>
+            <Input
+              id="occasion"
+              placeholder="E.g., Beach vacation, Wedding, Night out..."
+              value={occasionInput}
+              onChange={(e) => setOccasionInput(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="style" className="text-sm font-medium">
+              Style (optional)
+            </Label>
+            <Input
+              id="style"
+              placeholder="E.g., Casual, Formal, Bohemian..."
+              value={styleInput}
+              onChange={(e) => setStyleInput(e.target.value)}
+            />
+          </div>
         </div>
         
         <Button 

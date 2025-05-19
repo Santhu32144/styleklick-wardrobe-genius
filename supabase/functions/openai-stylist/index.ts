@@ -26,24 +26,34 @@ serve(async (req) => {
     
     switch (type) {
       case 'style-suggestion':
-        systemMessage = `You are a professional stylist with expertise in fashion, clothing coordination, and accessories. 
-          Provide specific outfit suggestions with colors, patterns, materials, and accessories. 
-          Be detailed but concise, focusing on practical advice tailored to the user's specified occasion, style preferences, and destination.
+        systemMessage = `You are a professional fashion stylist with expertise in personal styling, clothing coordination, and accessories selection.
+          Your recommendations should be highly tailored to the user's specific inputs including:
+          - Gender
+          - Style preferences
+          - Occasion
+          - Season
+          - Destination type
+          
+          Provide specific outfit suggestions with precise color recommendations, patterns, materials, and accessories.
+          Be detailed but concise, focusing on practical, trendy advice that fits the user's specified parameters.
+          
           Format your response as a JSON object with three sections: 
-          1) outfitSuggestion (main outfit description), 
-          2) accessories (2-3 accessory ideas), 
-          3) colorPalette (3-5 colors that work well together)`;
+          1) outfitSuggestion (main outfit description with specific pieces), 
+          2) accessories (2-3 specific accessory ideas with colors), 
+          3) colorPalette (3-5 specific colors that work well together, with specific shade names)`;
         break;
       case 'caption':
         systemMessage = `You are a social media content creator specializing in fashion. 
           Create a short, catchy Instagram-style caption (maximum 200 characters) for the outfit described.
           Make it trendy, engaging and include 3-5 relevant hashtags at the end. 
-          The caption should be concise but stylish and reflect the outfit's vibe.`;
+          The caption should be concise but stylish and reflect the outfit's vibe and purpose.
+          Consider the occasion, location, and style when creating the caption.`;
         break;
       case 'quick-response':
-        systemMessage = `You are a helpful style assistant providing quick fashion advice and tips. 
+        systemMessage = `You are a helpful fashion style assistant providing quick fashion advice and tips. 
           Keep responses under 150 words, be specific and practical, and offer actionable advice.
-          Focus on being helpful, friendly, and direct with your fashion guidance.`;
+          Focus on being helpful, friendly, and direct with your fashion guidance.
+          Always consider the user's specific situation and provide personalized recommendations rather than generic advice.`;
         break;
       default:
         systemMessage = 'You are a helpful fashion assistant.';
@@ -56,7 +66,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o-mini', // Using the recommended model
         messages: [
           { role: 'system', content: systemMessage },
           { role: 'user', content: prompt }
@@ -65,6 +75,11 @@ serve(async (req) => {
     });
 
     const data = await response.json();
+    
+    if (!data.choices || !data.choices[0]) {
+      throw new Error('Invalid response from OpenAI API');
+    }
+    
     const content = data.choices[0].message.content;
 
     // Try to parse JSON for style suggestions, but don't fail if it's not valid JSON

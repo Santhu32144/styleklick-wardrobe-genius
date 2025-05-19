@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/auth/AuthContext';
 import { SendHorizonal, User2, Bot, Clock } from 'lucide-react';
 
 interface Message {
@@ -17,10 +18,11 @@ interface Message {
 }
 
 const StyleChat = () => {
+  const { user, profile } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hi there! I'm your personal style assistant. How can I help with your fashion needs today?",
+      content: `Hi${profile?.name ? ' ' + profile.name : ''}! I'm your personal style assistant. How can I help with your fashion needs today?`,
       sender: 'assistant',
       timestamp: new Date()
     }
@@ -29,6 +31,19 @@ const StyleChat = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Update welcome message when profile changes
+  useEffect(() => {
+    if (profile?.name && messages.length > 0 && messages[0].id === '1') {
+      setMessages(prevMessages => [
+        {
+          ...prevMessages[0],
+          content: `Hi ${profile.name}! I'm your personal style assistant. How can I help with your fashion needs today?`
+        },
+        ...prevMessages.slice(1)
+      ]);
+    }
+  }, [profile?.name]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,14 +68,34 @@ const StyleChat = () => {
     setLoading(true);
 
     try {
+      // Enhance the prompt with user context if available
+      let enrichedPrompt = input;
+      
+      if (profile) {
+        let contextPrefix = "User context: ";
+        if (profile.gender) {
+          contextPrefix += `gender: ${profile.gender}, `;
+        }
+        if (profile.name) {
+          contextPrefix += `name: ${profile.name}`;
+        }
+        
+        // Add the context to the prompt
+        enrichedPrompt = `${contextPrefix}\n\nUser question: ${input}`;
+      }
+      
+      console.log("Sending chat message to AI:", enrichedPrompt);
+      
       const { data, error } = await supabase.functions.invoke('openai-stylist', {
         body: {
-          prompt: input,
+          prompt: enrichedPrompt,
           type: 'quick-response'
         }
       });
 
       if (error) throw error;
+      
+      console.log("Received AI chat response:", data.result);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),

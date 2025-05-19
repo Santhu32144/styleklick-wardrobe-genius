@@ -48,18 +48,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("Fetched profile data:", data);
         setProfile(data as UserProfile);
         
-        // If there's no name field with a value, try to set a name from email if email exists
+        // Only set a name from email if there's absolutely no name value
         if (!data.name && user?.email) {
-          // Extract name from email
-          const email = user.email;
-          const name = email.split('@')[0];
-          // Set name with first letter capitalized
-          const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-          
-          console.log("Setting default name from email:", formattedName);
-          
-          // Update the profile in the database with the extracted name
-          await updateProfile({ name: formattedName });
+          // We should avoid auto-generating names from emails if possible
+          console.log("Profile has no name and will only show generic greeting");
         }
       }
     } catch (error: any) {

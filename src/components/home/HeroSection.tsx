@@ -9,20 +9,21 @@ const HeroSection = () => {
   
   // Get user name or default welcome
   const getUserName = () => {
+    // Primary: Use the profile name if it exists
     if (profile?.name) {
       console.log("Using profile name:", profile.name);
       return profile.name;
     }
-    if (user && user.email) {
-      const email = user.email;
-      // Extract name before @ in email
-      const name = email.split('@')[0];
-      const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-      console.log("Using name from email:", formattedName);
-      return formattedName;
+    
+    // Fallback: If no profile name but user exists, use a generic welcome
+    if (user) {
+      console.log("User exists but no name found, using default greeting");
+      return "to StyleNKlick";
     }
-    console.log("No user name found, using default");
-    return "Fashion";
+    
+    // Default: Generic welcome for non-authenticated users
+    console.log("No user found, using default welcome");
+    return "to StyleNKlick";
   };
 
   return (
