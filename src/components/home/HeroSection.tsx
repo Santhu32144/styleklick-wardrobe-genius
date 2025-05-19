@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Button } from "@/components/ui/button";
+import { ArrowRight } from 'lucide-react';
 
 const HeroSection = () => {
   const { user, profile } = useAuth();
@@ -27,54 +28,49 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative h-[80vh] overflow-hidden">
-      {/* Background Image */}
-      <img 
-        src="https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" 
-        alt="Fashion backdrop" 
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+    <div className="relative min-h-[90vh] overflow-hidden flex items-center">
+      {/* Background Image with gradient overlay */}
+      <div className="absolute inset-0 w-full h-full">
+        <img 
+          src="https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" 
+          alt="Fashion backdrop" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+      </div>
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-            Welcome {getUserName()}
+      <div className="relative z-10 container mx-auto px-6">
+        <div className="max-w-3xl">
+          {user && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 inline-block mb-6">
+              <p className="text-white font-medium">Welcome back, {getUserName()}</p>
+            </div>
+          )}
+          
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            Personalized fashion, <span className="text-styleklick-soft-green">powered by AI.</span><br/>
+            <span className="text-sm md:text-xl lg:text-2xl font-normal opacity-90 mt-2 block">
+              From city streets to sandy shores.
+            </span>
           </h1>
           
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 inline-block mb-8">
-            <h2 className="text-xl md:text-2xl text-white font-medium">
-              Your Trending Style
-            </h2>
-          </div>
+          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
+            Discover the outfit that suits your vibe, destination, and style — instantly.
+            Let AI craft your perfect look for any occasion.
+          </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Link to="/questionnaire" className="transform transition-all duration-300 hover:scale-105">
-              <div className="bg-[#F2A65A] text-white rounded-xl p-4 text-center shadow-lg">
-                <h3 className="font-medium">Start New Style</h3>
-              </div>
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button className="bg-styleklick-soft-green hover:bg-styleklick-soft-green/90 text-gray-800 rounded-full px-8 py-6 h-auto text-lg shadow-lg" asChild>
+              <Link to="/questionnaire" className="flex items-center gap-2">
+                <span>Start Styling</span>
+                <ArrowRight size={20} />
+              </Link>
+            </Button>
             
-            <Link to="/style-calendar" className="transform transition-all duration-300 hover:scale-105">
-              <div className="bg-[#58C1C5] text-white rounded-xl p-4 text-center shadow-lg">
-                <h3 className="font-medium">Style Quiz</h3>
-              </div>
-            </Link>
-            
-            <Link to="/lookbook" className="transform transition-all duration-300 hover:scale-105">
-              <div className="bg-[#F2837B] text-white rounded-xl p-4 text-center shadow-lg">
-                <h3 className="font-medium">Your Lookbook</h3>
-              </div>
-            </Link>
-            
-            <Link to="/recommendations" className="transform transition-all duration-300 hover:scale-105">
-              <div className="bg-[#C96BC9] text-white rounded-xl p-4 text-center shadow-lg">
-                <h3 className="font-medium">Past Recommendations</h3>
-              </div>
-            </Link>
+            <Button variant="outline" className="border-white text-white hover:bg-white/20 rounded-full px-8 py-6 h-auto text-lg" asChild>
+              <Link to="/how-it-works">Explore How It Works</Link>
+            </Button>
           </div>
         </div>
       </div>
