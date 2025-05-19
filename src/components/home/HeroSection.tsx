@@ -8,22 +8,10 @@ import { ArrowRight } from 'lucide-react';
 const HeroSection = () => {
   const { user, profile } = useAuth();
   
-  // Get user name or default welcome
+  // Get user name as "santhosh" regardless of email
   const getUserName = () => {
-    // Primary: Use the profile name if it exists
-    if (profile?.name) {
-      return profile.name;
-    }
-    
-    // Fallback: Use email username part if user exists but no profile name
-    if (user?.email) {
-      const emailUsername = user.email.split('@')[0];
-      // Capitalize first letter
-      return emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
-    }
-    
-    // Default: Generic welcome for non-authenticated users
-    return "to StyleNKlick";
+    // Always return "santhosh" for the username
+    return "santhosh";
   };
 
   return (

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Check, Plus } from 'lucide-react';
@@ -9,32 +8,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 const RecommendationGrid = () => {
   const { user, profile } = useAuth();
   
-  // Get user name or default welcome
+  // Get user name as "santhosh"
   const getUserName = () => {
-    if (profile?.name) return profile.name;
-    if (user && user.email) {
-      const email = user.email;
-      const name = email.split('@')[0];
-      return name.charAt(0).toUpperCase() + name.slice(1);
-    }
-    return "Fashion";
+    return "santhosh";
   };
 
   // Get initials for avatar
   const getInitials = () => {
-    if (profile?.name) {
-      const nameParts = profile.name.split(' ');
-      if (nameParts.length > 1) {
-        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
-      }
-      return profile.name.substring(0, 2).toUpperCase();
-    }
-    
-    if (user?.email) {
-      return user.email.substring(0, 2).toUpperCase();
-    }
-    
-    return "FK";
+    return "S";
   };
 
   // Fashion items for the grid
