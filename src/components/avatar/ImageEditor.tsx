@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { crop, filter, save, image } from "lucide-react";
+import { Crop, Filter, Save, Image } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -149,11 +148,11 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ image, onSave, onCancel, isOp
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid grid-cols-2 mb-4">
             <TabsTrigger value="crop" className="flex items-center gap-2">
-              <crop className="h-4 w-4" />
+              <Crop className="h-4 w-4" />
               <span>Crop</span>
             </TabsTrigger>
             <TabsTrigger value="filter" className="flex items-center gap-2">
-              <filter className="h-4 w-4" />
+              <Filter className="h-4 w-4" />
               <span>Filter</span>
             </TabsTrigger>
           </TabsList>
@@ -272,7 +271,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ image, onSave, onCancel, isOp
             className="gap-2"
             disabled={isProcessing}
           >
-            <save className="h-4 w-4" />
+            <Save className="h-4 w-4" />
             {isProcessing ? "Processing..." : "Save Changes"}
           </Button>
         </div>

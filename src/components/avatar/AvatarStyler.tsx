@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Camera, Upload, User, image } from 'lucide-react';
+import { Camera, Upload, User, Image } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/components/auth/AuthContext';
 import ImageEditor from './ImageEditor';
