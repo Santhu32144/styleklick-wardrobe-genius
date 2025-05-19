@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Check, Plus } from 'lucide-react';
@@ -95,10 +96,11 @@ const RecommendationGrid = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                Hi {getUserName()}<br />Recommendations
+                Hi {getUserName()},<br />
+                Here's Your Collection
               </h1>
               <p className="text-gray-600 mb-6 max-w-md">
-                Personalized style recommendations tailored just for you. Browse your suggestions and save your favorite looks.
+                The best style recommendations tailored just for you, {getUserName()}. Browse your personalized suggestions and save your favorite looks.
               </p>
               
               <div className="flex gap-3">
@@ -175,7 +177,7 @@ const RecommendationGrid = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold flex items-center">
               <Heart className="mr-3 h-5 w-5" /> 
-              Recent Outfit Suggestions
+              {getUserName()}'s Recent Outfit Suggestions
             </h2>
             <Link to="/recommendations" className="text-styleklick-purple text-sm font-medium">
               View all
@@ -212,7 +214,7 @@ const RecommendationGrid = () => {
         {/* Saved Lookbook */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Saved Lookbook</h2>
+            <h2 className="text-2xl font-bold">{getUserName()}'s Saved Lookbook</h2>
             <Link to="/lookbook" className="text-styleklick-purple text-sm font-medium">
               View all
             </Link>

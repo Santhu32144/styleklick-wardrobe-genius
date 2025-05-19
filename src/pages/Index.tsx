@@ -6,11 +6,18 @@ import FeatureHighlights from '../components/home/FeatureHighlights';
 import HowItWorks from '../components/home/HowItWorks';
 import Testimonials from '../components/home/Testimonials';
 import CallToAction from '../components/home/CallToAction';
+import RecommendationGrid from '../components/home/RecommendationGrid';
+import { useAuth } from '@/components/auth/AuthContext';
+import FashionShowcase from '../components/home/FashionShowcase';
 
 const Index = () => {
+  const { user } = useAuth();
+  
   return (
     <Layout>
       <HeroSection />
+      <FashionShowcase />
+      {user && <RecommendationGrid />}
       <FeatureHighlights />
       <HowItWorks />
       <Testimonials />

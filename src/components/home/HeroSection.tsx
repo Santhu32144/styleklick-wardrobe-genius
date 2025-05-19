@@ -12,18 +12,17 @@ const HeroSection = () => {
   const getUserName = () => {
     // Primary: Use the profile name if it exists
     if (profile?.name) {
-      console.log("Using profile name:", profile.name);
       return profile.name;
     }
     
-    // Fallback: If no profile name but user exists, use a generic welcome
-    if (user) {
-      console.log("User exists but no name found, using default greeting");
-      return "to StyleNKlick";
+    // Fallback: Use email username part if user exists but no profile name
+    if (user?.email) {
+      const emailUsername = user.email.split('@')[0];
+      // Capitalize first letter
+      return emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
     }
     
     // Default: Generic welcome for non-authenticated users
-    console.log("No user found, using default welcome");
     return "to StyleNKlick";
   };
 
@@ -32,7 +31,7 @@ const HeroSection = () => {
       {/* Background Image with gradient overlay */}
       <div className="absolute inset-0 w-full h-full">
         <img 
-          src="https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" 
+          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" 
           alt="Fashion backdrop" 
           className="w-full h-full object-cover"
         />
@@ -44,12 +43,12 @@ const HeroSection = () => {
         <div className="max-w-3xl">
           {user && (
             <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 inline-block mb-6">
-              <p className="text-white font-medium">Welcome back, {getUserName()}</p>
+              <p className="text-white font-medium">Welcome back, {getUserName()}!</p>
             </div>
           )}
           
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Personalized fashion, <span className="text-styleklick-soft-green">powered by AI.</span><br/>
+            {user ? `${getUserName()}'s` : 'Personalized'} fashion, <span className="text-styleklick-soft-green">powered by AI.</span><br/>
             <span className="text-sm md:text-xl lg:text-2xl font-normal opacity-90 mt-2 block">
               From city streets to sandy shores.
             </span>
@@ -57,7 +56,7 @@ const HeroSection = () => {
           
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
             Discover the outfit that suits your vibe, destination, and style — instantly.
-            Let AI craft your perfect look for any occasion.
+            {user && ` Just for you, ${getUserName()}.`}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
