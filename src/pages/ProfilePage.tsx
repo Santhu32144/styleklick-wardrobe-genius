@@ -12,13 +12,16 @@ import { useAuth } from '@/components/auth/AuthContext';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Navigate } from 'react-router-dom';
 import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const ProfilePage = () => {
   const { user, profile, updateProfile, loading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
+  const [name, setName] = useState<string>('');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const { toast } = useToast();
 
   // If not authenticated, redirect to login
   if (!loading && !user) {
@@ -28,6 +31,7 @@ const ProfilePage = () => {
   React.useEffect(() => {
     if (profile) {
       setGender(profile.gender || null);
+      setName(profile.name || '');
     }
   }, [profile]);
 
@@ -35,7 +39,11 @@ const ProfilePage = () => {
     e.preventDefault();
     
     if (user && updateProfile) {
-      await updateProfile({ gender });
+      await updateProfile({ gender, name });
+      toast({
+        title: "Profile updated",
+        description: "Your profile information has been updated successfully.",
+      });
       setIsEditing(false);
     }
   };
@@ -196,6 +204,16 @@ const ProfilePage = () => {
                   {isEditing ? (
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
+                        <Label htmlFor="name">Username</Label>
+                        <Input 
+                          id="name"
+                          value={name} 
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Enter your username"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
                         <Label>Gender</Label>
                         <RadioGroup 
                           value={gender || ""} 
@@ -223,7 +241,7 @@ const ProfilePage = () => {
                     <div className="space-y-6">
                       <div className="space-y-1">
                         <p className="text-sm text-gray-500">Username</p>
-                        <p>{getUserDisplayName()}</p>
+                        <p>{profile?.name || "Not provided"}</p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm text-gray-500">Email</p>
