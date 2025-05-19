@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "../auth/AuthContext";
 import { Menu, LogIn, User, LogOut, Camera, BookMarked, Sparkles } from "lucide-react";
 
@@ -22,7 +22,7 @@ interface NavLinkType {
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, profile } = useAuth();
   const location = useLocation();
 
   const mainLinks: NavLinkType[] = [
@@ -53,10 +53,16 @@ const Navbar: React.FC = () => {
   };
 
   const getInitials = () => {
-    if (user?.email) {
-      return user.email.substring(0, 2).toUpperCase();
+    if (profile?.name) {
+      const nameParts = profile.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return profile.name.substring(0, 2).toUpperCase();
     }
-    return "U";
+    
+    if (!user?.email) return "U";
+    return user.email.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -93,9 +99,13 @@ const Navbar: React.FC = () => {
                   className="rounded-full h-8 w-8 p-0 flex items-center justify-center"
                 >
                   <Avatar className="h-8 w-8 border border-styleklick-purple/50">
-                    <AvatarFallback className="bg-styleklick-purple text-white text-xs">
-                      {getInitials()}
-                    </AvatarFallback>
+                    {profile?.avatar_url ? (
+                      <AvatarImage src={profile.avatar_url} alt="Profile" />
+                    ) : (
+                      <AvatarFallback className="bg-styleklick-purple text-white text-xs">
+                        {getInitials()}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>

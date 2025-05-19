@@ -11,6 +11,7 @@ type UserProfile = {
   phone?: string | null;
   gender?: 'male' | 'female' | null;
   name?: string | null;
+  avatar_url?: string | null;
   created_at?: string;
   updated_at?: string;
 };
@@ -22,6 +23,7 @@ type AuthContextType = {
   loading: boolean;
   signOut: () => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<string | null>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -114,6 +116,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const uploadAvatar = async (file: File): Promise<string | null> => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "You must be logged in to upload an avatar",
+        variant: "destructive"
+      });
+      return null;
+    }
+
+    try {
+      // Create a unique file path with user ID as folder
+      const filePath = `${user.id}/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+      
+      // Upload the file to the profile_pictures bucket
+      const { error: uploadError } = await supabase.storage
+        .from('profile_pictures')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL for the file
+      const { data } = supabase.storage
+        .from('profile_pictures')
+        .getPublicUrl(filePath);
+        
+      const publicUrl = data.publicUrl;
+      
+      // Update the user's profile with the avatar URL
+      await updateProfile({ avatar_url: publicUrl });
+      
+      toast({
+        title: "Avatar uploaded",
+        description: "Your profile picture has been updated",
+      });
+      
+      return publicUrl;
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error.message);
+      toast({
+        title: "Error uploading avatar",
+        description: error.message,
+        variant: "destructive"
+      });
+      return null;
+    }
+  };
+
   const updateProfile = async (data: Partial<UserProfile>) => {
     if (!user) {
       console.error("Cannot update profile: No user is logged in");
@@ -155,6 +208,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signOut,
     updateProfile,
+    uploadAvatar,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

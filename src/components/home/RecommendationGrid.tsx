@@ -76,10 +76,13 @@ const RecommendationGrid = () => {
               <div className="flex items-center mb-6">
                 {user && (
                   <Avatar className="h-12 w-12 border-2 border-white shadow-sm mr-4">
-                    <AvatarImage src="" alt={getUserName()} />
-                    <AvatarFallback className="bg-styleklick-purple text-white">
-                      {getInitials()}
-                    </AvatarFallback>
+                    {profile?.avatar_url ? (
+                      <AvatarImage src={profile.avatar_url} alt={getUserName()} />
+                    ) : (
+                      <AvatarFallback className="bg-styleklick-purple text-white">
+                        {getInitials()}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                 )}
                 <div className="text-lg text-gray-700">

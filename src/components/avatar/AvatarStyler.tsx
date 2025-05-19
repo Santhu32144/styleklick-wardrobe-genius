@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -16,9 +16,16 @@ const AvatarStyler: React.FC<AvatarStylerProps> = ({ onStyleComplete }) => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, profile, uploadAvatar } = useAuth();
   
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Initialize avatar from profile if available
+  useEffect(() => {
+    if (profile?.avatar_url) {
+      setAvatar(profile.avatar_url);
+    }
+  }, [profile]);
+  
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     
@@ -34,29 +41,22 @@ const AvatarStyler: React.FC<AvatarStylerProps> = ({ onStyleComplete }) => {
     
     setIsUploading(true);
     
-    // Read the file and convert to data URL
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      setAvatar(result);
-      setIsUploading(false);
+    try {
+      // Upload to Supabase storage
+      const avatarUrl = await uploadAvatar(file);
       
-      toast({
-        title: "Avatar updated",
-        description: "Your avatar has been updated successfully.",
-      });
-    };
-    
-    reader.onerror = () => {
-      setIsUploading(false);
+      if (avatarUrl) {
+        setAvatar(avatarUrl);
+      }
+    } catch (error: any) {
       toast({
         title: "Upload failed",
-        description: "There was an error uploading your image. Please try again.",
+        description: error.message || "There was an error uploading your image. Please try again.",
         variant: "destructive"
       });
-    };
-    
-    reader.readAsDataURL(file);
+    } finally {
+      setIsUploading(false);
+    }
   };
   
   const handleDone = () => {
@@ -71,6 +71,14 @@ const AvatarStyler: React.FC<AvatarStylerProps> = ({ onStyleComplete }) => {
   };
 
   const getInitials = () => {
+    if (profile?.name) {
+      const nameParts = profile.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return profile.name.substring(0, 2).toUpperCase();
+    }
+    
     if (!user) return "?";
     const email = user.email || "";
     return email.substring(0, 2).toUpperCase();
@@ -104,7 +112,7 @@ const AvatarStyler: React.FC<AvatarStylerProps> = ({ onStyleComplete }) => {
             >
               <Label htmlFor="avatar-upload" className="cursor-pointer flex items-center gap-2">
                 <Upload size={16} />
-                <span>Upload Photo</span>
+                <span>{isUploading ? "Uploading..." : "Upload Photo"}</span>
               </Label>
               <input
                 id="avatar-upload"
