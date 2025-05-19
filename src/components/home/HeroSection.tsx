@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
@@ -21,7 +22,7 @@ const HeroSection = () => {
   return <div className="relative min-h-[90vh] overflow-hidden flex items-center">
       {/* Background Image with gradient overlay */}
       <div className="absolute inset-0 w-full h-full">
-        <img src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Fashion backdrop" className="w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Beach trip backdrop" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
       </div>
       
@@ -52,8 +53,8 @@ const HeroSection = () => {
               </Link>
             </Button>
             
-            <Button variant="outline" className="border-white text-white hover:bg-white/20 rounded-full px-8 py-6 h-auto text-lg" asChild>
-              <Link to="/how-it-works" className="change the color\n">Explore How It Works</Link>
+            <Button variant="outline" className="border-white text-styleklick-soft-yellow hover:bg-white/20 rounded-full px-8 py-6 h-auto text-lg" asChild>
+              <Link to="/how-it-works">Explore How It Works</Link>
             </Button>
           </div>
         </div>
