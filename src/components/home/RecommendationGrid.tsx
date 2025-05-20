@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Check, Plus } from 'lucide-react';
@@ -9,12 +8,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 const RecommendationGrid = () => {
   const { user, profile } = useAuth();
   
-  // Get user name from profile or use fallback
+  // Get user name or default welcome
   const getUserName = () => {
-    if (profile?.name) {
-      return profile.name;
+    if (profile?.name) return profile.name;
+    if (user && user.email) {
+      const email = user.email;
+      const name = email.split('@')[0];
+      return name.charAt(0).toUpperCase() + name.slice(1);
     }
-    return user?.email?.split('@')[0] || "User";
+    return "Fashion";
   };
 
   // Get initials for avatar
@@ -26,7 +28,12 @@ const RecommendationGrid = () => {
       }
       return profile.name.substring(0, 2).toUpperCase();
     }
-    return "U";
+    
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase();
+    }
+    
+    return "FK";
   };
 
   // Fashion items for the grid
@@ -76,13 +83,10 @@ const RecommendationGrid = () => {
               <div className="flex items-center mb-6">
                 {user && (
                   <Avatar className="h-12 w-12 border-2 border-white shadow-sm mr-4">
-                    {profile?.avatar_url ? (
-                      <AvatarImage src={profile.avatar_url} alt={getUserName()} />
-                    ) : (
-                      <AvatarFallback className="bg-styleklick-purple text-white">
-                        {getInitials()}
-                      </AvatarFallback>
-                    )}
+                    <AvatarImage src="" alt={getUserName()} />
+                    <AvatarFallback className="bg-styleklick-purple text-white">
+                      {getInitials()}
+                    </AvatarFallback>
                   </Avatar>
                 )}
                 <div className="text-lg text-gray-700">
@@ -91,11 +95,10 @@ const RecommendationGrid = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                Hi {getUserName()},<br />
-                Here's Your Collection
+                Hi {getUserName()}<br />Recommendations
               </h1>
               <p className="text-gray-600 mb-6 max-w-md">
-                The best style recommendations tailored just for you, {getUserName()}. Browse your personalized suggestions and save your favorite looks.
+                Personalized style recommendations tailored just for you. Browse your suggestions and save your favorite looks.
               </p>
               
               <div className="flex gap-3">
@@ -172,7 +175,7 @@ const RecommendationGrid = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold flex items-center">
               <Heart className="mr-3 h-5 w-5" /> 
-              {getUserName()}'s Recent Outfit Suggestions
+              Recent Outfit Suggestions
             </h2>
             <Link to="/recommendations" className="text-styleklick-purple text-sm font-medium">
               View all
@@ -209,7 +212,7 @@ const RecommendationGrid = () => {
         {/* Saved Lookbook */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">{getUserName()}'s Saved Lookbook</h2>
+            <h2 className="text-2xl font-bold">Saved Lookbook</h2>
             <Link to="/lookbook" className="text-styleklick-purple text-sm font-medium">
               View all
             </Link>

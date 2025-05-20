@@ -1,26 +1,17 @@
 
 import React from 'react';
 import Layout from '../components/layout/Layout';
-import HeroSection from '../components/home/HeroSection';
-import FeatureHighlights from '../components/home/FeatureHighlights';
-import HowItWorks from '../components/home/HowItWorks';
-import Testimonials from '../components/home/Testimonials';
-import CallToAction from '../components/home/CallToAction';
 import RecommendationGrid from '../components/home/RecommendationGrid';
-import { useAuth } from '@/components/auth/AuthContext';
-import FashionShowcase from '../components/home/FashionShowcase';
+import OutfitCategories from '../components/home/OutfitCategories';
+import CallToAction from '../components/home/CallToAction';
+import HeroSection from '../components/home/HeroSection';
 
 const Index = () => {
-  const { user } = useAuth();
-  
   return (
     <Layout>
       <HeroSection />
-      <FashionShowcase />
-      {user && <RecommendationGrid />}
-      <FeatureHighlights />
-      <HowItWorks />
-      <Testimonials />
+      <RecommendationGrid />
+      <OutfitCategories />
       <CallToAction />
     </Layout>
   );

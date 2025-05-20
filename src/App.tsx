@@ -21,7 +21,6 @@ import FAQPage from "./pages/FAQPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import StyleCalendarPage from "./pages/StyleCalendarPage";
-import StyleAssistantPage from "./pages/StyleAssistantPage";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +42,6 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/lookbook" element={<LookbookPage />} />
             <Route path="/style-calendar" element={<StyleCalendarPage />} />
-            <Route path="/style-assistant" element={<StyleAssistantPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
