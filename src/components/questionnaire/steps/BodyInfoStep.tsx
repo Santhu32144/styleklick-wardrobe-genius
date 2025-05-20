@@ -4,7 +4,7 @@ import { QuestionnaireData } from '../QuestionnaireForm';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { User, UserRound, Users } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 
 interface BodyInfoStepProps {
   formData: QuestionnaireData;

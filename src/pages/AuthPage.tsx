@@ -12,7 +12,7 @@ import PhoneEmailForm from '@/components/auth/PhoneEmailForm';
 import OAuthButtons from '@/components/auth/OAuthButtons';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 
 enum AuthStep {
   INPUT = 'input',

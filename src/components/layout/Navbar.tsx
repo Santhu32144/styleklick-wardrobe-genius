@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogIn, LogOut, User, BookOpen } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,

@@ -3,8 +3,11 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const CallToAction = () => {
+  const { user } = useAuth();
+  
   return (
     <section className="py-16 px-4 bg-styleklick-soft-cream">
       <div className="container mx-auto max-w-4xl text-center">
