@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import StyleCalendar from '@/components/calendar/StyleCalendar';
@@ -9,7 +10,6 @@ import { Link } from 'react-router-dom';
 
 const StyleCalendarPage = () => {
   const { user } = useAuth();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   if (!user) {
     return (
@@ -36,7 +36,7 @@ const StyleCalendarPage = () => {
       <div className="py-12 bg-gray-50 min-h-screen">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-6 text-center">Style Calendar</h1>
-          <StyleCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          <StyleCalendar />
         </div>
       </div>
     </Layout>

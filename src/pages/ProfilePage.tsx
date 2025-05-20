@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -10,6 +11,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import AvatarStyler from '@/components/avatar/AvatarStyler';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Badge } from '@/components/ui/badge';
+import { Camera, Edit2, User, Calendar, BookOpen, Heart } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 
 const ProfilePage = () => {
   const { user, profile, updateProfile, loading } = useAuth();
@@ -290,7 +295,7 @@ const ProfilePage = () => {
                       <CardTitle className="text-lg">Your Lookbook</CardTitle>
                     </div>
                     <Button variant="outline" size="sm">
-                      <Image className="mr-2 h-4 w-4" />
+                      <ImageIcon className="mr-2 h-4 w-4" />
                       Upload Look
                     </Button>
                   </div>
