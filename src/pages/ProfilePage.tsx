@@ -1,17 +1,15 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { useAuth } from '@/components/auth/AuthContext';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Navigate } from 'react-router-dom';
-import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
+import AvatarStyler from '@/components/avatar/AvatarStyler';
 
 const ProfilePage = () => {
   const { user, profile, updateProfile, loading } = useAuth();
