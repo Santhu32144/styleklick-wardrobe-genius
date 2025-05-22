@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Check, Plus } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import AIStyleInsights from './AIStyleInsights';
 
 const RecommendationGrid = () => {
   const { user, profile } = useAuth();
@@ -169,6 +170,9 @@ const RecommendationGrid = () => {
             </div>
           </div>
         </div>
+
+        {/* Add AI Style Insights section */}
+        <AIStyleInsights />
 
         {/* Recent Outfit Suggestions */}
         <section className="mb-12">
