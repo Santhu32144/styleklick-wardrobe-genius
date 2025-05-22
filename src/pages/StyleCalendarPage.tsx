@@ -3,7 +3,7 @@ import React from 'react';
 import Layout from '@/components/layout/Layout';
 import StyleCalendar from '@/components/calendar/StyleCalendar';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 
 const StyleCalendarPage = () => {
   const { user, loading } = useAuth();

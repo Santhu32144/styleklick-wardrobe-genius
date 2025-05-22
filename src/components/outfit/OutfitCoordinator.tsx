@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 import { Bookmark, RefreshCcw, Heart, Calendar, Tag } from 'lucide-react';
 import GenderSelectionStep from '../questionnaire/steps/GenderSelectionStep';
 
@@ -37,7 +36,7 @@ const OutfitCoordinator: React.FC = () => {
   const [showGenderSelection, setShowGenderSelection] = useState(true);
   const [savedOutfits, setSavedOutfits] = useState<string[]>([]);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   // Sample outfit data - would normally come from API based on user preferences
   const generateOutfits = () => {

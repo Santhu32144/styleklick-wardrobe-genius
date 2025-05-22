@@ -1,22 +1,21 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Camera, Upload, User } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from '@/components/auth/AuthContext';
 
 interface AvatarStylerProps {
   onStyleComplete?: () => void;
 }
 
-const AvatarStyler: React.FC<AvatarStylerProps> = ({ onStyleComplete }) => {
+const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

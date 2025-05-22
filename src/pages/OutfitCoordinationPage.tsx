@@ -4,7 +4,7 @@ import Layout from '../components/layout/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OutfitCoordinator from '../components/outfit/OutfitCoordinator';
 import AvatarStyler from '../components/avatar/AvatarStyler';
-import { useAuth } from '../components/auth/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';

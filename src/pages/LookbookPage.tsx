@@ -1,18 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
+import Layout from '../components/layout/Layout';
+import { useAuth } from '@/hooks/use-auth';
+import { Navigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/components/auth/AuthContext';
 import { Search, Tag, Calendar, Trash2, Edit, ArrowRight, BookOpen } from 'lucide-react';
-import { Navigate } from 'react-router-dom';
 
 // Types for lookbook entries
 type ClothingItem = {
