@@ -4,7 +4,7 @@ import { useLocation, Navigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import RecommendationResult from '../components/recommendations/RecommendationResult';
 import { QuestionnaireData } from '../components/questionnaire/QuestionnaireForm';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '../components/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn } from 'lucide-react';
