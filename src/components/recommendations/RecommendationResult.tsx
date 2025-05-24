@@ -22,6 +22,14 @@ import { ThemeType } from '../../pages/RecommendationsPage';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import AIRecommendationSection from './AIRecommendationSection';
 
+// Add the missing interface
+interface RecommendationResultProps {
+  formData: QuestionnaireData;
+  activeTheme: ThemeType;
+  setActiveTheme: (theme: ThemeType) => void;
+  onSaveToLookbook?: () => void;
+}
+
 // Footwear type
 interface Footwear {
   id: string;
