@@ -264,12 +264,12 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
           <div>
-            <p><strong>Body Type:</strong> {formData.bodyType}</p>
-            <p><strong>Style Preference:</strong> {formData.stylePreference}</p>
+            <p><strong>Gender:</strong> {formData.gender}</p>
+            <p><strong>Style Preferences:</strong> {formData.stylePreferences.join(', ')}</p>
           </div>
           <div>
             <p><strong>Occasion:</strong> {formData.occasion}</p>
-            <p><strong>Destination:</strong> {formData.destination}</p>
+            <p><strong>Destination:</strong> {formData.destinationType}</p>
           </div>
         </div>
       </div>
