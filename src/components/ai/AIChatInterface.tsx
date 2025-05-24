@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Bot, User, Send, Loader2 } from 'lucide-react';
+import { Bot, User, Send, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
@@ -12,6 +12,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  isRecommendation?: boolean;
 }
 
 interface AIChatInterfaceProps {
@@ -21,14 +22,15 @@ interface AIChatInterfaceProps {
     stylePreference?: string;
     occasion?: string;
   };
+  onRecommendation?: (recommendation: string) => void;
 }
 
-const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
+const AIChatInterface = ({ userProfile, onRecommendation }: AIChatInterfaceProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm your personal AI fashion stylist. Ask me anything about style, outfits, colors, or fashion trends. How can I help you today?",
+      content: "Hi! I'm your personal AI fashion stylist. Ask me anything about style, outfits, colors, or fashion trends. I can give you specific outfit recommendations based on your preferences. How can I help you today?",
       timestamp: new Date()
     }
   ]);
@@ -76,10 +78,16 @@ const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: data.message,
-        timestamp: new Date()
+        timestamp: new Date(),
+        isRecommendation: data.isRecommendation
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+
+      // If this is a recommendation and we have a callback, trigger it
+      if (data.isRecommendation && onRecommendation) {
+        onRecommendation(data.message);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
@@ -99,15 +107,43 @@ const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
     }
   };
 
+  const suggestedQuestions = [
+    "What should I wear for a casual day out?",
+    "How can I style this outfit for work?",
+    "What colors look good together?",
+    "Give me a complete outfit recommendation",
+    "What's trending in fashion right now?"
+  ];
+
   return (
     <Card className="h-[600px] flex flex-col">
-      <CardHeader>
+      <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <CardTitle className="flex items-center gap-2">
-          <Bot className="h-5 w-5 text-purple-500" />
-          AI Style Chat
+          <Bot className="h-5 w-5" />
+          AI Style Expert - Ask Me Anything!
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
+        {/* Suggested Questions */}
+        {messages.length <= 1 && (
+          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+            <p className="text-sm font-medium mb-2">Try asking me:</p>
+            <div className="flex flex-wrap gap-2">
+              {suggestedQuestions.map((question, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                  onClick={() => setInputMessage(question)}
+                >
+                  {question}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 overflow-y-auto space-y-4 mb-4">
           {messages.map((message) => (
             <div
@@ -128,9 +164,17 @@ const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
                   className={`rounded-lg p-3 ${
                     message.role === 'user'
                       ? 'bg-blue-500 text-white'
+                      : message.isRecommendation
+                      ? 'bg-gradient-to-r from-purple-100 to-pink-100 text-gray-900 border border-purple-200'
                       : 'bg-gray-100 text-gray-900'
                   }`}
                 >
+                  {message.isRecommendation && (
+                    <div className="flex items-center gap-1 mb-2">
+                      <Sparkles className="h-3 w-3 text-purple-500" />
+                      <span className="text-xs font-medium text-purple-600">Style Recommendation</span>
+                    </div>
+                  )}
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   <span className="text-xs opacity-70 mt-1 block">
                     {message.timestamp.toLocaleTimeString()}
@@ -159,7 +203,7 @@ const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask me about style, outfits, colors..."
+            placeholder="Ask me about style, outfits, colors, or request specific recommendations..."
             className="resize-none"
             rows={2}
             disabled={isLoading}
@@ -168,7 +212,7 @@ const AIChatInterface = ({ userProfile }: AIChatInterfaceProps) => {
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
             size="sm"
-            className="px-3"
+            className="px-3 bg-purple-500 hover:bg-purple-600"
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

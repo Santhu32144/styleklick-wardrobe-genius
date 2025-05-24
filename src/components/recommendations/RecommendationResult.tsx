@@ -15,7 +15,8 @@ import {
   MapPin,
   Calendar,
   DollarSign,
-  User
+  User,
+  MessageSquare
 } from 'lucide-react';
 import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { ThemeType } from '../../pages/RecommendationsPage';
@@ -33,7 +34,8 @@ interface RecommendationResultProps {
 const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToLookbook }: RecommendationResultProps) => {
   const [aiRecommendations, setAiRecommendations] = useState<any[]>([]);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(true); // Make chat visible by default
+  const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
   const { toast } = useToast();
 
   const staticOutfits = [
@@ -124,9 +126,33 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     }
   };
 
+  const handleChatRecommendation = (recommendation: any) => {
+    // Add chat-based recommendation to the display
+    const newChatRec = {
+      id: `chat-${Date.now()}`,
+      title: "AI Chat Suggestion",
+      description: recommendation,
+      confidence: 95,
+      items: ["Based on your conversation"],
+      bodyTypeMatch: 90,
+      styleMatch: 95,
+      source: "chat"
+    };
+    
+    setChatRecommendations(prev => [newChatRec, ...prev.slice(0, 2)]); // Keep only 3 chat recommendations
+    
+    toast({
+      title: "New AI Suggestion Added",
+      description: "Your chat recommendation has been added to the suggestions!",
+    });
+  };
+
   useEffect(() => {
     loadAIRecommendations();
   }, [formData]);
+
+  // Combine AI recommendations with chat recommendations
+  const allRecommendations = [...chatRecommendations, ...aiRecommendations];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -136,35 +162,37 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           Your AI Style Recommendations
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Personalized outfit suggestions powered by AI, tailored to your style preferences and occasion.
+          Chat with our AI stylist and get personalized outfit suggestions tailored to your style preferences.
         </p>
       </div>
 
-      {/* Chat Toggle */}
-      <div className="flex justify-center mb-8">
-        <Button
-          onClick={() => setShowChat(!showChat)}
-          variant={showChat ? "default" : "outline"}
-          className="flex items-center gap-2"
-        >
-          <Bot className="h-4 w-4" />
-          {showChat ? 'Hide AI Chat' : 'Chat with AI Stylist'}
-        </Button>
+      {/* Enhanced Chat Section - Always Visible */}
+      <div className="mb-12">
+        <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full">
+            <MessageSquare className="h-5 w-5 mr-2" />
+            <h2 className="text-xl font-bold">Ask Your AI Style Expert</h2>
+          </div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto">
+          <Card className="border-2 border-purple-200 shadow-lg">
+            <CardContent className="p-0">
+              <AIChatInterface 
+                userProfile={formData} 
+                onRecommendation={handleChatRecommendation}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
-      {/* AI Chat Interface */}
-      {showChat && (
-        <div className="mb-8 max-w-4xl mx-auto">
-          <AIChatInterface userProfile={formData} />
-        </div>
-      )}
-
-      {/* AI Recommendations Section */}
+      {/* Combined AI Recommendations Section */}
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <Brain className="mr-3 h-6 w-6 text-purple-600" />
-            <h2 className="text-2xl font-bold">AI-Powered Recommendations</h2>
+            <h2 className="text-2xl font-bold">AI Style Suggestions</h2>
           </div>
           <Button 
             variant="outline" 
@@ -197,15 +225,20 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {aiRecommendations.map((recommendation) => (
+            {allRecommendations.map((recommendation) => (
               <Card key={recommendation.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
                   <div className="text-center p-4">
                     <h3 className="font-semibold text-lg mb-2">{recommendation.title}</h3>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center space-x-2">
                       <Badge className="bg-purple-600 text-white">
                         AI Match {recommendation.confidence}%
                       </Badge>
+                      {recommendation.source === 'chat' && (
+                        <Badge className="bg-green-600 text-white">
+                          Chat Suggestion
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
