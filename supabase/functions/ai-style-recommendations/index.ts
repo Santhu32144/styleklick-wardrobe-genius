@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const { formData, action = 'recommendations' } = await req.json();
-    const geminiApiKey = Deno.env.get('AIzaSyBqb-rwJiDCHg1qpmCVUwA8eqZBijlcP8A');
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
 
     if (!geminiApiKey) {
       throw new Error('Gemini API key not configured');
