@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -14,10 +13,10 @@ serve(async (req) => {
 
   try {
     const { formData, action = 'recommendations' } = await req.json();
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    const geminiApiKey = Deno.env.get('AIzaSyBqb-rwJiDCHg1qpmCVUwA8eqZBijlcP8A');
 
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+    if (!geminiApiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
     let prompt = '';
@@ -56,7 +55,9 @@ Format your response as a JSON array with this structure:
     "colorHarmony": 85,
     "styleMatch": 95
   }
-]`;
+]
+
+Please return only valid JSON without any markdown formatting or additional text.`;
     } else if (action === 'chat') {
       prompt = `You are a professional fashion stylist and personal style consultant. The user is asking: "${formData.message}"
 
@@ -69,38 +70,54 @@ Based on their style profile:
 Provide helpful, personalized fashion advice. Be conversational, encouraging, and specific with your recommendations.`;
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Using Gemini API endpoint and request format
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: 'You are a professional fashion stylist with expertise in personal styling, body types, color theory, and current fashion trends.'
-          },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: action === 'recommendations' ? 2000 : 500,
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: action === 'recommendations' ? 2000 : 500,
+        }
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
+    
+    // Extract content from Gemini response format
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!content) {
+      throw new Error('No content received from Gemini API');
+    }
 
     let result;
     if (action === 'recommendations') {
       try {
-        result = JSON.parse(content);
+        // Clean up the response to extract JSON if it's wrapped in markdown
+        let cleanContent = content.trim();
+        if (cleanContent.startsWith('```json')) {
+          cleanContent = cleanContent.replace(/```json\n?/, '').replace(/\n?```$/, '');
+        } else if (cleanContent.startsWith('```')) {
+          cleanContent = cleanContent.replace(/```\n?/, '').replace(/\n?```$/, '');
+        }
+        
+        result = JSON.parse(cleanContent);
       } catch (e) {
+        console.error('JSON parsing error:', e);
+        console.error('Content received:', content);
         // If JSON parsing fails, create a structured response
         result = [{
           id: "1",
