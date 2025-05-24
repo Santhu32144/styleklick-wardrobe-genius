@@ -15,7 +15,7 @@ serve(async (req) => {
   try {
     const { formData, action = 'recommendations' } = await req.json();
     
-    // Check for both possible API keys
+    // Check for Gemini API key first, then OpenAI as fallback
     const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -79,36 +79,45 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
     let response;
     let data;
 
-    // Try OpenAI first if available
-    if (openaiApiKey) {
-      console.log('Using OpenAI API');
-      response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Try Gemini first if available
+    if (geminiApiKey) {
+      console.log('Using Gemini API with model: gemini-1.5-flash');
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${openaiApiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'user', content: prompt }
-          ],
-          temperature: 0.7,
-          max_tokens: action === 'recommendations' ? 2000 : 500,
+          contents: [{
+            parts: [{
+              text: prompt
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: action === 'recommendations' ? 2000 : 500,
+          }
         }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('OpenAI API error:', response.status, errorText);
-        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
+        console.error('Gemini API error:', response.status, errorText);
+        
+        // If Gemini fails, try OpenAI as fallback
+        if (openaiApiKey) {
+          console.log('Gemini failed, falling back to OpenAI');
+          throw new Error('Gemini failed, trying OpenAI');
+        } else {
+          throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+        }
       }
 
       data = await response.json();
-      const content = data.choices?.[0]?.message?.content;
+      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
       
       if (!content) {
-        throw new Error('No content received from OpenAI API');
+        throw new Error('No content received from Gemini API');
       }
 
       let result;
@@ -147,38 +156,36 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
       });
     }
 
-    // Fallback to Gemini if OpenAI is not available
-    if (geminiApiKey) {
-      console.log('Using Gemini API');
-      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+    // Fallback to OpenAI if Gemini is not available
+    if (openaiApiKey) {
+      console.log('Using OpenAI API as fallback');
+      response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${openaiApiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: action === 'recommendations' ? 2000 : 500,
-          }
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: action === 'recommendations' ? 2000 : 500,
         }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Gemini API error:', response.status, errorText);
-        throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+        console.error('OpenAI API error:', response.status, errorText);
+        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
       }
 
       data = await response.json();
-      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      const content = data.choices?.[0]?.message?.content;
       
       if (!content) {
-        throw new Error('No content received from Gemini API');
+        throw new Error('No content received from OpenAI API');
       }
 
       let result;
