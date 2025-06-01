@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +26,7 @@ import { supabase } from '@/integrations/supabase/client';
 import AIChatInterface from '../ai/AIChatInterface';
 import OutfitGallery from './OutfitGallery';
 import DetailedStyleView from './DetailedStyleView';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -39,6 +41,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
   const [showChat, setShowChat] = useState(true);
   const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
+  const [selectedPosingPhoto, setSelectedPosingPhoto] = useState<any>(null);
   const { toast } = useToast();
 
   const staticOutfits = [
@@ -136,6 +139,20 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
       description: recommendation,
       confidence: 95,
       items: ["Based on your conversation"],
+      footwearOptions: [
+        {
+          type: "Recommended Shoes",
+          description: "Footwear suggestion from chat",
+          occasion: "General"
+        }
+      ],
+      posingIdeas: [
+        {
+          name: "Natural Pose",
+          description: "Confident and natural pose suggestion",
+          photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+        }
+      ],
       bodyTypeMatch: 90,
       styleMatch: 95,
       source: "chat"
@@ -167,8 +184,58 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     setSelectedRecommendation(recommendation);
   };
 
+  const handlePosingPhotoClick = (posingIdea: any, recommendation: any) => {
+    setSelectedPosingPhoto({
+      ...posingIdea,
+      recommendationId: recommendation.id,
+      recommendationTitle: recommendation.title
+    });
+  };
+
   const handleCloseDetailedView = () => {
     setSelectedRecommendation(null);
+  };
+
+  const handleClosePosingGallery = () => {
+    setSelectedPosingPhoto(null);
+  };
+
+  // Generate related gallery images for posing photo
+  const getPosingGalleryImages = (posingIdea: any) => {
+    const galleryImages = [
+      {
+        id: '1',
+        url: posingIdea.photoUrl,
+        title: posingIdea.name,
+        description: posingIdea.description
+      },
+      {
+        id: '2',
+        url: 'https://images.unsplash.com/photo-1552374196-c4e7fbd312fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+        title: 'Variation 1',
+        description: 'Similar pose with slight variation'
+      },
+      {
+        id: '3',
+        url: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+        title: 'Variation 2',
+        description: 'Alternative angle of the same pose'
+      },
+      {
+        id: '4',
+        url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+        title: 'Variation 3',
+        description: 'Dynamic version of the pose'
+      },
+      {
+        id: '5',
+        url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+        title: 'Variation 4',
+        description: 'Professional take on the pose'
+      }
+    ];
+    
+    return galleryImages;
   };
 
   useEffect(() => {
@@ -210,7 +277,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         </div>
       </div>
 
-      {/* Combined AI Recommendations Section */}
+      {/* Combined AI Recommendations Section - Limited to 3 */}
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
@@ -247,8 +314,8 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allRecommendations.map((recommendation) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {allRecommendations.slice(0, 3).map((recommendation) => (
               <Card 
                 key={recommendation.id} 
                 className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
@@ -275,19 +342,68 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     {recommendation.description}
                   </p>
                   
-                  <div className="space-y-2 mb-4">
-                    <h4 className="font-medium text-sm">Items:</h4>
-                    <ul className="text-xs text-gray-600 space-y-1">
-                      {recommendation.items.map((item: string, index: number) => (
-                        <li key={index} className="flex items-center">
-                          <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <Tabs defaultValue="items" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="items" className="text-xs">Items</TabsTrigger>
+                      <TabsTrigger value="footwear" className="text-xs">Footwear</TabsTrigger>
+                      <TabsTrigger value="poses" className="text-xs">Poses</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="items" className="mt-3">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Recommended Items:</h4>
+                        <ul className="text-xs text-gray-600 space-y-1">
+                          {recommendation.items.slice(0, 3).map((item: string, index: number) => (
+                            <li key={index} className="flex items-center">
+                              <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="footwear" className="mt-3">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Footwear Options:</h4>
+                        <div className="space-y-2">
+                          {recommendation.footwearOptions?.slice(0, 2).map((footwear: any, index: number) => (
+                            <div key={index} className="text-xs">
+                              <p className="font-medium text-purple-600">{footwear.type}</p>
+                              <p className="text-gray-600">{footwear.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="poses" className="mt-3">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Posing Ideas:</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          {recommendation.posingIdeas?.slice(0, 2).map((pose: any, index: number) => (
+                            <div 
+                              key={index} 
+                              className="cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handlePosingPhotoClick(pose, recommendation);
+                              }}
+                            >
+                              <img
+                                src={pose.photoUrl}
+                                alt={pose.name}
+                                className="w-full h-16 object-cover rounded"
+                              />
+                              <p className="text-xs mt-1 font-medium">{pose.name}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                   
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-2 mt-4">
                     <div className="flex justify-between text-xs">
                       <span>Body Type Match</span>
                       <span className="font-medium">{recommendation.bodyTypeMatch}%</span>
@@ -300,13 +416,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     </div>
                     <Progress value={recommendation.styleMatch} className="h-1" />
                   </div>
-
-                  <OutfitGallery
-                    styleId={recommendation.id}
-                    styleName={recommendation.title}
-                    onImageClick={handleOutfitImageClick}
-                    onAddToLookbook={handleAddImageToLookbook}
-                  />
                   
                   <Button 
                     className="w-full mt-4" 
@@ -351,6 +460,43 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           onClose={handleCloseDetailedView}
           onAddToLookbook={onSaveToLookbook}
         />
+      )}
+
+      {/* Posing Photo Gallery Modal */}
+      {selectedPosingPhoto && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <div>
+                <CardTitle className="text-xl">{selectedPosingPhoto.name} Gallery</CardTitle>
+                <p className="text-sm text-gray-600">From {selectedPosingPhoto.recommendationTitle}</p>
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleClosePosingGallery}>
+                ✕
+              </Button>
+            </CardHeader>
+            
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {getPosingGalleryImages(selectedPosingPhoto).map((image) => (
+                  <Card key={image.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-[3/4] overflow-hidden">
+                      <img
+                        src={image.url}
+                        alt={image.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <CardContent className="p-3">
+                      <h4 className="font-medium text-sm">{image.title}</h4>
+                      <p className="text-xs text-gray-600 mt-1">{image.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
