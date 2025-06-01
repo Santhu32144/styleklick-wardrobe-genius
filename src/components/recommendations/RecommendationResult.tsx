@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +24,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { supabase } from '@/integrations/supabase/client';
 import AIChatInterface from '../ai/AIChatInterface';
 import OutfitGallery from './OutfitGallery';
+import DetailedStyleView from './DetailedStyleView';
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -36,8 +36,9 @@ interface RecommendationResultProps {
 const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToLookbook }: RecommendationResultProps) => {
   const [aiRecommendations, setAiRecommendations] = useState<any[]>([]);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [showChat, setShowChat] = useState(true); // Make chat visible by default
+  const [showChat, setShowChat] = useState(true);
   const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
+  const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
   const { toast } = useToast();
 
   const staticOutfits = [
@@ -129,7 +130,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
   };
 
   const handleChatRecommendation = (recommendation: any) => {
-    // Add chat-based recommendation to the display
     const newChatRec = {
       id: `chat-${Date.now()}`,
       title: "AI Chat Suggestion",
@@ -141,7 +141,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
       source: "chat"
     };
     
-    setChatRecommendations(prev => [newChatRec, ...prev.slice(0, 2)]); // Keep only 3 chat recommendations
+    setChatRecommendations(prev => [newChatRec, ...prev.slice(0, 2)]);
     
     toast({
       title: "New AI Suggestion Added",
@@ -163,11 +163,18 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     });
   };
 
+  const handleRecommendationClick = (recommendation: any) => {
+    setSelectedRecommendation(recommendation);
+  };
+
+  const handleCloseDetailedView = () => {
+    setSelectedRecommendation(null);
+  };
+
   useEffect(() => {
     loadAIRecommendations();
   }, [formData]);
 
-  // Combine AI recommendations with chat recommendations
   const allRecommendations = [...chatRecommendations, ...aiRecommendations];
 
   return (
@@ -242,7 +249,11 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {allRecommendations.map((recommendation) => (
-              <Card key={recommendation.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card 
+                key={recommendation.id} 
+                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => handleRecommendationClick(recommendation)}
+              >
                 <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
                   <div className="text-center p-4">
                     <h3 className="font-semibold text-lg mb-2">{recommendation.title}</h3>
@@ -290,7 +301,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     <Progress value={recommendation.styleMatch} className="h-1" />
                   </div>
 
-                  {/* New Outfit Gallery Section */}
                   <OutfitGallery
                     styleId={recommendation.id}
                     styleName={recommendation.title}
@@ -301,7 +311,10 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                   <Button 
                     className="w-full mt-4" 
                     variant="outline"
-                    onClick={onSaveToLookbook}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSaveToLookbook();
+                    }}
                   >
                     <Heart className="h-4 w-4 mr-2" />
                     Save to Lookbook
@@ -330,6 +343,15 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           </div>
         </div>
       </div>
+
+      {/* Detailed Style View Modal */}
+      {selectedRecommendation && (
+        <DetailedStyleView
+          recommendation={selectedRecommendation}
+          onClose={handleCloseDetailedView}
+          onAddToLookbook={onSaveToLookbook}
+        />
+      )}
     </div>
   );
 };
