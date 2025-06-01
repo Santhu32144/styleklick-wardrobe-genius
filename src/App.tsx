@@ -12,6 +12,7 @@ import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
 import QuestionnairePage from "./pages/QuestionnairePage";
 import RecommendationsPage from "./pages/RecommendationsPage";
+import StyleRecommendationsPage from "./pages/StyleRecommendationsPage";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import LocationPosingSuggestionsPage from "./pages/LocationPosingSuggestionsPage";
 import OutfitCoordinationPage from "./pages/OutfitCoordinationPage";
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/questionnaire" element={<QuestionnairePage />} />
               <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="/style-recommendations" element={<StyleRecommendationsPage />} />
               <Route path="/how-it-works" element={<HowItWorksPage />} />
               <Route path="/location-posing" element={<LocationPosingSuggestionsPage />} />
               <Route path="/outfit-coordination" element={<OutfitCoordinationPage />} />
