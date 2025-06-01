@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +24,7 @@ import { ThemeType } from '../../pages/RecommendationsPage';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { supabase } from '@/integrations/supabase/client';
 import AIChatInterface from '../ai/AIChatInterface';
+import OutfitGallery from './OutfitGallery';
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -147,6 +149,20 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     });
   };
 
+  const handleOutfitImageClick = (image: any) => {
+    toast({
+      title: "Outfit Viewed",
+      description: `Viewing ${image.title} - ${image.price ? `$${image.price}` : 'Price on request'}`,
+    });
+  };
+
+  const handleAddImageToLookbook = (image: any) => {
+    toast({
+      title: "Added to Lookbook",
+      description: `${image.title} has been saved to your lookbook!`,
+    });
+  };
+
   useEffect(() => {
     loadAIRecommendations();
   }, [formData]);
@@ -260,7 +276,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     </ul>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-xs">
                       <span>Body Type Match</span>
                       <span className="font-medium">{recommendation.bodyTypeMatch}%</span>
@@ -273,6 +289,14 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     </div>
                     <Progress value={recommendation.styleMatch} className="h-1" />
                   </div>
+
+                  {/* New Outfit Gallery Section */}
+                  <OutfitGallery
+                    styleId={recommendation.id}
+                    styleName={recommendation.title}
+                    onImageClick={handleOutfitImageClick}
+                    onAddToLookbook={handleAddImageToLookbook}
+                  />
                   
                   <Button 
                     className="w-full mt-4" 
