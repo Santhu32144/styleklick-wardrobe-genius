@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Palette, Mountain, Building2 } from 'lucide-react';
-import { StyleCategory } from '../../pages/StyleRecommendationsPage';
+import { StyleCategory } from '@/types/style';
 
 interface CategorySelectorProps {
   selectedCategory: StyleCategory;

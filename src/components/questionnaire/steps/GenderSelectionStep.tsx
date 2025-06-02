@@ -5,21 +5,34 @@ import { Card, CardContent } from "@/components/ui/card";
 import { User, UserX } from 'lucide-react';
 
 interface GenderSelectionStepProps {
-  value: string;
-  onChange: (value: string) => void;
-  onNext: () => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  onNext?: () => void;
+  onSelectGender?: (gender: string) => void;
 }
 
-const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({ value, onChange, onNext }) => {
+const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({ 
+  value = '', 
+  onChange, 
+  onNext, 
+  onSelectGender 
+}) => {
   const handleGenderSelect = (gender: string) => {
-    onChange(gender);
+    if (onChange) {
+      onChange(gender);
+    }
+    if (onSelectGender) {
+      onSelectGender(gender);
+    }
   };
 
   const handleDoubleClick = (gender: string) => {
-    onChange(gender);
+    handleGenderSelect(gender);
     // Small delay to ensure state updates
     setTimeout(() => {
-      onNext();
+      if (onNext) {
+        onNext();
+      }
     }, 100);
   };
 

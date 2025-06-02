@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { OutfitSuggestion } from '../../pages/StyleRecommendationsPage';
+import { OutfitSuggestion } from '@/types/style';
 
 interface OutfitDetailedViewProps {
   outfit: OutfitSuggestion;

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StyleCategory, OutfitSuggestion } from '../../pages/StyleRecommendationsPage';
+import { StyleCategory, OutfitSuggestion } from '@/types/style';
 
 interface OutfitSuggestionsListProps {
   category: StyleCategory;
