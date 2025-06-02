@@ -103,6 +103,32 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     }
   };
 
+  // Get recommendation images based on user preferences
+  const getRecommendationImage = (recommendation: any) => {
+    const styleImages = {
+      'minimalist': 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'bohemian': 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'classic': 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'trendy': 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'edgy': 'https://images.unsplash.com/photo-1583743089695-4b816a340f82?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'casual': 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      'formal': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    };
+
+    // Try to match user's style preferences
+    if (formData.stylePreferences && formData.stylePreferences.length > 0) {
+      const firstPreference = formData.stylePreferences[0].toLowerCase();
+      return styleImages[firstPreference as keyof typeof styleImages] || styleImages.casual;
+    }
+
+    // Fallback based on recommendation source
+    if (recommendation.source === 'chat') {
+      return 'https://images.unsplash.com/photo-1552374196-c4e7fbd312fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
+    }
+
+    return styleImages.casual;
+  };
+
   const loadAIRecommendations = async () => {
     setIsLoadingAI(true);
     try {
@@ -321,10 +347,14 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                 className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
                 onClick={() => handleRecommendationClick(recommendation)}
               >
-                <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
-                  <div className="text-center p-4">
-                    <h3 className="font-semibold text-lg mb-2">{recommendation.title}</h3>
-                    <div className="flex justify-center space-x-2">
+                <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
+                  <img
+                    src={getRecommendationImage(recommendation)}
+                    alt={recommendation.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <div className="flex space-x-2">
                       <Badge className="bg-purple-600 text-white">
                         AI Match {recommendation.confidence}%
                       </Badge>
@@ -338,6 +368,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                 </div>
                 
                 <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg mb-2">{recommendation.title}</h3>
                   <p className="text-sm text-gray-600 mb-3 line-clamp-3">
                     {recommendation.description}
                   </p>
@@ -428,6 +459,17 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     <Heart className="h-4 w-4 mr-2" />
                     Save to Lookbook
                   </Button>
+                  
+                  {/* Outfit Gallery Integration */}
+                  <div className="mt-4">
+                    <OutfitGallery
+                      styleId={recommendation.id}
+                      styleName={recommendation.title}
+                      onImageClick={handleOutfitImageClick}
+                      onAddToLookbook={handleAddImageToLookbook}
+                      showTabsFirst={true}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -462,7 +504,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         />
       )}
 
-      {/* Posing Photo Gallery Modal */}
       {selectedPosingPhoto && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">

@@ -20,9 +20,10 @@ interface OutfitGalleryProps {
   styleName: string;
   onImageClick?: (image: OutfitImage) => void;
   onAddToLookbook?: (image: OutfitImage) => void;
+  showTabsFirst?: boolean;
 }
 
-const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook }: OutfitGalleryProps) => {
+const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook, showTabsFirst = false }: OutfitGalleryProps) => {
   const { toast } = useToast();
 
   // Mock data for outfit images - categorized by type
@@ -237,31 +238,46 @@ const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook }: Ou
     </ScrollArea>
   );
 
+  const TabsSection = () => (
+    <Tabs defaultValue="items" className="w-full">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="items">Items ({items.length})</TabsTrigger>
+        <TabsTrigger value="footwear">Footwear ({footwear.length})</TabsTrigger>
+        <TabsTrigger value="poses">Poses ({poses.length})</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="items" className="mt-4">
+        {renderImageGrid(items)}
+      </TabsContent>
+      
+      <TabsContent value="footwear" className="mt-4">
+        {renderImageGrid(footwear)}
+      </TabsContent>
+      
+      <TabsContent value="poses" className="mt-4">
+        {renderImageGrid(poses)}
+      </TabsContent>
+    </Tabs>
+  );
+
+  if (showTabsFirst) {
+    return (
+      <div className="mt-4">
+        <h4 className="text-sm font-medium mb-3 text-gray-700">
+          Outfit Inspiration for {styleName}
+        </h4>
+        <TabsSection />
+      </div>
+    );
+  }
+
   return (
     <div className="mt-4">
       <h4 className="text-sm font-medium mb-3 text-gray-700">
         Outfit Inspiration for {styleName}
       </h4>
       
-      <Tabs defaultValue="items" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="items">Items ({items.length})</TabsTrigger>
-          <TabsTrigger value="footwear">Footwear ({footwear.length})</TabsTrigger>
-          <TabsTrigger value="poses">Poses ({poses.length})</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="items" className="mt-4">
-          {renderImageGrid(items)}
-        </TabsContent>
-        
-        <TabsContent value="footwear" className="mt-4">
-          {renderImageGrid(footwear)}
-        </TabsContent>
-        
-        <TabsContent value="poses" className="mt-4">
-          {renderImageGrid(poses)}
-        </TabsContent>
-      </Tabs>
+      <TabsSection />
     </div>
   );
 };
