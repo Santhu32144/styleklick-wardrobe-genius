@@ -26,6 +26,13 @@ const Navbar = () => {
 
   // Get user initials for avatar
   const getInitials = () => {
+    if (profile?.name) {
+      const nameParts = profile.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+      }
+      return profile.name.substring(0, 2).toUpperCase();
+    }
     if (!user) return "?";
     const email = user.email || "";
     return email.substring(0, 2).toUpperCase();
@@ -56,7 +63,7 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarImage src="" alt={user.email || "User"} />
+                      <AvatarImage src={profile?.profile_picture || ""} alt={user.email || "User"} />
                       <AvatarFallback className="bg-styleklick-purple text-white">
                         {getInitials()}
                       </AvatarFallback>

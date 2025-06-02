@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -10,6 +9,7 @@ type UserProfile = {
   phone?: string | null;
   gender?: 'male' | 'female' | null;
   name?: string | null;
+  profile_picture?: string | null;
   created_at?: string;
   updated_at?: string;
 };
@@ -29,6 +29,44 @@ const initialState: AuthState = {
   loading: true,
   error: null,
 };
+
+// Async thunk for uploading profile picture
+export const uploadProfilePicture = createAsyncThunk(
+  'auth/uploadProfilePicture',
+  async (file: File, { getState, rejectWithValue }) => {
+    const { auth } = getState() as { auth: AuthState };
+    if (!auth.user) return rejectWithValue('User not authenticated');
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${auth.user.id}/avatar.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('profile-pictures')
+        .upload(fileName, file, { upsert: true });
+        
+      if (uploadError) throw uploadError;
+      
+      const { data } = supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(fileName);
+        
+      const profilePictureUrl = data.publicUrl;
+      
+      // Update profile with new picture URL
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_picture: profilePictureUrl })
+        .eq('id', auth.user.id);
+        
+      if (updateError) throw updateError;
+      
+      return profilePictureUrl;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 // Async thunk for signing out
 export const signOut = createAsyncThunk(
@@ -142,6 +180,14 @@ export const authSlice = createSlice({
         state.profile = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(uploadProfilePicture.fulfilled, (state, action) => {
+        if (state.profile) {
+          state.profile.profile_picture = action.payload;
+        }
+      })
+      .addCase(uploadProfilePicture.rejected, (state, action) => {
         state.error = action.payload as string;
       });
   },

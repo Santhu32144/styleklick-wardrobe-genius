@@ -1,6 +1,6 @@
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { signOut, updateProfile } from '@/store/authSlice';
+import { signOut, updateProfile, uploadProfilePicture } from '@/store/authSlice';
 import { useToast } from '@/hooks/use-toast';
 
 export const useAuth = () => {
@@ -44,6 +44,25 @@ export const useAuth = () => {
     }
   };
 
+  const handleUploadProfilePicture = async (file: File) => {
+    if (!user) return;
+    
+    try {
+      await dispatch(uploadProfilePicture(file)).unwrap();
+      toast({
+        title: "Profile picture updated",
+        description: "Your profile picture has been successfully updated.",
+      });
+    } catch (error: any) {
+      console.error('Error uploading profile picture:', error);
+      toast({
+        title: "Error uploading profile picture",
+        description: error,
+        variant: "destructive"
+      });
+    }
+  };
+
   return {
     user,
     session,
@@ -51,5 +70,6 @@ export const useAuth = () => {
     loading,
     signOut: handleSignOut,
     updateProfile: handleUpdateProfile,
+    uploadProfilePicture: handleUploadProfilePicture,
   };
 };

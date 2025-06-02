@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -14,11 +13,9 @@ import { Navigate } from 'react-router-dom';
 import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image } from 'lucide-react';
 
 const ProfilePage = () => {
-  const { user, profile, updateProfile, loading } = useAuth();
+  const { user, profile, updateProfile, uploadProfilePicture, loading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   // If not authenticated, redirect to login
   if (!loading && !user) {
@@ -46,18 +43,11 @@ const ProfilePage = () => {
     return user?.email?.split('@')[0] || "User";
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !uploadProfilePicture) return;
     
-    setAvatarFile(file);
-    
-    // Create a preview of the image
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAvatarPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    await uploadProfilePicture(file);
   };
 
   // Sample saved looks data
@@ -143,13 +133,10 @@ const ProfilePage = () => {
               <div className="flex flex-col md:flex-row md:items-end -mt-16">
                 <div className="relative">
                   <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-                    {avatarPreview ? (
-                      <AvatarImage src={avatarPreview} alt={getUserDisplayName()} />
-                    ) : (
-                      <AvatarFallback className="bg-styleklick-purple text-white text-4xl">
-                        {getInitials()}
-                      </AvatarFallback>
-                    )}
+                    <AvatarImage src={profile?.profile_picture || ""} alt={getUserDisplayName()} />
+                    <AvatarFallback className="bg-styleklick-purple text-white text-4xl">
+                      {getInitials()}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
                     <Label htmlFor="avatar-upload" className="cursor-pointer">
