@@ -63,7 +63,7 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarImage src={profile?.profile_picture || ""} alt={user.email || "User"} />
+                      <AvatarImage src={profile?.avatar_url || ""} alt={user.email || "User"} />
                       <AvatarFallback className="bg-styleklick-purple text-white">
                         {getInitials()}
                       </AvatarFallback>
