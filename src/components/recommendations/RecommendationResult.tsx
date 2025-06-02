@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +16,8 @@ import {
   Calendar,
   DollarSign,
   User,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
 import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { ThemeType } from '../../pages/RecommendationsPage';
@@ -27,6 +27,7 @@ import AIChatInterface from '../ai/AIChatInterface';
 import OutfitGallery from './OutfitGallery';
 import DetailedStyleView from './DetailedStyleView';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -42,6 +43,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
   const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
   const [selectedPosingPhoto, setSelectedPosingPhoto] = useState<any>(null);
+  const [showOutfitInspiration, setShowOutfitInspiration] = useState(false);
   const { toast } = useToast();
 
   const staticOutfits = [
@@ -208,6 +210,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
 
   const handleRecommendationClick = (recommendation: any) => {
     setSelectedRecommendation(recommendation);
+    setShowOutfitInspiration(true);
   };
 
   const handlePosingPhotoClick = (posingIdea: any, recommendation: any) => {
@@ -373,67 +376,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     {recommendation.description}
                   </p>
                   
-                  <Tabs defaultValue="items" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="items" className="text-xs">Items</TabsTrigger>
-                      <TabsTrigger value="footwear" className="text-xs">Footwear</TabsTrigger>
-                      <TabsTrigger value="poses" className="text-xs">Poses</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="items" className="mt-3">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-sm">Recommended Items:</h4>
-                        <ul className="text-xs text-gray-600 space-y-1">
-                          {recommendation.items.slice(0, 3).map((item: string, index: number) => (
-                            <li key={index} className="flex items-center">
-                              <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="footwear" className="mt-3">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-sm">Footwear Options:</h4>
-                        <div className="space-y-2">
-                          {recommendation.footwearOptions?.slice(0, 2).map((footwear: any, index: number) => (
-                            <div key={index} className="text-xs">
-                              <p className="font-medium text-purple-600">{footwear.type}</p>
-                              <p className="text-gray-600">{footwear.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="poses" className="mt-3">
-                      <div className="space-y-2">
-                        <h4 className="font-medium text-sm">Posing Ideas:</h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          {recommendation.posingIdeas?.slice(0, 2).map((pose: any, index: number) => (
-                            <div 
-                              key={index} 
-                              className="cursor-pointer hover:opacity-80 transition-opacity"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handlePosingPhotoClick(pose, recommendation);
-                              }}
-                            >
-                              <img
-                                src={pose.photoUrl}
-                                alt={pose.name}
-                                className="w-full h-16 object-cover rounded"
-                              />
-                              <p className="text-xs mt-1 font-medium">{pose.name}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                  
                   <div className="space-y-2 mt-4">
                     <div className="flex justify-between text-xs">
                       <span>Body Type Match</span>
@@ -459,17 +401,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     <Heart className="h-4 w-4 mr-2" />
                     Save to Lookbook
                   </Button>
-                  
-                  {/* Outfit Gallery Integration */}
-                  <div className="mt-4">
-                    <OutfitGallery
-                      styleId={recommendation.id}
-                      styleName={recommendation.title}
-                      onImageClick={handleOutfitImageClick}
-                      onAddToLookbook={handleAddImageToLookbook}
-                      showTabsFirst={true}
-                    />
-                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -495,8 +426,43 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         </div>
       </div>
 
+      {/* Outfit Inspiration Modal with Scrolling */}
+      {showOutfitInspiration && selectedRecommendation && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-6xl max-h-[90vh] overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <div>
+                <CardTitle className="text-xl">Outfit Inspiration for {selectedRecommendation.title}</CardTitle>
+                <p className="text-sm text-gray-600">Explore items, footwear, and poses</p>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowOutfitInspiration(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            
+            <CardContent className="p-0">
+              <ScrollArea className="h-[70vh]">
+                <div className="p-6">
+                  <OutfitGallery
+                    styleId={selectedRecommendation.id}
+                    styleName={selectedRecommendation.title}
+                    onImageClick={handleOutfitImageClick}
+                    onAddToLookbook={handleAddImageToLookbook}
+                    showTabsFirst={true}
+                  />
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Detailed Style View Modal */}
-      {selectedRecommendation && (
+      {selectedRecommendation && !showOutfitInspiration && (
         <DetailedStyleView
           recommendation={selectedRecommendation}
           onClose={handleCloseDetailedView}
@@ -513,28 +479,30 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                 <p className="text-sm text-gray-600">From {selectedPosingPhoto.recommendationTitle}</p>
               </div>
               <Button variant="ghost" size="sm" onClick={handleClosePosingGallery}>
-                ✕
+                <X className="h-4 w-4" />
               </Button>
             </CardHeader>
             
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {getPosingGalleryImages(selectedPosingPhoto).map((image) => (
-                  <Card key={image.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="aspect-[3/4] overflow-hidden">
-                      <img
-                        src={image.url}
-                        alt={image.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <CardContent className="p-3">
-                      <h4 className="font-medium text-sm">{image.title}</h4>
-                      <p className="text-xs text-gray-600 mt-1">{image.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <ScrollArea className="h-[60vh]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {getPosingGalleryImages(selectedPosingPhoto).map((image) => (
+                    <Card key={image.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="aspect-[3/4] overflow-hidden">
+                        <img
+                          src={image.url}
+                          alt={image.title}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <CardContent className="p-3">
+                        <h4 className="font-medium text-sm">{image.title}</h4>
+                        <p className="text-xs text-gray-600 mt-1">{image.description}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </ScrollArea>
             </CardContent>
           </Card>
         </div>
