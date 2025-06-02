@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -133,7 +134,7 @@ const ProfilePage = () => {
               <div className="flex flex-col md:flex-row md:items-end -mt-16">
                 <div className="relative">
                   <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-                    <AvatarImage src={profile?.profile_picture || ""} alt={getUserDisplayName()} />
+                    <AvatarImage src={profile?.avatar_url || ""} alt={getUserDisplayName()} />
                     <AvatarFallback className="bg-styleklick-purple text-white text-4xl">
                       {getInitials()}
                     </AvatarFallback>

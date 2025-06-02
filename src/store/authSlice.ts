@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -10,7 +9,6 @@ type UserProfile = {
   phone?: string | null;
   gender?: 'male' | 'female' | null;
   name?: string | null;
-  profile_picture?: string | null;
   avatar_url?: string | null;
   created_at?: string;
   updated_at?: string;
@@ -55,10 +53,10 @@ export const uploadProfilePicture = createAsyncThunk(
         
       const profilePictureUrl = data.publicUrl;
       
-      // Update profile with new picture URL
+      // Update profile with new picture URL using avatar_url field
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ profile_picture: profilePictureUrl })
+        .update({ avatar_url: profilePictureUrl })
         .eq('id', auth.user.id);
         
       if (updateError) throw updateError;
@@ -186,7 +184,7 @@ export const authSlice = createSlice({
       })
       .addCase(uploadProfilePicture.fulfilled, (state, action) => {
         if (state.profile) {
-          state.profile.profile_picture = action.payload;
+          state.profile.avatar_url = action.payload;
         }
       })
       .addCase(uploadProfilePicture.rejected, (state, action) => {
