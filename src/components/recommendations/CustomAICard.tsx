@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Heart, Camera, Sparkles } from 'lucide-react';
+import { Heart, Camera, Sparkles, Shirt, ShoppingBag } from 'lucide-react';
 
 interface CustomAICardProps {
   recommendation: any;
@@ -24,6 +24,29 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
     return styleImages.casual;
   };
 
+  const clothingSuggestions = [
+    {
+      item: "White Cotton T-Shirt",
+      description: "Classic fit, breathable fabric",
+      price: "$25-35"
+    },
+    {
+      item: "Dark Denim Jeans",
+      description: "Slim fit, versatile styling",
+      price: "$60-80"
+    },
+    {
+      item: "Light Cardigan",
+      description: "Soft knit, perfect layering piece",
+      price: "$45-65"
+    },
+    {
+      item: "Crossbody Bag",
+      description: "Hands-free convenience",
+      price: "$30-50"
+    }
+  ];
+
   const posesData = [
     {
       name: "Confident Stand",
@@ -34,11 +57,39 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
       name: "Casual Lean",
       description: "Lean against a wall or surface naturally",
       caption: "Relaxed and effortless style expression"
+    },
+    {
+      name: "Walking Pose",
+      description: "Mid-stride with natural arm movement",
+      caption: "Dynamic and lifestyle-oriented shot"
+    },
+    {
+      name: "Sitting Relaxed",
+      description: "Comfortable seated position with good posture",
+      caption: "Great for showing full outfit details"
+    }
+  ];
+
+  const shoesSuggestions = [
+    {
+      type: "White Sneakers",
+      description: "Clean, minimalist design for everyday wear",
+      occasion: "Casual daily activities"
+    },
+    {
+      type: "Canvas Shoes",
+      description: "Comfortable and breathable for warm weather",
+      occasion: "Weekend outings"
+    },
+    {
+      type: "Ankle Boots",
+      description: "Versatile boots for transitional weather",
+      occasion: "Smart casual events"
     }
   ];
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full">
       <div className="relative h-64 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
         <img
           src={getRecommendationImage(recommendation)}
@@ -65,21 +116,61 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
           {recommendation.description || "A personalized style recommendation based on your preferences and current trends."}
         </p>
         
+        {/* Clothing Suggestions Section */}
+        <div className="mb-4">
+          <h4 className="font-medium text-sm mb-2 flex items-center">
+            <Shirt className="h-4 w-4 mr-1" />
+            Clothing Items
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {clothingSuggestions.slice(0, 4).map((item, index) => (
+              <div key={index} className="bg-gray-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="h-3 w-3 text-purple-500" />
+                  <span className="font-medium text-xs">{item.item}</span>
+                </div>
+                <p className="text-xs text-gray-600">{item.description}</p>
+                <p className="text-xs text-green-600 font-medium">{item.price}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footwear Suggestions Section */}
+        <div className="mb-4">
+          <h4 className="font-medium text-sm mb-2 flex items-center">
+            <ShoppingBag className="h-4 w-4 mr-1" />
+            Footwear Options
+          </h4>
+          <div className="space-y-2">
+            {shoesSuggestions.slice(0, 3).map((shoe, index) => (
+              <div key={index} className="bg-blue-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="h-3 w-3 text-blue-500" />
+                  <span className="font-medium text-xs">{shoe.type}</span>
+                </div>
+                <p className="text-xs text-gray-600">{shoe.description}</p>
+                <p className="text-xs text-blue-600 mt-1 italic">Best for: {shoe.occasion}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
         {/* Pose Ideas Section */}
         <div className="mb-4">
           <h4 className="font-medium text-sm mb-2 flex items-center">
             <Camera className="h-4 w-4 mr-1" />
             Pose Ideas
           </h4>
-          <div className="space-y-2">
-            {posesData.slice(0, 2).map((pose, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {posesData.slice(0, 4).map((pose, index) => (
+              <div key={index} className="bg-pink-50 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles className="h-3 w-3 text-purple-500" />
+                  <Sparkles className="h-3 w-3 text-pink-500" />
                   <span className="font-medium text-xs">{pose.name}</span>
                 </div>
                 <p className="text-xs text-gray-600">{pose.description}</p>
-                <p className="text-xs text-purple-600 mt-1 italic">"{pose.caption}"</p>
+                <p className="text-xs text-pink-600 mt-1 italic">"{pose.caption}"</p>
               </div>
             ))}
           </div>

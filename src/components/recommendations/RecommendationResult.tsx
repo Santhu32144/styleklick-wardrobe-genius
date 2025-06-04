@@ -22,6 +22,7 @@ import {
 import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 import { ThemeType } from '../../pages/RecommendationsPage';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Slider } from "@/components/ui/slider";
 import { supabase } from '@/integrations/supabase/client';
 import AIChatInterface from '../ai/AIChatInterface';
 import OutfitGallery from './OutfitGallery';
@@ -40,7 +41,7 @@ interface RecommendationResultProps {
 const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToLookbook }: RecommendationResultProps) => {
   const [aiRecommendations, setAiRecommendations] = useState<any[]>([]);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [showChat, setShowChat] = useState(true);
+  const [showChat, setShowChat] = useState(false); // Changed default to false to show suggestions first
   const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
   const [selectedPosingPhoto, setSelectedPosingPhoto] = useState<any>(null);
@@ -283,95 +284,119 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           Your AI Style Recommendations
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Chat with our AI stylist and get personalized outfit suggestions tailored to your style preferences.
+          Get personalized outfit suggestions and chat with our AI stylist.
         </p>
       </div>
 
-      {/* Enhanced Chat Section - Always Visible */}
-      <div className="mb-12">
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full">
-            <MessageSquare className="h-5 w-5 mr-2" />
-            <h2 className="text-xl font-bold">Ask Your AI Style Expert</h2>
-          </div>
-        </div>
-        
-        <div className="max-w-4xl mx-auto">
-          <Card className="border-2 border-purple-200 shadow-lg">
-            <CardContent className="p-0">
-              <AIChatInterface 
-                userProfile={formData} 
-                onRecommendation={handleChatRecommendation}
+      {/* Mode Selector with Slider */}
+      <div className="mb-8">
+        <Card className="max-w-md mx-auto p-6">
+          <div className="text-center mb-4">
+            <h3 className="text-lg font-semibold mb-2">Choose Your Experience</h3>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                <span className={showChat ? 'text-gray-500' : 'text-purple-600 font-medium'}>Style Suggestions</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-blue-600" />
+                <span className={showChat ? 'text-blue-600 font-medium' : 'text-gray-500'}>AI Chat</span>
+              </div>
+            </div>
+            <div className="px-4">
+              <Slider
+                value={[showChat ? 1 : 0]}
+                onValueChange={(value) => setShowChat(value[0] === 1)}
+                max={1}
+                step={1}
+                className="w-full"
               />
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
+        </Card>
       </div>
 
-      {/* AI Recommendations Section with Card Number Selection */}
-      <div className="mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <Brain className="mr-3 h-6 w-6 text-purple-600" />
-            <h2 className="text-2xl font-bold">AI Style Suggestions</h2>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Show:</span>
-              <ToggleGroup 
-                type="single" 
-                value={numberOfCards.toString()} 
-                onValueChange={(value) => value && setNumberOfCards(parseInt(value))}
-                className="border rounded-md"
-              >
-                <ToggleGroupItem value="1" aria-label="Show 1 card">1</ToggleGroupItem>
-                <ToggleGroupItem value="2" aria-label="Show 2 cards">2</ToggleGroupItem>
-                <ToggleGroupItem value="3" aria-label="Show 3 cards">3</ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2"
-              onClick={loadAIRecommendations}
-              disabled={isLoadingAI}
-            >
-              {isLoadingAI ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="h-4 w-4" />
-                  <span>Regenerate</span>
-                </>
-              )}
-            </Button>
+      {/* Conditional Content Based on Slider */}
+      {showChat ? (
+        /* Chat Section */
+        <div className="mb-12">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-2 border-blue-200 shadow-lg">
+              <CardContent className="p-0">
+                <AIChatInterface 
+                  userProfile={formData} 
+                  onRecommendation={handleChatRecommendation}
+                />
+              </CardContent>
+            </Card>
           </div>
         </div>
-        
-        {isLoadingAI ? (
-          <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1 max-w-md mx-auto' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'} opacity-50`}>
-            {Array.from({ length: numberOfCards }, (_, index) => (
-              <div 
-                key={index} 
-                className="bg-gray-100 rounded-lg h-96 animate-pulse"
-              />
-            ))}
+      ) : (
+        /* AI Recommendations Section */
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <Brain className="mr-3 h-6 w-6 text-purple-600" />
+              <h2 className="text-2xl font-bold">AI Style Suggestions</h2>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Show:</span>
+                <ToggleGroup 
+                  type="single" 
+                  value={numberOfCards.toString()} 
+                  onValueChange={(value) => value && setNumberOfCards(parseInt(value))}
+                  className="border rounded-md"
+                >
+                  <ToggleGroupItem value="1" aria-label="Show 1 card">1</ToggleGroupItem>
+                  <ToggleGroupItem value="2" aria-label="Show 2 cards">2</ToggleGroupItem>
+                  <ToggleGroupItem value="3" aria-label="Show 3 cards">3</ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={loadAIRecommendations}
+                disabled={isLoadingAI}
+              >
+                {isLoadingAI ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4" />
+                    <span>Regenerate</span>
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
-        ) : (
-          <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1 max-w-md mx-auto' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'}`}>
-            {allRecommendations.slice(0, numberOfCards).map((recommendation) => (
-              <CustomAICard
-                key={recommendation.id}
-                recommendation={recommendation}
-                onSaveToLookbook={onSaveToLookbook}
-                onViewDetails={() => handleRecommendationClick(recommendation)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+          
+          {isLoadingAI ? (
+            <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'} opacity-50`}>
+              {Array.from({ length: numberOfCards }, (_, index) => (
+                <div 
+                  key={index} 
+                  className="bg-gray-100 rounded-lg h-96 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'}`}>
+              {allRecommendations.slice(0, numberOfCards).map((recommendation) => (
+                <CustomAICard
+                  key={recommendation.id}
+                  recommendation={recommendation}
+                  onSaveToLookbook={onSaveToLookbook}
+                  onViewDetails={() => handleRecommendationClick(recommendation)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Style Explanation */}
       <div className="bg-gray-50 rounded-lg p-6 mb-8">
@@ -385,7 +410,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
             <p><strong>Style Preferences:</strong> {formData.stylePreferences.join(', ')}</p>
           </div>
           <div>
-            <p><strong>Occasion:</strong> {formData.occasion}</p>
+            <p><strong>Season:</strong> {formData.seasonality}</p>
             <p><strong>Destination:</strong> {formData.destinationType}</p>
           </div>
         </div>
