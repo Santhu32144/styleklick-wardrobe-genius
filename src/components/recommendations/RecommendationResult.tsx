@@ -290,30 +290,31 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
 
       {/* Mode Selector with Slider */}
       <div className="mb-8">
-        <Card className="max-w-md mx-auto p-6">
-          <div className="text-center mb-4">
-            <h3 className="text-lg font-semibold mb-2">Choose Your Experience</h3>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-purple-600" />
-                <span className={showChat ? 'text-gray-500' : 'text-purple-600 font-medium'}>Style Suggestions</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-blue-600" />
-                <span className={showChat ? 'text-blue-600 font-medium' : 'text-gray-500'}>AI Chat</span>
-              </div>
-            </div>
-            <div className="px-4">
-              <Slider
-                value={[showChat ? 1 : 0]}
-                onValueChange={(value) => setShowChat(value[0] === 1)}
-                max={1}
-                step={1}
-                className="w-full"
-              />
-            </div>
+        <div className="flex items-center justify-center">
+          <div className="bg-white rounded-full p-1 shadow-lg border-2 border-gray-200">
+            <ToggleGroup 
+              type="single" 
+              value={showChat ? "chat" : "suggestions"} 
+              onValueChange={(value) => setShowChat(value === "chat")}
+              className="bg-transparent"
+            >
+              <ToggleGroupItem 
+                value="suggestions" 
+                className="px-6 py-3 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                AI Style Suggestions
+              </ToggleGroupItem>
+              <ToggleGroupItem 
+                value="chat" 
+                className="px-6 py-3 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                AI Chat Expert
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Conditional Content Based on Slider */}
