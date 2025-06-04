@@ -28,6 +28,7 @@ import OutfitGallery from './OutfitGallery';
 import DetailedStyleView from './DetailedStyleView';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import CustomAICard from './CustomAICard';
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -44,6 +45,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
   const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
   const [selectedPosingPhoto, setSelectedPosingPhoto] = useState<any>(null);
   const [showOutfitInspiration, setShowOutfitInspiration] = useState(false);
+  const [numberOfCards, setNumberOfCards] = useState(1);
   const { toast } = useToast();
 
   const staticOutfits = [
@@ -306,103 +308,66 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         </div>
       </div>
 
-      {/* Combined AI Recommendations Section - Limited to 3 */}
+      {/* AI Recommendations Section with Card Number Selection */}
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <Brain className="mr-3 h-6 w-6 text-purple-600" />
             <h2 className="text-2xl font-bold">AI Style Suggestions</h2>
           </div>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={loadAIRecommendations}
-            disabled={isLoadingAI}
-          >
-            {isLoadingAI ? (
-              <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                <span>Generating...</span>
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4" />
-                <span>Regenerate</span>
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Show:</span>
+              <ToggleGroup 
+                type="single" 
+                value={numberOfCards.toString()} 
+                onValueChange={(value) => value && setNumberOfCards(parseInt(value))}
+                className="border rounded-md"
+              >
+                <ToggleGroupItem value="1" aria-label="Show 1 card">1</ToggleGroupItem>
+                <ToggleGroupItem value="2" aria-label="Show 2 cards">2</ToggleGroupItem>
+                <ToggleGroupItem value="3" aria-label="Show 3 cards">3</ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2"
+              onClick={loadAIRecommendations}
+              disabled={isLoadingAI}
+            >
+              {isLoadingAI ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <span>Generating...</span>
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-4 w-4" />
+                  <span>Regenerate</span>
+                </>
+              )}
+            </Button>
+          </div>
         </div>
         
         {isLoadingAI ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-50">
-            {[1, 2, 3].map((placeholder) => (
+          <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1 max-w-md mx-auto' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'} opacity-50`}>
+            {Array.from({ length: numberOfCards }, (_, index) => (
               <div 
-                key={placeholder} 
+                key={index} 
                 className="bg-gray-100 rounded-lg h-96 animate-pulse"
               />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {allRecommendations.slice(0, 3).map((recommendation) => (
-              <Card 
-                key={recommendation.id} 
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => handleRecommendationClick(recommendation)}
-              >
-                <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
-                  <img
-                    src={getRecommendationImage(recommendation)}
-                    alt={recommendation.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <div className="flex space-x-2">
-                      <Badge className="bg-purple-600 text-white">
-                        AI Match {recommendation.confidence}%
-                      </Badge>
-                      {recommendation.source === 'chat' && (
-                        <Badge className="bg-green-600 text-white">
-                          Chat Suggestion
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{recommendation.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-3">
-                    {recommendation.description}
-                  </p>
-                  
-                  <div className="space-y-2 mt-4">
-                    <div className="flex justify-between text-xs">
-                      <span>Body Type Match</span>
-                      <span className="font-medium">{recommendation.bodyTypeMatch}%</span>
-                    </div>
-                    <Progress value={recommendation.bodyTypeMatch} className="h-1" />
-                    
-                    <div className="flex justify-between text-xs">
-                      <span>Style Match</span>
-                      <span className="font-medium">{recommendation.styleMatch}%</span>
-                    </div>
-                    <Progress value={recommendation.styleMatch} className="h-1" />
-                  </div>
-                  
-                  <Button 
-                    className="w-full mt-4" 
-                    variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSaveToLookbook();
-                    }}
-                  >
-                    <Heart className="h-4 w-4 mr-2" />
-                    Save to Lookbook
-                  </Button>
-                </CardContent>
-              </Card>
+          <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1 max-w-md mx-auto' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'}`}>
+            {allRecommendations.slice(0, numberOfCards).map((recommendation) => (
+              <CustomAICard
+                key={recommendation.id}
+                recommendation={recommendation}
+                onSaveToLookbook={onSaveToLookbook}
+                onViewDetails={() => handleRecommendationClick(recommendation)}
+              />
             ))}
           </div>
         )}

@@ -3,7 +3,7 @@ import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
 import { Card } from "@/components/ui/card";
 import { 
-  Shirt, Sparkles, Leaf, Clock, Palette, Camera, HeartHandshake 
+  Shirt, Palette, Camera, Zap
 } from 'lucide-react';
 
 interface StylePreferencesStepProps {
@@ -25,39 +25,15 @@ const styleOptions = [
     image: 'https://images.unsplash.com/photo-1486894491016-3bcf6c51a462?auto=format&fit=crop&w=800&q=80'
   },
   { 
-    id: 'bohemian', 
-    label: 'Bohemian', 
-    icon: Leaf,
-    image: 'https://images.unsplash.com/photo-1564039968505-e5a47dcd4bf0?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'vintage', 
-    label: 'Vintage', 
-    icon: Clock,
-    image: 'https://images.unsplash.com/photo-1566078121739-9f548c461f31?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
     id: 'streetwear', 
     label: 'Streetwear', 
     icon: Camera,
     image: 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=800&q=80'
   },
   { 
-    id: 'classic', 
-    label: 'Classic', 
-    icon: HeartHandshake,
-    image: 'https://images.unsplash.com/photo-1594741158703-b5dada79d851?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'glamorous', 
-    label: 'Glamorous', 
-    icon: Sparkles,
-    image: 'https://images.unsplash.com/photo-1599447292180-45fd84092ef4?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
     id: 'sporty', 
     label: 'Sporty', 
-    icon: Shirt,
+    icon: Zap,
     image: 'https://images.unsplash.com/photo-1593520126198-99a1272190e4?auto=format&fit=crop&w=800&q=80'
   }
 ];
@@ -80,10 +56,10 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
       <div>
         <h3 className="text-xl font-semibold mb-4">Your Style Preferences</h3>
         <p className="text-gray-600 mb-6">
-          Select the styles that resonate with you. Choose 2-3 styles for best results.
+          Select the styles that resonate with you. Choose 1-2 styles for best results.
         </p>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {styleOptions.map((style) => {
             const Icon = style.icon;
             const isSelected = formData.stylePreferences.includes(style.id);

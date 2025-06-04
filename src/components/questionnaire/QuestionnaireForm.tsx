@@ -24,7 +24,7 @@ export interface QuestionnaireData {
 const steps = [
   { name: 'About You', description: 'Tell us a bit about yourself' },
   { name: 'Style', description: 'Your style preferences and tastes' },
-  { name: 'Occasion', description: 'What you\'re dressing for' },
+  { name: 'Season', description: 'The season you\'re dressing for' },
   { name: 'Destination', description: 'The type of place you\'ll be' }
 ];
 
@@ -73,7 +73,7 @@ const QuestionnaireForm = () => {
       case 1:
         return formData.stylePreferences.length > 0;
       case 2:
-        return formData.occasion !== '' && formData.seasonality !== '';
+        return formData.seasonality !== '';
       case 3:
         return formData.destinationType !== '';
       default:

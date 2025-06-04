@@ -3,7 +3,6 @@ import React from 'react';
 import { QuestionnaireData } from '../QuestionnaireForm';
 import { Card } from "@/components/ui/card";
 import { 
-  Sparkles, Briefcase, Backpack, Umbrella, Calendar, 
   Snowflake, Sun, Leaf, Flower
 } from 'lucide-react';
 
@@ -11,39 +10,6 @@ interface OccasionStepProps {
   formData: QuestionnaireData;
   updateFormData: (data: Partial<QuestionnaireData>) => void;
 }
-
-const occasions = [
-  { 
-    id: 'wedding', 
-    label: 'Wedding', 
-    icon: Sparkles,
-    image: 'https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'business', 
-    label: 'Business', 
-    icon: Briefcase,
-    image: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'adventure', 
-    label: 'Adventure', 
-    icon: Backpack,
-    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'beach-party', 
-    label: 'Beach Party', 
-    icon: Umbrella,
-    image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=800&q=80'
-  },
-  { 
-    id: 'work-trip', 
-    label: 'Work Trip', 
-    icon: Calendar,
-    image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80'
-  }
-];
 
 const seasons = [
   { 
@@ -73,62 +39,22 @@ const seasons = [
 ];
 
 const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData }) => {
+  // Set a default occasion value since we're removing the occasion selection
+  React.useEffect(() => {
+    if (!formData.occasion) {
+      updateFormData({ occasion: 'casual' });
+    }
+  }, [formData.occasion, updateFormData]);
+
   return (
     <div className="space-y-8">
-      <div>
-        <h3 className="text-xl font-semibold mb-4">What's the Occasion?</h3>
-        <p className="text-gray-600 mb-6">
-          Select the type of event or occasion you're dressing for.
-        </p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {occasions.map((occasion) => {
-            const Icon = occasion.icon;
-            const isSelected = formData.occasion === occasion.id;
-            
-            return (
-              <Card 
-                key={occasion.id}
-                onClick={() => updateFormData({ occasion: occasion.id })}
-                className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
-                  isSelected ? 'ring-2 ring-styleklick-purple' : ''
-                }`}
-              >
-                <div className="relative h-40 overflow-hidden">
-                  <img 
-                    src={occasion.image} 
-                    alt={occasion.label} 
-                    className="w-full h-full object-cover transition-transform hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <div className="flex items-center gap-2">
-                      <Icon size={20} />
-                      <h4 className="text-lg font-semibold">{occasion.label}</h4>
-                    </div>
-                  </div>
-                  
-                  {isSelected && (
-                    <div className="absolute top-2 right-2 bg-styleklick-purple text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
       <div>
         <h3 className="text-xl font-semibold mb-4">What Season?</h3>
         <p className="text-gray-600 mb-6">
           Select the season you'll be dressing for.
         </p>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {seasons.map((season) => {
             const Icon = season.icon;
             const isSelected = formData.seasonality === season.id;
@@ -141,17 +67,17 @@ const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData })
                   isSelected ? 'ring-2 ring-styleklick-purple' : ''
                 }`}
               >
-                <div className="relative h-32 overflow-hidden">
+                <div className="relative h-40 overflow-hidden">
                   <img 
                     src={season.image} 
                     alt={season.label} 
                     className="w-full h-full object-cover transition-transform hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                     <div className="flex items-center gap-2">
-                      <Icon size={16} />
-                      <h4 className="font-medium">{season.label}</h4>
+                      <Icon size={20} />
+                      <h4 className="text-lg font-semibold">{season.label}</h4>
                     </div>
                   </div>
                   
