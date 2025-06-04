@@ -4,7 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Heart, Camera, Sparkles } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import OutfitSuggestions from './OutfitSuggestions';
+import PoseIdeas from './PoseIdeas';
 
 interface CustomAICardProps {
   recommendation: any;
@@ -84,40 +86,9 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
           {recommendation.description || "A personalized style recommendation based on your preferences and current trends."}
         </p>
         
-        {/* AI Outfit Suggestions in Rows */}
-        <div className="mb-4">
-          <h4 className="font-medium text-sm mb-3 flex items-center">
-            <Sparkles className="h-4 w-4 mr-1" />
-            AI Outfit Suggestions
-          </h4>
-          <div className="space-y-3">
-            {outfitSuggestions.map((suggestion, index) => (
-              <div key={index} className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 border-l-4 border-purple-300">
-                <p className="text-sm text-gray-700 leading-relaxed">{suggestion}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <OutfitSuggestions suggestions={outfitSuggestions} />
         
-        {/* AI Generated Pose Ideas Section */}
-        <div className="mb-4">
-          <h4 className="font-medium text-sm mb-2 flex items-center">
-            <Camera className="h-4 w-4 mr-1" />
-            AI Pose Ideas
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {aiGeneratedPoses.map((pose, index) => (
-              <div key={index} className="bg-pink-50 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <Sparkles className="h-3 w-3 text-pink-500" />
-                  <span className="font-medium text-xs">{pose.name}</span>
-                </div>
-                <p className="text-xs text-gray-600">{pose.description}</p>
-                <p className="text-xs text-pink-600 mt-1 italic">"{pose.caption}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PoseIdeas poses={aiGeneratedPoses} />
         
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-xs">
