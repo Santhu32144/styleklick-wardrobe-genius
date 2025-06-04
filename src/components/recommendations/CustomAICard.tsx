@@ -26,16 +26,16 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
     return styleImages.casual;
   };
 
-  // AI-generated outfit suggestions in row format
-  const outfitSuggestions = [
+  // Use AI-generated suggestions from the recommendation data
+  const outfitSuggestions = recommendation.outfitSuggestions || [
     "Wear a classic white cotton t-shirt with dark blue jeans and finish with a denim jacket for a timeless casual look",
     "Try a soft knit sweater paired with black leggings and layer with a long cardigan for comfort and style",
     "Go for a striped long-sleeve shirt with khaki chinos and add a baseball cap for a relaxed weekend vibe",
     "Combine a fitted blouse with high-waisted trousers and accessorize with a statement necklace for elevated casual"
   ];
 
-  // AI-generated pose ideas
-  const aiGeneratedPoses = [
+  // Use AI-generated pose ideas from the recommendation data
+  const aiGeneratedPoses = recommendation.poseIdeas || [
     {
       name: "Natural Confidence",
       description: "Stand with one hand casually in your pocket, slight smile, looking directly at camera",

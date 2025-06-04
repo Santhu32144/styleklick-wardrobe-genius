@@ -31,7 +31,7 @@ serve(async (req) => {
     let prompt = '';
     
     if (action === 'recommendations') {
-      prompt = `You are a professional fashion stylist. Based on the following user preferences, provide exactly 3 specific outfit recommendations with detailed explanations:
+      prompt = `You are a professional fashion stylist. Based on the following user preferences, provide exactly 3 UNIQUE and DIFFERENT outfit recommendations with detailed explanations. Each recommendation should be COMPLETELY DIFFERENT in style, vibe, and approach:
 
 User Preferences:
 - Gender: ${formData.gender}
@@ -40,53 +40,142 @@ User Preferences:
 - Seasonality: ${formData.seasonality || 'Not specified'}
 - Destination: ${formData.destinationType}
 
+IMPORTANT: Make each recommendation COMPLETELY UNIQUE:
+- Recommendation 1: Casual/Relaxed style with comfortable pieces
+- Recommendation 2: Smart/Elevated style with sophisticated pieces  
+- Recommendation 3: Trendy/Fashion-forward style with statement pieces
+
 For each recommendation, provide:
-1. A descriptive outfit title
-2. Detailed clothing items and colors
-3. Footwear options (3-4 different shoe types that work with the outfit)
-4. Posing ideas (3-4 specific pose suggestions with descriptions)
-5. Why this outfit works for their preferences and occasion
-6. Styling tips
-7. A confidence score (1-100) for how well it matches their preferences
+1. A descriptive outfit title that reflects the unique style
+2. 4 UNIQUE outfit suggestions in this exact format: "Wear a [specific top] with [specific bottom] and [specific accessory/layer] for [specific vibe/occasion]"
+3. 4 UNIQUE pose ideas with specific names, descriptions, and caption suggestions
+4. Why this outfit works for their preferences and occasion
+5. Styling tips specific to this style approach
+6. A confidence score (85-95) for how well it matches their preferences
+
+MAKE SURE ALL OUTFIT SUGGESTIONS AND POSE IDEAS ARE COMPLETELY DIFFERENT ACROSS ALL 3 RECOMMENDATIONS.
 
 Format your response as a JSON array with this structure:
 [
   {
     "id": "1",
-    "title": "Outfit Title",
-    "description": "Detailed outfit description",
-    "items": ["item1", "item2", "item3"],
-    "footwearOptions": [
+    "title": "Casual Comfort Master",
+    "description": "Effortless everyday style that prioritizes comfort without sacrificing style",
+    "outfitSuggestions": [
+      "Wear a soft cotton oversized hoodie with high-waisted joggers and chunky sneakers for ultimate weekend comfort",
+      "Try a relaxed graphic tee with denim shorts and canvas sneakers for a laid-back summer vibe",
+      "Go for a cozy knit sweater with leggings and slip-on shoes for casual errands and coffee dates",
+      "Combine a comfortable tank top with wide-leg pants and sandals for effortless warm-weather style"
+    ],
+    "poseIdeas": [
       {
-        "type": "Sneakers",
-        "description": "White leather sneakers for casual comfort",
-        "occasion": "Everyday wear"
+        "name": "Relaxed Lean",
+        "description": "Lean casually against a wall with hands in pockets, gentle smile, showcasing the comfortable fit",
+        "caption": "Comfort never looked so good"
       },
       {
-        "type": "Ankle Boots",
-        "description": "Brown leather ankle boots for elevated style",
-        "occasion": "Smart casual events"
-      }
-    ],
-    "posingIdeas": [
-      {
-        "name": "Casual Lean",
-        "description": "Lean against a wall with one foot up, hands in pockets for a relaxed vibe",
-        "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+        "name": "Coffee Shop Casual",
+        "description": "Sitting cross-legged with a warm drink, natural laugh, showing the cozy vibe",
+        "caption": "Weekend vibes in full effect"
       },
       {
-        "name": "Walking Shot",
-        "description": "Mid-stride walking pose with a slight smile, looking ahead confidently",
-        "photoUrl": "https://images.unsplash.com/photo-1552374196-c4e7fbd312fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+        "name": "Walking Confidence",
+        "description": "Mid-stride with arms swinging naturally, looking ahead with purpose",
+        "caption": "Comfortable confidence in motion"
+      },
+      {
+        "name": "Cozy Moment",
+        "description": "Sitting on steps or bench, knees drawn up slightly, peaceful expression",
+        "caption": "Finding comfort in every moment"
       }
     ],
-    "explanation": "Why this works for the user",
-    "stylingTips": "Additional styling advice",
-    "confidence": 95,
-    "occasion": "appropriate occasion",
-    "bodyTypeMatch": 90,
+    "explanation": "Perfect for your preference for comfort and casual occasions",
+    "stylingTips": "Layer pieces for versatility and choose soft, breathable fabrics",
+    "confidence": 90,
+    "occasion": formData.occasion || "Casual",
+    "bodyTypeMatch": 88,
     "colorHarmony": 85,
+    "styleMatch": 92
+  },
+  {
+    "id": "2", 
+    "title": "Smart Sophistication",
+    "description": "Elevated pieces that transition seamlessly from work to social events",
+    "outfitSuggestions": [
+      "Wear a tailored blazer with straight-leg trousers and pointed-toe flats for professional polish",
+      "Try a silk blouse with midi skirt and heeled ankle boots for sophisticated elegance",
+      "Go for a structured cardigan with slim-fit pants and leather loafers for refined casual",
+      "Combine a button-down shirt with culottes and block heel sandals for modern sophistication"
+    ],
+    "poseIdeas": [
+      {
+        "name": "Professional Power",
+        "description": "Standing tall with hands on hips, confident expression, showcasing the structured silhouette",
+        "caption": "Sophisticated style meets personal power"
+      },
+      {
+        "name": "Elegant Grace",
+        "description": "Walking with purposeful stride, one hand adjusting accessories, poised demeanor",
+        "caption": "Elegance in every step"
+      },
+      {
+        "name": "Thoughtful Pose",
+        "description": "Sitting with legs crossed, hand touching chin thoughtfully, refined posture",
+        "caption": "Smart style for thoughtful moments"
+      },
+      {
+        "name": "Conference Ready",
+        "description": "Standing with arms crossed loosely, warm professional smile, approachable confidence",
+        "caption": "Ready to take on the world"
+      }
+    ],
+    "explanation": "Ideal for your professional needs while maintaining personal style",
+    "stylingTips": "Invest in quality basics and add personality through accessories",
+    "confidence": 93,
+    "occasion": "Professional/Smart Casual",
+    "bodyTypeMatch": 91,
+    "colorHarmony": 89,
     "styleMatch": 95
+  },
+  {
+    "id": "3",
+    "title": "Trendy Statement Maker", 
+    "description": "Fashion-forward pieces that showcase your unique style and current trends",
+    "outfitSuggestions": [
+      "Wear an oversized denim jacket with a crop top and high-waisted wide-leg jeans for modern street style",
+      "Try a statement print dress with combat boots and layered jewelry for edgy femininity",
+      "Go for a mesh or sheer top with bralette underneath and leather pants for bold confidence",
+      "Combine a vintage band tee with plaid mini skirt and platform sneakers for retro-modern fusion"
+    ],
+    "poseIdeas": [
+      {
+        "name": "Street Style Star",
+        "description": "Dynamic pose with one leg forward, hands adjusting jacket, confident city swagger",
+        "caption": "Making statements on every street"
+      },
+      {
+        "name": "Artistic Expression",
+        "description": "Sitting on urban steps, creative pose with interesting angles, showcasing the outfit details",
+        "caption": "Fashion is my art form"
+      },
+      {
+        "name": "Bold Confidence",
+        "description": "Standing with arms akimbo, direct gaze at camera, unapologetic confidence",
+        "caption": "Owning my unique style"
+      },
+      {
+        "name": "Trend Setter",
+        "description": "Mid-laugh with head thrown back slightly, natural joy, showing personality through style",
+        "caption": "Setting trends, not following them"
+      }
+    ],
+    "explanation": "Perfect for expressing your unique personality and staying fashion-forward",
+    "stylingTips": "Mix textures and patterns boldly, and don't be afraid to make a statement",
+    "confidence": 87,
+    "occasion": "Creative/Social",
+    "bodyTypeMatch": 86,
+    "colorHarmony": 82,
+    "styleMatch": 89
   }
 ]
 
@@ -120,8 +209,8 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
             }]
           }],
           generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: action === 'recommendations' ? 3000 : 500,
+            temperature: 0.8,
+            maxOutputTokens: action === 'recommendations' ? 4000 : 500,
           }
         }),
       });
@@ -164,138 +253,127 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
           }
         } catch (e) {
           console.error('JSON parsing error:', e);
-          // Fallback with structured data for 3 recommendations
+          // Fallback with unique structured data for 3 recommendations
           result = [
             {
               id: "1",
-              title: "Casual Elegance",
-              description: "A balanced outfit that flatters your body shape while providing comfort and style",
-              items: ["Fitted white blouse", "High-waisted dark wash jeans", "Tan leather ankle boots", "Oversized beige cardigan", "Gold minimalist necklace"],
-              footwearOptions: [
+              title: "Casual Day Explorer",
+              description: "Comfortable and stylish outfits perfect for everyday adventures",
+              outfitSuggestions: [
+                "Wear a soft cotton t-shirt with comfortable jeans and white sneakers for effortless style",
+                "Try a cozy sweater with leggings and slip-on shoes for relaxed comfort",
+                "Go for a casual button-up with shorts and canvas shoes for summer ease",
+                "Combine a tank top with palazzo pants and sandals for breezy elegance"
+              ],
+              poseIdeas: [
                 {
-                  type: "Ankle Boots",
-                  description: "Comfortable 2-inch heel that adds height while remaining practical",
-                  occasion: "Everyday wear"
+                  name: "Natural Explorer",
+                  description: "Walking with a gentle smile, hands in pockets, showcasing the comfortable outfit",
+                  caption: "Exploring life in comfort and style"
                 },
                 {
-                  type: "White Sneakers",
-                  description: "Clean white leather sneakers for a more casual approach",
-                  occasion: "Weekend activities"
+                  name: "Relaxed Moment",
+                  description: "Sitting casually with legs crossed, peaceful expression",
+                  caption: "Finding beauty in simple moments"
                 },
                 {
-                  type: "Loafers",
-                  description: "Brown leather loafers for a polished yet comfortable look",
-                  occasion: "Work or meetings"
+                  name: "Confident Stride",
+                  description: "Mid-walk with natural arm movement, looking ahead optimistically",
+                  caption: "Every step tells a story"
+                },
+                {
+                  name: "Casual Lean",
+                  description: "Leaning against a wall casually, relaxed and approachable demeanor",
+                  caption: "Effortless style meets genuine comfort"
                 }
               ],
-              posingIdeas: [
-                {
-                  name: "Simple Elegance",
-                  description: "Stand with hands casually in pockets, leaning slightly for a relaxed yet confident look",
-                  photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                },
-                {
-                  name: "Casual Yet Put-Together",
-                  description: "Crossed arms with a gentle smile, showcasing the layered cardigan",
-                  photoUrl: "https://images.unsplash.com/photo-1552374196-c4e7fbd312fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                },
-                {
-                  name: "Finding Balance",
-                  description: "Walking pose with one hand adjusting the necklace, natural movement",
-                  photoUrl: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                }
-              ],
-              explanation: "Personalized recommendation from AI stylist",
-              stylingTips: "Follow the detailed advice provided",
-              confidence: 85,
-              occasion: formData.occasion || "General",
-              bodyTypeMatch: 85,
-              colorHarmony: 80,
-              styleMatch: 90
+              explanation: "Perfect for your everyday lifestyle with comfort as priority",
+              stylingTips: "Choose breathable fabrics and versatile pieces that mix and match easily",
+              confidence: 88,
+              occasion: formData.occasion || "Casual",
+              bodyTypeMatch: 90,
+              colorHarmony: 85,
+              styleMatch: 92
             },
             {
               id: "2",
-              title: "Urban Professional",
-              description: "Modern and sophisticated look perfect for city life and professional settings",
-              items: ["Crisp white button-down", "Tailored navy blazer", "Dark skinny jeans", "Pointed toe flats", "Structured handbag"],
-              footwearOptions: [
+              title: "Modern Professional",
+              description: "Sophisticated looks that command respect while expressing personal style",
+              outfitSuggestions: [
+                "Wear a tailored blazer with dress pants and pointed flats for boardroom confidence",
+                "Try a silk blouse with pencil skirt and heeled pumps for executive elegance",
+                "Go for a structured dress with a belt and ankle boots for versatile professionalism",
+                "Combine a crisp shirt with wide-leg trousers and oxford shoes for contemporary polish"
+              ],
+              poseIdeas: [
                 {
-                  type: "Pointed Flats",
-                  description: "Sleek black pointed toe flats for all-day comfort",
-                  occasion: "Office wear"
+                  name: "Executive Presence",
+                  description: "Standing with shoulders back, hands clasped in front, confident eye contact",
+                  caption: "Leading with style and substance"
                 },
                 {
-                  type: "Block Heels",
-                  description: "Low block heel pumps for added height and confidence",
-                  occasion: "Meetings or presentations"
+                  name: "Thoughtful Leader",
+                  description: "Sitting at desk with fingers steepled, contemplative yet approachable",
+                  caption: "Strategic thinking meets personal style"
                 },
                 {
-                  type: "Chelsea Boots",
-                  description: "Black leather Chelsea boots for an edgier professional look",
-                  occasion: "Creative workplace"
+                  name: "Professional Grace",
+                  description: "Walking with purpose, carrying a briefcase, elegant stride",
+                  caption: "Grace under pressure, style under scrutiny"
+                },
+                {
+                  name: "Confident Communicator",
+                  description: "Standing with one hand gesturing naturally, engaging smile",
+                  caption: "Speaking with style and conviction"
                 }
               ],
-              posingIdeas: [
-                {
-                  name: "Professional Confidence",
-                  description: "Standing tall with hands on hips, showcasing the blazer silhouette",
-                  photoUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                },
-                {
-                  name: "City Walker",
-                  description: "Mid-stride with handbag, looking ahead with purpose and determination",
-                  photoUrl: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                }
-              ],
-              explanation: "Perfect blend of professional and trendy",
-              stylingTips: "Roll up blazer sleeves for a more relaxed look",
-              confidence: 92,
+              explanation: "Ideal for professional settings while maintaining your unique aesthetic",
+              stylingTips: "Invest in quality basics and add personality through subtle accessories",
+              confidence: 94,
               occasion: "Professional",
-              bodyTypeMatch: 88,
-              colorHarmony: 90,
-              styleMatch: 95
+              bodyTypeMatch: 92,
+              colorHarmony: 91,
+              styleMatch: 96
             },
             {
               id: "3",
-              title: "Weekend Warrior",
-              description: "Comfortable yet stylish outfit perfect for weekend adventures and casual outings",
-              items: ["Soft cotton t-shirt", "Denim jacket", "Comfortable leggings", "Canvas sneakers", "Crossbody bag"],
-              footwearOptions: [
+              title: "Creative Trendsetter",
+              description: "Bold and artistic outfits that showcase your unique personality and creativity",
+              outfitSuggestions: [
+                "Wear a vintage band tee with layered skirts and combat boots for artistic rebellion",
+                "Try an oversized blazer with bike shorts and platform sneakers for modern edge",
+                "Go for a mesh top with high-waisted jeans and statement jewelry for bold confidence",
+                "Combine a colorful kimono with black basics and strappy sandals for bohemian chic"
+              ],
+              poseIdeas: [
                 {
-                  type: "Canvas Sneakers",
-                  description: "Classic white canvas sneakers for maximum comfort",
-                  occasion: "Casual outings"
+                  name: "Artistic Vision",
+                  description: "Sitting cross-legged with hands creating interesting shapes, creative energy",
+                  caption: "Art is my language, style is my voice"
                 },
                 {
-                  type: "Athletic Sneakers",
-                  description: "Supportive running shoes for active weekends",
-                  occasion: "Exercise or long walks"
+                  name: "Urban Artist",
+                  description: "Standing against graffiti wall, one foot up, edgy confidence",
+                  caption: "Creating beauty in unexpected places"
                 },
                 {
-                  type: "Slip-on Shoes",
-                  description: "Easy slip-on sneakers for quick errands",
-                  occasion: "Running errands"
+                  name: "Expressive Soul",
+                  description: "Dancing or moving with arms outstretched, joyful expression",
+                  caption: "Life is my canvas, style is my brush"
+                },
+                {
+                  name: "Rebel Grace",
+                  description: "Sitting on steps with interesting angles, showcasing unique outfit details",
+                  caption: "Breaking rules with style and grace"
                 }
               ],
-              posingIdeas: [
-                {
-                  name: "Relaxed Adventure",
-                  description: "Sitting casually with one leg up, hands behind head, carefree expression",
-                  photoUrl: "https://images.unsplash.com/photo-1571945153237-4929e783af4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                },
-                {
-                  name: "Active Lifestyle",
-                  description: "Dynamic pose mid-movement, perhaps adjusting the crossbody bag",
-                  photoUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                }
-              ],
-              explanation: "Versatile and comfortable for any weekend activity",
-              stylingTips: "Layer with the denim jacket for changing weather",
-              confidence: 87,
-              occasion: "Casual",
-              bodyTypeMatch: 92,
-              colorHarmony: 85,
-              styleMatch: 88
+              explanation: "Perfect for expressing your creativity and standing out from the crowd",
+              stylingTips: "Mix unexpected textures and don't be afraid to experiment with proportions",
+              confidence: 85,
+              occasion: "Creative/Artistic",
+              bodyTypeMatch: 87,
+              colorHarmony: 83,
+              styleMatch: 89
             }
           ];
         }
@@ -322,8 +400,8 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
           messages: [
             { role: 'user', content: prompt }
           ],
-          temperature: 0.7,
-          max_tokens: action === 'recommendations' ? 3000 : 500,
+          temperature: 0.8,
+          max_tokens: action === 'recommendations' ? 4000 : 500,
         }),
       });
 
@@ -362,19 +440,12 @@ Provide helpful, personalized fashion advice. Be conversational, encouraging, an
             id: "1",
             title: "AI Style Recommendation",
             description: content,
-            items: ["Curated outfit based on your preferences"],
-            footwearOptions: [
-              {
-                type: "Versatile Shoes",
-                description: "Recommended footwear for this style",
-                occasion: "General wear"
-              }
-            ],
-            posingIdeas: [
+            outfitSuggestions: ["Curated outfit based on your preferences"],
+            poseIdeas: [
               {
                 name: "Classic Pose",
                 description: "Natural and confident pose suggestion",
-                photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                caption: "Style with confidence"
               }
             ],
             explanation: "Personalized recommendation from AI stylist",
