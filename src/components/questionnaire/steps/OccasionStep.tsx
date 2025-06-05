@@ -96,7 +96,7 @@ const OccasionStep: React.FC<OccasionStepProps> = ({
               <p className="text-xs text-gray-500 text-center">{option.description}</p>
               {formData.occasion === option.value && (
                 <Badge className="mt-2 bg-styleklick-purple text-xs">
-                  Selected - Double click to continue
+                  Selected
                 </Badge>
               )}
             </CardContent>

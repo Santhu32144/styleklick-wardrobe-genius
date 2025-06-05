@@ -325,7 +325,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
             <Card className="border-2 border-blue-200 shadow-lg">
               <CardContent className="p-0">
                 <AIChatInterface 
-                  userProfile={formData} 
+                  formData={formData} 
                   onRecommendation={handleChatRecommendation}
                 />
               </CardContent>

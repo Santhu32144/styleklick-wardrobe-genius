@@ -48,11 +48,11 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({
   onNext 
 }) => {
   const handleStyleSelect = (style: StylePreference) => {
-    updateFormData({ stylePreference: style });
+    updateFormData({ stylePreference: style, stylePreferences: [style] });
   };
 
   const handleDoubleClick = (style: StylePreference) => {
-    updateFormData({ stylePreference: style });
+    updateFormData({ stylePreference: style, stylePreferences: [style] });
     setTimeout(onNext, 100);
   };
 
@@ -68,7 +68,7 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({
           <Card 
             key={option.value}
             className={`cursor-pointer transition-all duration-200 hover:shadow-md overflow-hidden ${
-              formData.stylePreference === option.value ? 'ring-2 ring-styleklick-purple border-styleklick-purple' : 'border-gray-200'
+              (formData.stylePreference === option.value || formData.stylePreferences.includes(option.value)) ? 'ring-2 ring-styleklick-purple border-styleklick-purple' : 'border-gray-200'
             }`}
             onClick={() => handleStyleSelect(option.value)}
             onDoubleClick={() => handleDoubleClick(option.value)}
@@ -83,9 +83,9 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({
             <CardContent className="p-4">
               <h4 className="font-medium text-lg mb-2">{option.label}</h4>
               <p className="text-sm text-gray-500 mb-3">{option.description}</p>
-              {formData.stylePreference === option.value && (
+              {(formData.stylePreference === option.value || formData.stylePreferences.includes(option.value)) && (
                 <Badge className="bg-styleklick-purple">
-                  Selected - Double click to continue
+                  Selected
                 </Badge>
               )}
             </CardContent>
