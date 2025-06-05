@@ -1,80 +1,85 @@
 
 import React from 'react';
-import { QuestionnaireData } from '../QuestionnaireForm';
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { User, Users } from 'lucide-react';
+import { User, UserX } from 'lucide-react';
 
 interface GenderSelectionStepProps {
-  formData: QuestionnaireData;
-  updateFormData: (data: Partial<QuestionnaireData>) => void;
-  onNext: () => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  onNext?: () => void;
+  onSelectGender?: (gender: string) => void;
 }
 
 const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({ 
-  formData, 
-  updateFormData,
-  onNext 
+  value = '', 
+  onChange, 
+  onNext, 
+  onSelectGender 
 }) => {
-  const handleGenderSelect = (gender: 'male' | 'female') => {
-    updateFormData({ gender });
+  const handleGenderSelect = (gender: string) => {
+    if (onChange) {
+      onChange(gender);
+    }
+    if (onSelectGender) {
+      onSelectGender(gender);
+    }
   };
 
-  const handleDoubleClick = (gender: 'male' | 'female') => {
-    updateFormData({ gender });
-    setTimeout(onNext, 100);
+  const handleDoubleClick = (gender: string) => {
+    handleGenderSelect(gender);
+    // Small delay to ensure state updates
+    setTimeout(() => {
+      if (onNext) {
+        onNext();
+      }
+    }, 100);
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">I identify as</h3>
-        <p className="text-gray-600 mb-6">This helps us provide more personalized recommendations</p>
+    <div className="space-y-6">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold mb-2">What's your gender?</h2>
+        <p className="text-gray-600">
+          💡 Tip: Double-click any option to automatically move to the next step
+        </p>
       </div>
-
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
-          className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-            formData.gender === 'male' ? 'ring-2 ring-styleklick-purple border-styleklick-purple' : 'border-gray-200'
+          className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
+            value === 'male' ? 'ring-2 ring-styleklick-purple bg-styleklick-purple/10' : ''
           }`}
           onClick={() => handleGenderSelect('male')}
           onDoubleClick={() => handleDoubleClick('male')}
         >
-          <CardContent className="flex flex-col items-center p-6">
-            <div className={`p-4 rounded-full mb-4 ${
-              formData.gender === 'male' ? 'bg-styleklick-purple text-white' : 'bg-gray-100 text-gray-600'
-            }`}>
-              <User size={24} />
-            </div>
-            <h4 className="font-medium text-lg mb-2">Male</h4>
-            <p className="text-sm text-gray-500 text-center">Menswear styles and fits</p>
-            {formData.gender === 'male' && (
-              <Badge className="mt-3 bg-styleklick-purple">
-                Selected - Double click to continue
-              </Badge>
+          <CardContent className="p-6 text-center">
+            <User className="mx-auto mb-4 h-12 w-12 text-styleklick-purple" />
+            <h3 className="text-xl font-semibold">Male</h3>
+            {value === 'male' && (
+              <div className="mt-2 text-styleklick-purple font-medium flex items-center justify-center">
+                Selected ✓
+                <span className="ml-2 text-sm">→ Double-click to continue</span>
+              </div>
             )}
           </CardContent>
         </Card>
 
         <Card 
-          className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-            formData.gender === 'female' ? 'ring-2 ring-styleklick-purple border-styleklick-purple' : 'border-gray-200'
+          className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
+            value === 'female' ? 'ring-2 ring-styleklick-purple bg-styleklick-purple/10' : ''
           }`}
           onClick={() => handleGenderSelect('female')}
           onDoubleClick={() => handleDoubleClick('female')}
         >
-          <CardContent className="flex flex-col items-center p-6">
-            <div className={`p-4 rounded-full mb-4 ${
-              formData.gender === 'female' ? 'bg-styleklick-purple text-white' : 'bg-gray-100 text-gray-600'
-            }`}>
-              <Users size={24} />
-            </div>
-            <h4 className="font-medium text-lg mb-2">Female</h4>
-            <p className="text-sm text-gray-500 text-center">Womenswear styles and fits</p>
-            {formData.gender === 'female' && (
-              <Badge className="mt-3 bg-styleklick-purple">
-                Selected - Double click to continue
-              </Badge>
+          <CardContent className="p-6 text-center">
+            <UserX className="mx-auto mb-4 h-12 w-12 text-styleklick-purple" />
+            <h3 className="text-xl font-semibold">Female</h3>
+            {value === 'female' && (
+              <div className="mt-2 text-styleklick-purple font-medium flex items-center justify-center">
+                Selected ✓
+                <span className="ml-2 text-sm">→ Double-click to continue</span>
+              </div>
             )}
           </CardContent>
         </Card>

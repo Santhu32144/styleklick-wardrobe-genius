@@ -13,24 +13,18 @@ import { Check, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 // Define types for our form data
-export type StylePreference = 'minimalist' | 'casual' | 'streetwear' | 'sporty';
-export type Occasion = 'work' | 'casual' | 'date' | 'party' | 'formal' | 'travel';
-export type Destination = 'urban' | 'outdoor' | 'beach' | 'indoor';
-
 export interface QuestionnaireData {
   gender: string;
   stylePreferences: string[];
-  stylePreference?: StylePreference;
   occasion: string;
   seasonality: string;
   destinationType: string;
-  destination?: Destination;
 }
 
 const steps = [
   { name: 'About You', description: 'Tell us a bit about yourself' },
   { name: 'Style', description: 'Your style preferences and tastes' },
-  { name: 'Occasion', description: 'The occasion you\'re dressing for' },
+  { name: 'Season', description: 'The season you\'re dressing for' },
   { name: 'Destination', description: 'The type of place you\'ll be' }
 ];
 
@@ -77,11 +71,11 @@ const QuestionnaireForm = () => {
       case 0:
         return formData.gender !== '';
       case 1:
-        return formData.stylePreferences.length > 0 || formData.stylePreference;
+        return formData.stylePreferences.length > 0;
       case 2:
-        return formData.occasion !== '';
+        return formData.seasonality !== '';
       case 3:
-        return formData.destinationType !== '' || formData.destination;
+        return formData.destinationType !== '';
       default:
         return true;
     }
@@ -101,35 +95,17 @@ const QuestionnaireForm = () => {
       case 0:
         return (
           <GenderSelectionStep 
-            formData={formData}
-            updateFormData={updateFormData}
+            value={formData.gender}
+            onChange={(gender) => updateFormData({ gender })}
             onNext={handleNextStep}
           />
         );
       case 1:
-        return (
-          <StylePreferencesStep 
-            formData={formData} 
-            updateFormData={updateFormData} 
-            onNext={handleNextStep}
-          />
-        );
+        return <StylePreferencesStep formData={formData} updateFormData={updateFormData} />;
       case 2:
-        return (
-          <OccasionStep 
-            formData={formData} 
-            updateFormData={updateFormData} 
-            onNext={handleNextStep}
-          />
-        );
+        return <OccasionStep formData={formData} updateFormData={updateFormData} />;
       case 3:
-        return (
-          <DestinationStep 
-            formData={formData} 
-            updateFormData={updateFormData} 
-            onNext={handleNextStep}
-          />
-        );
+        return <DestinationStep formData={formData} updateFormData={updateFormData} />;
       default:
         return null;
     }

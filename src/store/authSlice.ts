@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -10,7 +9,6 @@ type UserProfile = {
   phone?: string | null;
   gender?: 'male' | 'female' | null;
   name?: string | null;
-  username?: string | null;
   avatar_url?: string | null;
   created_at?: string;
   updated_at?: string;

@@ -8,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/use-auth';
 import { Bookmark, RefreshCcw, Heart, Calendar, Tag } from 'lucide-react';
 import GenderSelectionStep from '../questionnaire/steps/GenderSelectionStep';
-import { QuestionnaireData } from '../questionnaire/QuestionnaireForm';
 
 // Define outfit types
 type ClothingItem = {
@@ -36,13 +35,6 @@ const OutfitCoordinator: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [showGenderSelection, setShowGenderSelection] = useState(true);
   const [savedOutfits, setSavedOutfits] = useState<string[]>([]);
-  const [formData, setFormData] = useState<QuestionnaireData>({
-    gender: '',
-    stylePreferences: [],
-    occasion: '',
-    seasonality: '',
-    destinationType: ''
-  });
   const { toast } = useToast();
   const { user, profile } = useAuth();
 
@@ -173,15 +165,6 @@ const OutfitCoordinator: React.FC = () => {
 
   const handleGenderSelect = (gender: string) => {
     setSelectedGender(gender);
-    setFormData(prev => ({ ...prev, gender }));
-    setShowGenderSelection(false);
-  };
-
-  const updateFormData = (data: Partial<QuestionnaireData>) => {
-    setFormData(prev => ({ ...prev, ...data }));
-  };
-
-  const handleNextStep = () => {
     setShowGenderSelection(false);
   };
 
@@ -223,13 +206,7 @@ const OutfitCoordinator: React.FC = () => {
   };
 
   if (showGenderSelection) {
-    return (
-      <GenderSelectionStep 
-        formData={formData}
-        updateFormData={updateFormData}
-        onNext={handleNextStep}
-      />
-    );
+    return <GenderSelectionStep onSelectGender={handleGenderSelect} />;
   }
 
   return (
