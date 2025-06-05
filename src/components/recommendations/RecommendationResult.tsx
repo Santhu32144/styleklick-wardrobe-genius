@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -325,8 +325,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
             <Card className="border-2 border-blue-200 shadow-lg">
               <CardContent className="p-0">
                 <AIChatInterface 
-                  formData={formData} 
-                  onRecommendation={handleChatRecommendation}
+                  onStyleSuggestion={handleChatRecommendation}
                 />
               </CardContent>
             </Card>
