@@ -26,52 +26,24 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
     return styleImages.casual;
   };
 
-  // Use AI-generated suggestions from the recommendation data
-  const outfitSuggestions = recommendation.outfitSuggestions || [
-    "Wear a classic white cotton t-shirt with dark blue jeans and finish with a denim jacket for a timeless casual look",
-    "Try a soft knit sweater paired with black leggings and layer with a long cardigan for comfort and style",
-    "Go for a striped long-sleeve shirt with khaki chinos and add a baseball cap for a relaxed weekend vibe",
-    "Combine a fitted blouse with high-waisted trousers and accessorize with a statement necklace for elevated casual"
-  ];
-
-  // Use AI-generated pose ideas from the recommendation data
-  const aiGeneratedPoses = recommendation.poseIdeas || [
-    {
-      name: "Natural Confidence",
-      description: "Stand with one hand casually in your pocket, slight smile, looking directly at camera",
-      caption: "Effortless confidence that showcases your outfit naturally"
-    },
-    {
-      name: "Relaxed Lean",
-      description: "Lean against a wall or surface with arms crossed loosely, gentle expression",
-      caption: "Casual and approachable while highlighting your style choices"
-    },
-    {
-      name: "Dynamic Movement",
-      description: "Mid-walk pose with natural arm swing, looking ahead with purpose",
-      caption: "Action shot that captures your outfit in real-life motion"
-    },
-    {
-      name: "Thoughtful Pause",
-      description: "Sitting position with one hand touching face thoughtfully, relaxed posture",
-      caption: "Contemplative pose that shows both personality and outfit details"
-    }
-  ];
+  // Add safe fallbacks for undefined data
+  const outfitSuggestions = recommendation?.outfitSuggestions || [];
+  const aiGeneratedPoses = recommendation?.poseIdeas || [];
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full">
       <div className="relative h-64 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
         <img
           src={getRecommendationImage(recommendation)}
-          alt={recommendation.title}
+          alt={recommendation?.title || "AI Style Suggestion"}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-3 right-3">
           <Badge className="bg-purple-600 text-white">
-            AI Match {recommendation.confidence || 95}%
+            AI Match {recommendation?.confidence || 95}%
           </Badge>
         </div>
-        {recommendation.source === 'chat' && (
+        {recommendation?.source === 'chat' && (
           <div className="absolute top-3 left-3">
             <Badge className="bg-green-600 text-white">
               Chat Suggestion
@@ -81,9 +53,9 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
       </div>
       
       <CardContent className="p-6">
-        <h3 className="font-semibold text-xl mb-2">{recommendation.title || "AI Style Suggestion"}</h3>
+        <h3 className="font-semibold text-xl mb-2">{recommendation?.title || "AI Style Suggestion"}</h3>
         <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-          {recommendation.description || "A personalized style recommendation based on your preferences and current trends."}
+          {recommendation?.description || "A personalized style recommendation based on your preferences and current trends."}
         </p>
         
         <OutfitSuggestions suggestions={outfitSuggestions} />
@@ -93,9 +65,9 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-xs">
             <span>Style Match</span>
-            <span className="font-medium">{recommendation.styleMatch || 92}%</span>
+            <span className="font-medium">{recommendation?.styleMatch || 92}%</span>
           </div>
-          <Progress value={recommendation.styleMatch || 92} className="h-1" />
+          <Progress value={recommendation?.styleMatch || 92} className="h-1" />
         </div>
         
         <div className="flex gap-2">
