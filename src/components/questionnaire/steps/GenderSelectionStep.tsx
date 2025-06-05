@@ -57,9 +57,8 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
             <User className="mx-auto mb-4 h-12 w-12 text-styleklick-purple" />
             <h3 className="text-xl font-semibold">Male</h3>
             {value === 'male' && (
-              <div className="mt-2 text-styleklick-purple font-medium flex items-center justify-center">
+              <div className="mt-2 text-styleklick-purple font-medium">
                 Selected ✓
-                <span className="ml-2 text-sm">→ Double-click to continue</span>
               </div>
             )}
           </CardContent>
@@ -76,9 +75,8 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
             <UserX className="mx-auto mb-4 h-12 w-12 text-styleklick-purple" />
             <h3 className="text-xl font-semibold">Female</h3>
             {value === 'female' && (
-              <div className="mt-2 text-styleklick-purple font-medium flex items-center justify-center">
+              <div className="mt-2 text-styleklick-purple font-medium">
                 Selected ✓
-                <span className="ml-2 text-sm">→ Double-click to continue</span>
               </div>
             )}
           </CardContent>

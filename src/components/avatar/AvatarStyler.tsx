@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,11 @@ interface AvatarStylerProps {
 }
 
 const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
-  const { user, profile } = useAuth();
+  const { user, profile, uploadProfilePicture } = useAuth();
   
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     
@@ -31,31 +31,25 @@ const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
       return;
     }
     
-    setIsUploading(true);
-    
-    // Read the file and convert to data URL
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      setAvatar(result);
-      setIsUploading(false);
-      
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "Avatar updated",
-        description: "Your avatar has been updated successfully.",
-      });
-    };
-    
-    reader.onerror = () => {
-      setIsUploading(false);
-      toast({
-        title: "Upload failed",
-        description: "There was an error uploading your image. Please try again.",
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB.",
         variant: "destructive"
       });
-    };
+      return;
+    }
     
-    reader.readAsDataURL(file);
+    setIsUploading(true);
+    
+    try {
+      await uploadProfilePicture(file);
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+    } finally {
+      setIsUploading(false);
+    }
   };
   
   const handleDone = () => {
@@ -70,9 +64,13 @@ const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
   };
 
   const getInitials = () => {
-    if (!user) return "?";
-    const email = user.email || "";
-    return email.substring(0, 2).toUpperCase();
+    if (profile?.name) {
+      return profile.name.substring(0, 2).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase();
+    }
+    return "?";
   };
   
   return (
@@ -86,8 +84,8 @@ const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
       <CardContent className="space-y-6">
         <div className="flex flex-col items-center gap-4">
           <Avatar className="w-32 h-32">
-            {avatar ? (
-              <AvatarImage src={avatar} alt="Your avatar" />
+            {profile?.avatar_url ? (
+              <AvatarImage src={profile.avatar_url} alt="Your avatar" />
             ) : (
               <AvatarFallback className="bg-styleklick-purple text-white text-3xl">
                 {getInitials()}
@@ -103,7 +101,7 @@ const AvatarStyler = ({ onStyleComplete }: AvatarStylerProps) => {
             >
               <Label htmlFor="avatar-upload" className="cursor-pointer flex items-center gap-2">
                 <Upload size={16} />
-                <span>Upload Photo</span>
+                <span>{isUploading ? 'Uploading...' : 'Upload Photo'}</span>
               </Label>
               <input
                 id="avatar-upload"

@@ -9,6 +9,7 @@ import {
 interface OccasionStepProps {
   formData: QuestionnaireData;
   updateFormData: (data: Partial<QuestionnaireData>) => void;
+  onNext?: () => void;
 }
 
 const seasons = [
@@ -38,7 +39,7 @@ const seasons = [
   }
 ];
 
-const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData }) => {
+const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData, onNext }) => {
   // Set a default occasion value since we're removing the occasion selection
   React.useEffect(() => {
     if (!formData.occasion) {
@@ -46,12 +47,26 @@ const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData })
     }
   }, [formData.occasion, updateFormData]);
 
+  const handleSeasonSelect = (seasonId: string) => {
+    updateFormData({ seasonality: seasonId });
+  };
+
+  const handleDoubleClick = (seasonId: string) => {
+    updateFormData({ seasonality: seasonId });
+    // Small delay to ensure state updates
+    setTimeout(() => {
+      if (onNext) {
+        onNext();
+      }
+    }, 100);
+  };
+
   return (
     <div className="space-y-8">
       <div>
         <h3 className="text-xl font-semibold mb-4">What Season?</h3>
         <p className="text-gray-600 mb-6">
-          Select the season you'll be dressing for.
+          💡 Tip: Double-click any option to automatically move to the next step
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -62,7 +77,8 @@ const OccasionStep: React.FC<OccasionStepProps> = ({ formData, updateFormData })
             return (
               <Card 
                 key={season.id}
-                onClick={() => updateFormData({ seasonality: season.id })}
+                onClick={() => handleSeasonSelect(season.id)}
+                onDoubleClick={() => handleDoubleClick(season.id)}
                 className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
                   isSelected ? 'ring-2 ring-styleklick-purple' : ''
                 }`}
