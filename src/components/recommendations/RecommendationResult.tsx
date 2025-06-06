@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -166,7 +167,11 @@ const RecommendationResult = ({
     id: 'ai-suggestion-1',
     title: 'Perfect Fall Look',
     description: 'A curated outfit that matches your style preferences and the season.',
-    outfitSuggestions: displayedOutfits.slice(0, 3),
+    outfitSuggestions: [
+      'Layer a cozy sweater over a collared shirt for a polished yet comfortable look',
+      'Pair high-waisted jeans with ankle boots to elongate your silhouette',
+      'Add a statement scarf to bring warmth and visual interest to your outfit'
+    ],
     poseIdeas: [
       { id: '1', title: 'Casual Walking Pose', description: 'Natural stride with hands in pockets' },
       { id: '2', title: 'Leaning Against Wall', description: 'Relaxed pose against urban backdrop' }
