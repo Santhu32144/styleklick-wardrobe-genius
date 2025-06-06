@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 // Define the available themes
 export type ThemeType = 'fall' | 'adventure' | 'urban';
@@ -67,11 +68,31 @@ const RecommendationsPage = () => {
     );
   }
 
-  const handleSaveToLookbook = () => {
-    toast({
-      title: "Look saved!",
-      description: "Lookbook coming soon – stay stylish!",
-    });
+  const handleSaveToLookbook = async (outfitData: any) => {
+    try {
+      const { error } = await supabase
+        .from('lookbook')
+        .insert({
+          user_id: user.id,
+          outfit_data: outfitData,
+          name: outfitData.title || 'Saved Outfit',
+          tags: outfitData.tags || ['saved']
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Look saved!",
+        description: "Your outfit has been saved to your lookbook.",
+      });
+    } catch (error: any) {
+      console.error('Error saving to lookbook:', error);
+      toast({
+        title: "Save failed",
+        description: error.message || "Failed to save to lookbook. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -83,6 +104,7 @@ const RecommendationsPage = () => {
             activeTheme={activeTheme}
             setActiveTheme={setActiveTheme}
             onSaveToLookbook={handleSaveToLookbook}
+            showSingleCard={true}
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ import PoseIdeas from './PoseIdeas';
 
 interface CustomAICardProps {
   recommendation: any;
-  onSaveToLookbook: () => void;
+  onSaveToLookbook: (outfitData: any) => void;
   onViewDetails: () => void;
 }
 
@@ -30,9 +30,23 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
   const outfitSuggestions = recommendation?.outfitSuggestions || [];
   const aiGeneratedPoses = recommendation?.poseIdeas || [];
 
+  const handleSave = () => {
+    const outfitData = {
+      title: recommendation?.title || "AI Style Suggestion",
+      description: recommendation?.description || "A personalized style recommendation based on your preferences and current trends.",
+      image: getRecommendationImage(recommendation),
+      outfitSuggestions,
+      poseIdeas: aiGeneratedPoses,
+      styleMatch: recommendation?.styleMatch || 92,
+      tags: ['ai-suggestion', 'saved']
+    };
+    
+    onSaveToLookbook(outfitData);
+  };
+
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full">
-      <div className="relative h-80 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full max-w-md mx-auto">
+      <div className="relative h-96 bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
         <img
           src={getRecommendationImage(recommendation)}
           alt={recommendation?.title || "AI Style Suggestion"}
@@ -69,7 +83,7 @@ const CustomAICard = ({ recommendation, onSaveToLookbook, onViewDetails }: Custo
           <Button 
             className="flex-1" 
             variant="outline"
-            onClick={onSaveToLookbook}
+            onClick={handleSave}
           >
             <Heart className="h-4 w-4 mr-2" />
             Save
