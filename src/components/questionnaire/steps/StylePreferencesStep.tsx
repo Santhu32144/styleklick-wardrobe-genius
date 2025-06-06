@@ -9,6 +9,7 @@ import {
 interface StylePreferencesStepProps {
   formData: QuestionnaireData;
   updateFormData: (data: Partial<QuestionnaireData>) => void;
+  onNext?: () => void;
 }
 
 const styleOptions = [
@@ -38,7 +39,7 @@ const styleOptions = [
   }
 ];
 
-const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, updateFormData }) => {
+const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, updateFormData, onNext }) => {
   const handleStyleToggle = (styleId: string) => {
     if (formData.stylePreferences.includes(styleId)) {
       updateFormData({ 
@@ -51,12 +52,28 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
     }
   };
 
+  const handleDoubleClick = (styleId: string) => {
+    // First select the style if not already selected
+    if (!formData.stylePreferences.includes(styleId)) {
+      updateFormData({ 
+        stylePreferences: [...formData.stylePreferences, styleId] 
+      });
+    }
+    // Small delay to ensure state updates
+    setTimeout(() => {
+      if (onNext) {
+        onNext();
+      }
+    }, 100);
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-xl font-semibold mb-4">Your Style Preferences</h3>
         <p className="text-gray-600 mb-6">
           Select the styles that resonate with you. Choose 1-2 styles for best results.
+          💡 Tip: Double-click any option to automatically move to the next step
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -68,6 +85,7 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
               <Card 
                 key={style.id}
                 onClick={() => handleStyleToggle(style.id)}
+                onDoubleClick={() => handleDoubleClick(style.id)}
                 className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
                   isSelected ? 'ring-2 ring-styleklick-purple' : ''
                 }`}

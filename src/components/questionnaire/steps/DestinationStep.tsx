@@ -9,6 +9,7 @@ import {
 interface DestinationStepProps {
   formData: QuestionnaireData;
   updateFormData: (data: Partial<QuestionnaireData>) => void;
+  onNext?: () => void;
 }
 
 const destinationTypes = [
@@ -49,13 +50,28 @@ const destinationTypes = [
   }
 ];
 
-const DestinationStep: React.FC<DestinationStepProps> = ({ formData, updateFormData }) => {
+const DestinationStep: React.FC<DestinationStepProps> = ({ formData, updateFormData, onNext }) => {
+  const handleDestinationSelect = (destinationId: string) => {
+    updateFormData({ destinationType: destinationId });
+  };
+
+  const handleDoubleClick = (destinationId: string) => {
+    updateFormData({ destinationType: destinationId });
+    // Small delay to ensure state updates
+    setTimeout(() => {
+      if (onNext) {
+        onNext();
+      }
+    }, 100);
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-xl font-semibold mb-4">Your Destination</h3>
         <p className="text-gray-600 mb-6">
           Select the type of environment you'll be in.
+          💡 Tip: Double-click any option to automatically move to the next step
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -66,7 +82,8 @@ const DestinationStep: React.FC<DestinationStepProps> = ({ formData, updateFormD
             return (
               <Card 
                 key={destination.id}
-                onClick={() => updateFormData({ destinationType: destination.id })}
+                onClick={() => handleDestinationSelect(destination.id)}
+                onDoubleClick={() => handleDoubleClick(destination.id)}
                 className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
                   isSelected ? 'ring-2 ring-styleklick-purple' : ''
                 }`}

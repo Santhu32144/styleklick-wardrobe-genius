@@ -101,11 +101,29 @@ const QuestionnaireForm = () => {
           />
         );
       case 1:
-        return <StylePreferencesStep formData={formData} updateFormData={updateFormData} />;
+        return (
+          <StylePreferencesStep 
+            formData={formData} 
+            updateFormData={updateFormData} 
+            onNext={handleNextStep}
+          />
+        );
       case 2:
-        return <OccasionStep formData={formData} updateFormData={updateFormData} />;
+        return (
+          <OccasionStep 
+            formData={formData} 
+            updateFormData={updateFormData} 
+            onNext={handleNextStep}
+          />
+        );
       case 3:
-        return <DestinationStep formData={formData} updateFormData={updateFormData} />;
+        return (
+          <DestinationStep 
+            formData={formData} 
+            updateFormData={updateFormData} 
+            onNext={handleNextStep}
+          />
+        );
       default:
         return null;
     }
