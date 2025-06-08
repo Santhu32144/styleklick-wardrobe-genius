@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +19,8 @@ interface OTPFormProps {
 const OTPFormSchema = z.object({
   otp: z.string().min(6, {
     message: "Please enter the complete verification code.",
+  }).max(6, {
+    message: "Verification code should be exactly 6 digits.",
   }),
 });
 
@@ -43,7 +46,6 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
   }, [timeLeft]);
 
   const handleResendCode = () => {
-    // We would use the same function as before to resend the code
     setTimeLeft(30);
     setCanResend(false);
   };
@@ -57,13 +59,11 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <Alert className="mb-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Important</AlertTitle>
+          <AlertTitle>Verification Code</AlertTitle>
           <AlertDescription>
-            <p>For email verification, you'll need to copy the 6-digit code from the email.</p>
-            <p className="mt-1">The code should be a 6-digit number like "123456" in the email body.</p>
-            <p className="mt-1">If you don't see the code, check your spam folder or try requesting a new code.</p>
-            <p className="mt-1 font-semibold">Note: The email template might not be displaying the code correctly. In Supabase email templates, use <code>{`{{ .Token }}`}</code> as the placeholder for the verification code.</p>
-            <p className="mt-1">If you're testing and can't see the code in the email, please log into your Supabase dashboard to get the verification code from Auth &gt; Users &gt; User details.</p>
+            <p>Please enter the 6-digit code sent to your email.</p>
+            <p className="mt-1">The code should look like "123456" in your email.</p>
+            <p className="mt-1">If you don't see the code, check your spam folder.</p>
           </AlertDescription>
         </Alert>
         
@@ -72,21 +72,24 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
           name="otp"
           render={({ field }) => (
             <FormItem className="space-y-2">
-              <div className="flex flex-col items-center gap-1">
-                <FormControl>
-                  <InputOTP maxLength={6} {...field}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </FormControl>
-                <FormMessage />
-              </div>
+              <Label htmlFor="otp" className="text-sm font-medium">
+                Verification Code
+              </Label>
+              <FormControl>
+                <Input
+                  id="otp"
+                  type="text"
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                  className="text-center text-lg font-mono h-12"
+                  {...field}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -94,7 +97,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
         <Button 
           type="submit" 
           className="w-full" 
-          disabled={isLoading}
+          disabled={isLoading || form.watch('otp').length !== 6}
         >
           {isLoading ? 'Verifying...' : 'Verify Code'}
         </Button>
@@ -119,7 +122,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onVerify, onChangeContact, isLoading 
             className="text-sm text-primary hover:underline focus:outline-none"
             onClick={onChangeContact}
           >
-            Change phone/email
+            Change email
           </button>
         </div>
       </form>

@@ -30,6 +30,7 @@ import DetailedStyleView from './DetailedStyleView';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CustomAICard from './CustomAICard';
+import { useAuth } from '@/hooks/use-auth';
 
 interface RecommendationResultProps {
   formData: QuestionnaireData;
@@ -41,13 +42,13 @@ interface RecommendationResultProps {
 const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToLookbook }: RecommendationResultProps) => {
   const [aiRecommendations, setAiRecommendations] = useState<any[]>([]);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [showChat, setShowChat] = useState(false); // Changed default to false to show suggestions first
+  const [showChat, setShowChat] = useState(false);
   const [chatRecommendations, setChatRecommendations] = useState<any[]>([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState<any>(null);
   const [selectedPosingPhoto, setSelectedPosingPhoto] = useState<any>(null);
   const [showOutfitInspiration, setShowOutfitInspiration] = useState(false);
-  const [numberOfCards, setNumberOfCards] = useState(1);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const staticOutfits = [
     {
@@ -108,7 +109,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     }
   };
 
-  // Get recommendation images based on user preferences
   const getRecommendationImage = (recommendation: any) => {
     const styleImages = {
       'minimalist': 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
@@ -120,13 +120,11 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
       'formal': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
     };
 
-    // Try to match user's style preferences
     if (formData.stylePreferences && formData.stylePreferences.length > 0) {
       const firstPreference = formData.stylePreferences[0].toLowerCase();
       return styleImages[firstPreference as keyof typeof styleImages] || styleImages.casual;
     }
 
-    // Fallback based on recommendation source
     if (recommendation.source === 'chat') {
       return 'https://images.unsplash.com/photo-1552374196-c4e7fbd312fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
     }
@@ -160,6 +158,42 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
       });
     } finally {
       setIsLoadingAI(false);
+    }
+  };
+
+  const handleSaveToLookbook = async (recommendation: any) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to save items to your lookbook.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('lookbook')
+        .insert({
+          user_id: user.id,
+          name: recommendation.title || 'Saved Look',
+          outfit_data: recommendation,
+          tags: recommendation.tags || []
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Saved to Lookbook!",
+        description: "This outfit has been added to your lookbook.",
+      });
+    } catch (error) {
+      console.error('Error saving to lookbook:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save to lookbook. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -232,7 +266,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
     setSelectedPosingPhoto(null);
   };
 
-  // Generate related gallery images for posing photo
   const getPosingGalleryImages = (posingIdea: any) => {
     const galleryImages = [
       {
@@ -288,7 +321,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         </p>
       </div>
 
-      {/* Mode Selector with Slider */}
+      {/* Mode Selector */}
       <div className="mb-8">
         <div className="flex items-center justify-center">
           <div className="bg-white rounded-full p-1 shadow-lg border-2 border-gray-200">
@@ -341,19 +374,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
               <h2 className="text-2xl font-bold">AI Style Suggestions</h2>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Show:</span>
-                <ToggleGroup 
-                  type="single" 
-                  value={numberOfCards.toString()} 
-                  onValueChange={(value) => value && setNumberOfCards(parseInt(value))}
-                  className="border rounded-md"
-                >
-                  <ToggleGroupItem value="1" aria-label="Show 1 card">1</ToggleGroupItem>
-                  <ToggleGroupItem value="2" aria-label="Show 2 cards">2</ToggleGroupItem>
-                  <ToggleGroupItem value="3" aria-label="Show 3 cards">3</ToggleGroupItem>
-                </ToggleGroup>
-              </div>
               <Button 
                 variant="outline" 
                 className="flex items-center gap-2"
@@ -376,21 +396,16 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
           </div>
           
           {isLoadingAI ? (
-            <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'} opacity-50`}>
-              {Array.from({ length: numberOfCards }, (_, index) => (
-                <div 
-                  key={index} 
-                  className="bg-gray-100 rounded-lg h-96 animate-pulse"
-                />
-              ))}
+            <div className="grid grid-cols-1 gap-6 opacity-50">
+              <div className="bg-gray-100 rounded-lg h-96 animate-pulse" />
             </div>
           ) : (
-            <div className={`grid gap-6 ${numberOfCards === 1 ? 'grid-cols-1' : numberOfCards === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-3'}`}>
-              {allRecommendations.slice(0, numberOfCards).map((recommendation) => (
+            <div className="grid grid-cols-1 gap-6">
+              {allRecommendations.slice(0, 1).map((recommendation) => (
                 <CustomAICard
                   key={recommendation.id}
                   recommendation={recommendation}
-                  onSaveToLookbook={onSaveToLookbook}
+                  onSaveToLookbook={() => handleSaveToLookbook(recommendation)}
                   onViewDetails={() => handleRecommendationClick(recommendation)}
                 />
               ))}
@@ -457,7 +472,7 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
         <DetailedStyleView
           recommendation={selectedRecommendation}
           onClose={handleCloseDetailedView}
-          onAddToLookbook={onSaveToLookbook}
+          onAddToLookbook={() => handleSaveToLookbook(selectedRecommendation)}
         />
       )}
 

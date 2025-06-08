@@ -18,7 +18,6 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({
   onSubmit,
   isLoading
 }) => {
-  // Define separate schemas for phone and email
   const phoneSchema = z.object({
     phone: z.string().min(10, {
       message: "Phone number must be at least 10 digits"
@@ -38,7 +37,6 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({
     })
   });
 
-  // Use the appropriate schema based on the type
   const formSchema = type === 'phone' ? phoneSchema : emailSchema;
   type FormValues = z.infer<typeof formSchema>;
   
@@ -67,6 +65,27 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        {type === 'email' && (
+          <FormField 
+            control={form.control} 
+            name="userName" 
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="text" 
+                    placeholder="Your username" 
+                    autoComplete="name" 
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+        )}
+        
         <FormField 
           control={form.control} 
           name={type as any} 
@@ -85,27 +104,6 @@ const PhoneEmailForm: React.FC<PhoneEmailFormProps> = ({
             </FormItem>
           )} 
         />
-        
-        {type === 'email' && (
-          <FormField 
-            control={form.control} 
-            name="userName" 
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="text" 
-                    placeholder="Your name" 
-                    autoComplete="name" 
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-        )}
         
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? 'Sending...' : `Send Verification Code to ${type === 'phone' ? 'Phone' : 'Email'}`}
