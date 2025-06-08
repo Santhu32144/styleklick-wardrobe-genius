@@ -40,25 +40,18 @@ const styleOptions = [
 ];
 
 const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, updateFormData, onNext }) => {
-  const handleStyleToggle = (styleId: string) => {
-    if (formData.stylePreferences.includes(styleId)) {
-      updateFormData({ 
-        stylePreferences: formData.stylePreferences.filter(id => id !== styleId) 
-      });
-    } else {
-      updateFormData({ 
-        stylePreferences: [...formData.stylePreferences, styleId] 
-      });
-    }
+  const handleStyleSelect = (styleId: string) => {
+    // Allow only single selection
+    updateFormData({ 
+      stylePreferences: [styleId] 
+    });
   };
 
   const handleDoubleClick = (styleId: string) => {
-    // First select the style if not already selected
-    if (!formData.stylePreferences.includes(styleId)) {
-      updateFormData({ 
-        stylePreferences: [...formData.stylePreferences, styleId] 
-      });
-    }
+    // Select the style and move to next step
+    updateFormData({ 
+      stylePreferences: [styleId] 
+    });
     // Small delay to ensure state updates
     setTimeout(() => {
       if (onNext) {
@@ -70,9 +63,9 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-xl font-semibold mb-4">Your Style Preferences</h3>
+        <h3 className="text-xl font-semibold mb-4">Your Style Preference</h3>
         <p className="text-gray-600 mb-6">
-          Select the styles that resonate with you. Choose 1-2 styles for best results.
+          Select the style that best represents you. Choose only one option.
           💡 Tip: Double-click any option to automatically move to the next step
         </p>
         
@@ -84,7 +77,7 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({ formData, u
             return (
               <Card 
                 key={style.id}
-                onClick={() => handleStyleToggle(style.id)}
+                onClick={() => handleStyleSelect(style.id)}
                 onDoubleClick={() => handleDoubleClick(style.id)}
                 className={`cursor-pointer overflow-hidden transition-all hover:shadow-md ${
                   isSelected ? 'ring-2 ring-styleklick-purple' : ''
