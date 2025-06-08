@@ -41,7 +41,7 @@ const DetailedStyleView = ({ recommendation, onClose, onAddToLookbook }: Detaile
     }));
   };
 
-  const outfitImages = getDetailedOutfitImages(recommendation.id);
+  const outfitImages = getDetailedOutfitImages(recommendation?.id || 'default');
 
   const handleImageClick = (image: any) => {
     toast({
@@ -57,16 +57,27 @@ const DetailedStyleView = ({ recommendation, onClose, onAddToLookbook }: Detaile
     });
   };
 
+  // Provide safe fallbacks for all recommendation properties
+  const safeRecommendation = {
+    title: recommendation?.title || 'Style Suggestion',
+    description: recommendation?.description || 'A personalized style recommendation for you.',
+    items: recommendation?.items || recommendation?.outfitSuggestions || [],
+    confidence: recommendation?.confidence || recommendation?.styleMatch || 90,
+    bodyTypeMatch: recommendation?.bodyTypeMatch || 85,
+    styleMatch: recommendation?.styleMatch || 90,
+    source: recommendation?.source || 'ai'
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-6xl max-h-[90vh] overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div className="flex items-center space-x-4">
-            <CardTitle className="text-2xl">{recommendation.title}</CardTitle>
+            <CardTitle className="text-2xl">{safeRecommendation.title}</CardTitle>
             <Badge className="bg-purple-600 text-white">
-              AI Match {recommendation.confidence}%
+              AI Match {safeRecommendation.confidence}%
             </Badge>
-            {recommendation.source === 'chat' && (
+            {safeRecommendation.source === 'chat' && (
               <Badge className="bg-green-600 text-white">
                 Chat Suggestion
               </Badge>
@@ -91,13 +102,13 @@ const DetailedStyleView = ({ recommendation, onClose, onAddToLookbook }: Detaile
             {/* Style Description */}
             <div className="space-y-4">
               <p className="text-gray-600 leading-relaxed">
-                {recommendation.description}
+                {safeRecommendation.description}
               </p>
               
               <div className="space-y-2">
                 <h4 className="font-medium">Recommended Items:</h4>
                 <ul className="space-y-1">
-                  {recommendation.items.map((item: string, index: number) => (
+                  {safeRecommendation.items.map((item: string, index: number) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
                       <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
                       {item}
@@ -108,11 +119,11 @@ const DetailedStyleView = ({ recommendation, onClose, onAddToLookbook }: Detaile
 
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{recommendation.bodyTypeMatch}%</div>
+                  <div className="text-2xl font-bold text-purple-600">{safeRecommendation.bodyTypeMatch}%</div>
                   <div className="text-sm text-gray-600">Body Type Match</div>
                 </div>
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{recommendation.styleMatch}%</div>
+                  <div className="text-2xl font-bold text-purple-600">{safeRecommendation.styleMatch}%</div>
                   <div className="text-sm text-gray-600">Style Match</div>
                 </div>
               </div>
@@ -122,7 +133,7 @@ const DetailedStyleView = ({ recommendation, onClose, onAddToLookbook }: Detaile
             <div className="relative aspect-[4/5] bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <h3 className="text-xl font-semibold mb-2">{recommendation.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2">{safeRecommendation.title}</h3>
                   <p className="text-gray-600">Featured Style</p>
                 </div>
               </div>
