@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -18,11 +19,6 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [cardDisplayCount, setCardDisplayCount] = useState<string>('1');
-
-  // If not authenticated, redirect to login
-  if (!loading && !user) {
-    return <Navigate to="/auth" state={{ returnTo: '/profile' }} />;
-  }
 
   React.useEffect(() => {
     if (profile) {
@@ -107,6 +103,11 @@ const ProfilePage = () => {
     const email = user.email || "";
     return email.substring(0, 2).toUpperCase();
   };
+
+  // Move authentication check after all hooks
+  if (!loading && !user) {
+    return <Navigate to="/auth" state={{ returnTo: '/profile' }} />;
+  }
 
   if (loading) {
     return (

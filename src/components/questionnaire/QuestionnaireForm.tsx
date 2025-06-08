@@ -35,40 +35,6 @@ const initialFormData: QuestionnaireData = {
   destinationType: ''
 };
 
-// Define consistent labels for each question
-const QUESTION_LABELS = {
-  gender: {
-    'male': 'Male',
-    'female': 'Female', 
-    'non-binary': 'Non-Binary',
-    'prefer-not-to-say': 'Prefer Not to Say'
-  },
-  stylePreferences: {
-    'minimalist': 'Minimalist',
-    'bohemian': 'Bohemian',
-    'classic': 'Classic',
-    'trendy': 'Trendy',
-    'edgy': 'Edgy',
-    'casual': 'Casual',
-    'formal': 'Formal',
-    'sporty': 'Sporty'
-  },
-  seasonality: {
-    'spring': 'Spring',
-    'summer': 'Summer',
-    'fall': 'Fall/Autumn',
-    'winter': 'Winter'
-  },
-  destinationType: {
-    'urban': 'Urban/City',
-    'nature': 'Nature/Outdoor',
-    'beach': 'Beach/Coastal',
-    'mountains': 'Mountains',
-    'countryside': 'Countryside',
-    'indoor': 'Indoor Events'
-  }
-};
-
 const QuestionnaireForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<QuestionnaireData>(initialFormData);
@@ -131,7 +97,6 @@ const QuestionnaireForm = () => {
             value={formData.gender}
             onChange={(gender) => updateFormData({ gender })}
             onNext={handleNextStep}
-            labels={QUESTION_LABELS.gender}
           />
         );
       case 1:
@@ -140,8 +105,6 @@ const QuestionnaireForm = () => {
             formData={formData} 
             updateFormData={updateFormData} 
             onNext={handleNextStep}
-            labels={QUESTION_LABELS.stylePreferences}
-            allowMultiple={false}
           />
         );
       case 2:
@@ -150,7 +113,6 @@ const QuestionnaireForm = () => {
             formData={formData} 
             updateFormData={updateFormData} 
             onNext={handleNextStep}
-            labels={QUESTION_LABELS.seasonality}
           />
         );
       case 3:
@@ -159,7 +121,6 @@ const QuestionnaireForm = () => {
             formData={formData} 
             updateFormData={updateFormData} 
             onNext={handleNextStep}
-            labels={QUESTION_LABELS.destinationType}
           />
         );
       default:
