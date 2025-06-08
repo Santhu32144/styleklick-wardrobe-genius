@@ -1,14 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import RecommendationResult from '../components/recommendations/RecommendationResult';
 import { QuestionnaireData } from '../components/questionnaire/QuestionnaireForm';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LogIn, RotateCcw } from 'lucide-react';
 
 // Define the available themes
 export type ThemeType = 'fall' | 'adventure' | 'urban';
@@ -50,6 +49,16 @@ const RecommendationsPage = () => {
     return (
       <Layout>
         <div className="py-20 bg-gray-50 min-h-screen">
+          {/* Back to Quiz Button */}
+          <div className="absolute top-20 right-4 z-10">
+            <Button variant="outline" asChild>
+              <Link to="/questionnaire">
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Back to Quiz
+              </Link>
+            </Button>
+          </div>
+
           <div ref={authContainerRef} className="max-w-md mx-auto text-center bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4">Login Required</h2>
             <p className="text-gray-600 mb-6">
@@ -76,7 +85,17 @@ const RecommendationsPage = () => {
 
   return (
     <Layout>
-      <div className="py-12 bg-gray-50 min-h-screen">
+      <div className="py-12 bg-gray-50 min-h-screen relative">
+        {/* Back to Quiz Button */}
+        <div className="absolute top-4 right-4 z-10">
+          <Button variant="outline" asChild>
+            <Link to="/questionnaire">
+              <RotateCcw className="mr-2 h-4 w-4" />
+              Back to Quiz
+            </Link>
+          </Button>
+        </div>
+
         <div id="outfits">
           <RecommendationResult 
             formData={formData} 

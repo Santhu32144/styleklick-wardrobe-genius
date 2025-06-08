@@ -13,6 +13,7 @@ import OAuthButtons from '@/components/auth/OAuthButtons';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import { Sparkles, Mail, Phone } from 'lucide-react';
 
 enum AuthStep {
   INPUT = 'input',
@@ -151,96 +152,130 @@ const AuthPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container max-w-md mx-auto py-10 bg-gray-50">
-        <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Welcome to StyleNKlick</CardTitle>
-            <CardDescription className="text-center">
-              {authStep === AuthStep.INPUT 
-                ? "Enter your phone or email to get started" 
-                : authStep === AuthStep.NAME 
-                  ? "Please tell us your name" 
-                  : `Enter the verification code sent to ${otpSentTo}`}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {authStep === AuthStep.INPUT ? (
-              <Tabs defaultValue="phone" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="phone">Phone</TabsTrigger>
-                  <TabsTrigger value="email">Email</TabsTrigger>
-                </TabsList>
-                <TabsContent value="phone">
-                  <PhoneEmailForm 
-                    type="phone" 
-                    onSubmit={(value) => handleSendOTP('phone', value)} 
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12 px-4">
+        <div className="container max-w-md mx-auto">
+          {/* Modern Auth Card */}
+          <div className="relative">
+            {/* Background decorations */}
+            <div className="absolute -top-4 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+            <div className="absolute -top-4 -right-4 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+            
+            <Card className="relative backdrop-blur-sm bg-white/90 border border-white/20 shadow-2xl">
+              <CardHeader className="text-center space-y-4 pb-8">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mb-4">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Welcome to StyleNKlick
+                </CardTitle>
+                <CardDescription className="text-lg text-gray-600">
+                  {authStep === AuthStep.INPUT 
+                    ? "Discover your perfect style with AI" 
+                    : authStep === AuthStep.NAME 
+                      ? "Tell us your name to personalize your experience" 
+                      : `Enter the verification code sent to ${otpSentTo}`}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                {authStep === AuthStep.INPUT ? (
+                  <div className="space-y-6">
+                    <Tabs defaultValue="phone" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-100/50">
+                        <TabsTrigger value="phone" className="flex items-center gap-2">
+                          <Phone className="h-4 w-4" />
+                          Phone
+                        </TabsTrigger>
+                        <TabsTrigger value="email" className="flex items-center gap-2">
+                          <Mail className="h-4 w-4" />
+                          Email
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="phone" className="mt-6">
+                        <PhoneEmailForm 
+                          type="phone" 
+                          onSubmit={(value) => handleSendOTP('phone', value)} 
+                          isLoading={isLoading} 
+                        />
+                      </TabsContent>
+                      <TabsContent value="email" className="mt-6">
+                        <PhoneEmailForm 
+                          type="email" 
+                          onSubmit={(value, userName) => handleSendOTP('email', value, userName)} 
+                          isLoading={isLoading} 
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                ) : authStep === AuthStep.NAME ? (
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                        Your Name
+                      </Label>
+                      <Input 
+                        id="name" 
+                        placeholder="Enter your full name" 
+                        value={userName} 
+                        onChange={e => setUserName(e.target.value)} 
+                        disabled={isLoading}
+                        className="h-12 bg-white/50 border-gray-200 focus:border-purple-500 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <Button 
+                        onClick={handleContinueWithName} 
+                        className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium"
+                        disabled={isLoading || !userName.trim()}
+                      >
+                        Continue to Verification
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={handleChangeContact} 
+                        className="w-full h-12 border-gray-200 hover:bg-gray-50"
+                      >
+                        Back
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <OTPForm 
+                    onVerify={handleVerifyOTP} 
+                    onChangeContact={handleChangeContact} 
                     isLoading={isLoading} 
                   />
-                </TabsContent>
-                <TabsContent value="email">
-                  <PhoneEmailForm 
-                    type="email" 
-                    onSubmit={(value, userName) => handleSendOTP('email', value, userName)} 
-                    isLoading={isLoading} 
-                  />
-                </TabsContent>
-              </Tabs>
-            ) : authStep === AuthStep.NAME ? (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Your Name</Label>
-                  <Input 
-                    id="name" 
-                    placeholder="Enter your name" 
-                    value={userName} 
-                    onChange={e => setUserName(e.target.value)} 
-                    disabled={isLoading} 
-                  />
-                </div>
-                <Button 
-                  onClick={handleContinueWithName} 
-                  className="w-full" 
-                  disabled={isLoading || !userName.trim()}
-                >
-                  Continue
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={handleChangeContact} 
-                  className="w-full"
-                >
-                  Back
-                </Button>
-              </div>
-            ) : (
-              <OTPForm 
-                onVerify={handleVerifyOTP} 
-                onChangeContact={handleChangeContact} 
-                isLoading={isLoading} 
-              />
-            )}
+                )}
 
-            {authStep === AuthStep.INPUT && (
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {authStep === AuthStep.INPUT && <OAuthButtons isLoading={isLoading} />}
-          </CardContent>
-          <CardFooter className="flex flex-col">
-            <p className="text-xs text-center text-muted-foreground mt-2">
-              By continuing, you agree to our Terms of Service and Privacy Policy.
-            </p>
-          </CardFooter>
-        </Card>
+                {authStep === AuthStep.INPUT && (
+                  <>
+                    <div className="relative my-6">
+                      <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t border-gray-200" />
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="bg-white px-4 text-gray-500 font-medium">
+                          Or continue with
+                        </span>
+                      </div>
+                    </div>
+                    <OAuthButtons isLoading={isLoading} />
+                  </>
+                )}
+              </CardContent>
+              
+              <CardFooter className="pt-6">
+                <p className="text-xs text-center text-gray-500 w-full leading-relaxed">
+                  By continuing, you agree to our{' '}
+                  <span className="text-purple-600 hover:underline cursor-pointer">Terms of Service</span>
+                  {' '}and{' '}
+                  <span className="text-purple-600 hover:underline cursor-pointer">Privacy Policy</span>.
+                </p>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
       </div>
     </Layout>
   );

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -8,15 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from '@/hooks/use-auth';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Navigate } from 'react-router-dom';
-import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image } from 'lucide-react';
+import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image, Settings } from 'lucide-react';
 
 const ProfilePage = () => {
   const { user, profile, updateProfile, uploadProfilePicture, loading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
+  const [cardDisplayCount, setCardDisplayCount] = useState<string>('1');
 
   // If not authenticated, redirect to login
   if (!loading && !user) {
@@ -223,6 +224,37 @@ const ProfilePage = () => {
                       </div>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+
+              {/* Style Preferences */}
+              <Card className="mb-8 shadow-airbnb border-0">
+                <CardHeader>
+                  <div className="flex items-center">
+                    <Settings className="mr-2 h-5 w-5 text-styleklick-airbnb-pink" />
+                    <CardTitle className="text-lg">Style Preferences</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="card-count">Recommendation Cards to Display</Label>
+                      <Select value={cardDisplayCount} onValueChange={setCardDisplayCount}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select number of cards" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1 Card</SelectItem>
+                          <SelectItem value="2">2 Cards</SelectItem>
+                          <SelectItem value="3">3 Cards</SelectItem>
+                          <SelectItem value="4">4 Cards</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-gray-500">
+                        Choose how many style recommendation cards to show on your recommendations page
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
