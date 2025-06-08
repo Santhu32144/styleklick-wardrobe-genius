@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -10,13 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/hooks/use-auth';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Navigate } from 'react-router-dom';
-import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image, Settings } from 'lucide-react';
+import { Edit2, Camera, User, Calendar, Heart, BookOpen, Image } from 'lucide-react';
 
 const ProfilePage = () => {
   const { user, profile, updateProfile, uploadProfilePicture, loading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
-  const [recommendationCount, setRecommendationCount] = useState<'1' | '2' | '3'>('1');
 
   // If not authenticated, redirect to login
   if (!loading && !user) {
@@ -223,42 +223,6 @@ const ProfilePage = () => {
                       </div>
                     </div>
                   )}
-                </CardContent>
-              </Card>
-
-              {/* Style Preferences */}
-              <Card className="mb-8 shadow-airbnb border-0">
-                <CardHeader>
-                  <div className="flex items-center">
-                    <Settings className="mr-2 h-5 w-5 text-styleklick-airbnb-pink" />
-                    <CardTitle className="text-lg">Style Preferences</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-sm font-medium">Recommendation Cards</Label>
-                      <p className="text-xs text-gray-500 mb-2">Choose how many style cards to show</p>
-                      <RadioGroup 
-                        value={recommendationCount} 
-                        onValueChange={(val) => setRecommendationCount(val as '1' | '2' | '3')}
-                        className="flex space-x-4"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="1" id="one" />
-                          <Label htmlFor="one" className="text-sm">1 Card</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="2" id="two" />
-                          <Label htmlFor="two" className="text-sm">2 Cards</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="3" id="three" />
-                          <Label htmlFor="three" className="text-sm">3 Cards</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
 
