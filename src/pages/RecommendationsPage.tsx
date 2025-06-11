@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn, RotateCcw } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Define the available themes
 export type ThemeType = 'fall' | 'adventure' | 'urban';
@@ -48,30 +49,66 @@ const RecommendationsPage = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="py-20 bg-gray-50 min-h-screen">
+        <motion.div 
+          className="py-20 bg-gray-50 min-h-screen"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
           {/* Back to Quiz Button */}
-          <div className="absolute top-20 right-4 z-10">
+          <motion.div 
+            className="absolute top-20 right-4 z-10"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <Button variant="outline" asChild>
               <Link to="/questionnaire">
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Back to Quiz
               </Link>
             </Button>
-          </div>
+          </motion.div>
 
-          <div ref={authContainerRef} className="max-w-md mx-auto text-center bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Login Required</h2>
-            <p className="text-gray-600 mb-6">
+          <motion.div 
+            ref={authContainerRef} 
+            className="max-w-md mx-auto text-center bg-white p-8 rounded-lg shadow-md"
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <motion.h2 
+              className="text-2xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              Login Required
+            </motion.h2>
+            <motion.p 
+              className="text-gray-600 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
               Please login or create an account to view your personalized style recommendations.
               We'll save your questionnaire responses!
-            </p>
-            <Button className="w-full" asChild>
-              <Link to="/auth" state={{ returnTo: '/recommendations', formData }}>
-                <LogIn className="mr-2 h-4 w-4" /> Login or Sign Up
-              </Link>
-            </Button>
-          </div>
-        </div>
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button className="w-full" asChild>
+                <Link to="/auth" state={{ returnTo: '/recommendations', formData }}>
+                  <LogIn className="mr-2 h-4 w-4" /> Login or Sign Up
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </Layout>
     );
   }
@@ -85,26 +122,41 @@ const RecommendationsPage = () => {
 
   return (
     <Layout>
-      <div className="py-12 bg-gray-50 min-h-screen relative">
+      <motion.div 
+        className="py-12 bg-gray-50 min-h-screen relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
         {/* Back to Quiz Button */}
-        <div className="absolute top-4 right-4 z-10">
+        <motion.div 
+          className="absolute top-4 right-4 z-10"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <Button variant="outline" asChild>
             <Link to="/questionnaire">
               <RotateCcw className="mr-2 h-4 w-4" />
               Back to Quiz
             </Link>
           </Button>
-        </div>
+        </motion.div>
 
-        <div id="outfits">
+        <motion.div 
+          id="outfits"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
           <RecommendationResult 
             formData={formData} 
             activeTheme={activeTheme}
             setActiveTheme={setActiveTheme}
             onSaveToLookbook={handleSaveToLookbook}
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </Layout>
   );
 };
