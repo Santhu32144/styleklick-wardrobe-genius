@@ -188,7 +188,7 @@ const Index = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Save & Share</h3>
                 <p className="text-gray-600">
-                  Build your personal lookbook and share your favorite styles with friends
+                  Build your personal collection and share your favorite styles with friends
                 </p>
               </motion.div>
             </motion.div>

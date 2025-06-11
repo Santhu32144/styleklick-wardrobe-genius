@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="text-2xl font-bold gradient-heading">StyleNKlick</Link>
+            <Link to="/" className="text-2xl font-bold gradient-heading">santhosh</Link>
             <p className="mt-4 text-gray-600">Your AI-powered personal stylist for any occasion.</p>
             <div className="flex space-x-4 mt-6">
               <a href="#" className="text-gray-500 hover:text-styleklick-purple">
@@ -33,6 +33,7 @@ const Footer = () => {
               <li><Link to="/" className="text-gray-600 hover:text-styleklick-purple">Home</Link></li>
               <li><Link to="/how-it-works" className="text-gray-600 hover:text-styleklick-purple">How It Works</Link></li>
               <li><Link to="/questionnaire" className="text-gray-600 hover:text-styleklick-purple">Get Started</Link></li>
+              <li><Link to="/location-posing" className="text-gray-600 hover:text-styleklick-purple">Location Posing</Link></li>
             </ul>
           </div>
           
