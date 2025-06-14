@@ -113,10 +113,22 @@ const RecommendationsPage = () => {
     );
   }
 
-  const handleSaveToLookbook = () => {
+  // Generate recommendation results based on form data
+  const generateRecommendations = () => {
+    const baseId = `rec-${formData.gender}-${formData.occasion}-${formData.seasonality}`;
+    
+    return {
+      id: baseId,
+      title: `Perfect ${formData.seasonality} ${formData.occasion} Style`,
+      description: `Curated specifically for your ${formData.gender} style preferences including ${formData.stylePreferences.slice(0, 2).join(' and ')} vibes for ${formData.destinationType} settings.`,
+      styleId: baseId
+    };
+  };
+
+  const handleImageClick = (styleId: string, styleName: string) => {
     toast({
-      title: "Look saved!",
-      description: "Lookbook coming soon – stay stylish!",
+      title: "Style Details",
+      description: `Viewing details for ${styleName}`,
     });
   };
 
@@ -150,10 +162,8 @@ const RecommendationsPage = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <RecommendationResult 
-            formData={formData} 
-            activeTheme={activeTheme}
-            setActiveTheme={setActiveTheme}
-            onSaveToLookbook={handleSaveToLookbook}
+            result={generateRecommendations()}
+            onImageClick={handleImageClick}
           />
         </motion.div>
       </motion.div>
