@@ -3,157 +3,243 @@ import React from 'react';
 import Layout from '../components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { ArrowRight, ClipboardCheck, Sparkles, ShoppingBag, Image, PencilRuler, Users } from 'lucide-react';
+import { ArrowRight, Camera, Sparkles, Palette, Zap, Heart, Stars } from 'lucide-react';
+import { motion } from 'framer-motion';
+import LoadingIcons from '@/components/ui/loading-icons';
 
 const HowItWorksPage = () => {
+  const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6 }
+  };
+
+  const staggerContainer = {
+    animate: {
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
   return (
     <Layout>
-      <div className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-heading mb-6">How StyleNKlick Works</h1>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Our AI-powered platform creates personalized outfit recommendations tailored to your unique preferences and needs.
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-styleklick-purple/5 via-white to-styleklick-soft-pink/10 py-20">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="mb-8">
+              <LoadingIcons size={32} className="mb-6" />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold gradient-heading mb-6">
+              Style Made
+              <span className="block text-styleklick-purple">Simple</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Discover your perfect style with AI-powered recommendations tailored just for you
             </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto space-y-24">
-            {/* Step 1 */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
-              <div className="md:col-span-2 flex justify-center">
-                <div className="p-8 bg-styleklick-purple/10 rounded-full">
-                  <ClipboardCheck className="h-20 w-20 text-styleklick-purple" />
-                </div>
-              </div>
-              <div className="md:col-span-3">
-                <div className="bg-white p-8 rounded-xl shadow-md">
-                  <h3 className="text-2xl font-bold mb-4">1. Complete Your Style Questionnaire</h3>
-                  <p className="text-gray-700 mb-6">
-                    Answer questions about your body type, skin tone, style preferences, and the occasion you're dressing for. The more details you provide, the better your recommendations will be.
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Provide your body measurements and type</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Share your personal style preferences</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Tell us about the occasion and destination</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
-              <div className="md:col-span-3 order-2 md:order-1">
-                <div className="bg-white p-8 rounded-xl shadow-md">
-                  <h3 className="text-2xl font-bold mb-4">2. Our AI Generates Recommendations</h3>
-                  <p className="text-gray-700 mb-6">
-                    Our advanced style algorithm processes your information to create personalized outfit suggestions that are perfect for your body type, preferences, and the occasion.
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Analyze what styles flatter your body type</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Match colors to your skin tone and preferences</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Consider occasion, destination, and weather</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="md:col-span-2 order-1 md:order-2 flex justify-center">
-                <div className="p-8 bg-styleklick-purple/10 rounded-full">
-                  <Sparkles className="h-20 w-20 text-styleklick-purple" />
-                </div>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
-              <div className="md:col-span-2 flex justify-center">
-                <div className="p-8 bg-styleklick-purple/10 rounded-full">
-                  <Image className="h-20 w-20 text-styleklick-purple" />
-                </div>
-              </div>
-              <div className="md:col-span-3">
-                <div className="bg-white p-8 rounded-xl shadow-md">
-                  <h3 className="text-2xl font-bold mb-4">3. View Your Personalized Outfits</h3>
-                  <p className="text-gray-700 mb-6">
-                    See visual representations of your recommended outfits, complete with detailed explanations of why they work for you and specific item recommendations.
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>View outfit visualizations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Read detailed style explanations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Get specific item recommendations</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
-              <div className="md:col-span-3 order-2 md:order-1">
-                <div className="bg-white p-8 rounded-xl shadow-md">
-                  <h3 className="text-2xl font-bold mb-4">4. Explore Multiple Options</h3>
-                  <p className="text-gray-700 mb-6">
-                    Browse through multiple outfit options, all tailored to your preferences. Need something different? You can regenerate recommendations until you find the perfect match.
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Compare different outfit options</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Generate alternative recommendations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <div className="mr-2 text-styleklick-purple">•</div>
-                      <span>Find the perfect style for your needs</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="md:col-span-2 order-1 md:order-2 flex justify-center">
-                <div className="p-8 bg-styleklick-purple/10 rounded-full">
-                  <PencilRuler className="h-20 w-20 text-styleklick-purple" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-20 text-center">
-            <h2 className="text-3xl font-bold mb-8 gradient-heading">Ready to Elevate Your Style?</h2>
-            <Button className="btn-primary text-lg" asChild>
-              <Link to="/questionnaire" className="flex items-center space-x-2">
-                <span>Try StyleNKlick Now</span>
-                <ArrowRight size={18} />
-              </Link>
-            </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
+
+      {/* What is StyleNKlick Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-16"
+            {...fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">What is StyleNKlick?</h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              Your personal AI stylist that understands your unique body type, preferences, and lifestyle to create outfits that make you look and feel amazing.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <motion.div variants={fadeInUp} className="text-center p-8 rounded-2xl bg-gradient-to-br from-styleklick-soft-blue to-white border border-gray-100 hover:shadow-lg transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 bg-styleklick-purple/10 rounded-full flex items-center justify-center">
+                <Sparkles className="h-8 w-8 text-styleklick-purple" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">AI-Powered</h3>
+              <p className="text-gray-600">Advanced algorithms analyze your preferences to deliver personalized style recommendations</p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="text-center p-8 rounded-2xl bg-gradient-to-br from-styleklick-soft-green to-white border border-gray-100 hover:shadow-lg transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 bg-styleklick-purple/10 rounded-full flex items-center justify-center">
+                <Heart className="h-8 w-8 text-styleklick-purple" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Personalized</h3>
+              <p className="text-gray-600">Every recommendation is tailored to your body type, style preferences, and occasion</p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="text-center p-8 rounded-2xl bg-gradient-to-br from-styleklick-soft-peach to-white border border-gray-100 hover:shadow-lg transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 bg-styleklick-purple/10 rounded-full flex items-center justify-center">
+                <Zap className="h-8 w-8 text-styleklick-purple" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Instant</h3>
+              <p className="text-gray-600">Get style recommendations in seconds, not hours of browsing and guessing</p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How It Works - Simplified */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-styleklick-neutral-light/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-16"
+            {...fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold gradient-heading mb-6">How It Works</h2>
+            <p className="text-xl text-gray-600">Three simple steps to your perfect style</p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto">
+            <motion.div 
+              className="space-y-12"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {/* Step 1 */}
+              <motion.div variants={fadeInUp} className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-styleklick-purple text-white font-bold text-xl mb-4">1</div>
+                  <h3 className="text-2xl font-bold mb-4">Tell Us About You</h3>
+                  <p className="text-gray-600 text-lg">Answer a few quick questions about your style preferences, body type, and the occasion you're dressing for.</p>
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="w-48 h-48 rounded-2xl bg-gradient-to-br from-styleklick-purple/10 to-styleklick-purple/5 flex items-center justify-center">
+                    <Camera className="h-16 w-16 text-styleklick-purple" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 2 */}
+              <motion.div variants={fadeInUp} className="flex flex-col md:flex-row-reverse items-center gap-8">
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-styleklick-purple text-white font-bold text-xl mb-4">2</div>
+                  <h3 className="text-2xl font-bold mb-4">AI Creates Your Look</h3>
+                  <p className="text-gray-600 text-lg">Our AI analyzes your information and creates personalized outfit recommendations that flatter your unique style.</p>
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="w-48 h-48 rounded-2xl bg-gradient-to-br from-styleklick-purple/10 to-styleklick-purple/5 flex items-center justify-center">
+                    <Sparkles className="h-16 w-16 text-styleklick-purple" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 3 */}
+              <motion.div variants={fadeInUp} className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-styleklick-purple text-white font-bold text-xl mb-4">3</div>
+                  <h3 className="text-2xl font-bold mb-4">Look Amazing</h3>
+                  <p className="text-gray-600 text-lg">Get visual outfit recommendations with detailed explanations and shopping suggestions to complete your perfect look.</p>
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="w-48 h-48 rounded-2xl bg-gradient-to-br from-styleklick-purple/10 to-styleklick-purple/5 flex items-center justify-center">
+                    <Stars className="h-16 w-16 text-styleklick-purple" />
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technology Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-16"
+            {...fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold gradient-heading mb-6">Powered by Advanced AI</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our technology combines machine learning, body type analysis, and fashion expertise to deliver recommendations that actually work for you.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <motion.div variants={fadeInUp} className="text-center p-6 rounded-xl bg-gradient-to-br from-styleklick-soft-blue/50 to-white">
+              <div className="w-12 h-12 mx-auto mb-4 bg-styleklick-purple/10 rounded-lg flex items-center justify-center">
+                <Palette className="h-6 w-6 text-styleklick-purple" />
+              </div>
+              <h4 className="font-semibold mb-2">Color Analysis</h4>
+              <p className="text-sm text-gray-600">Matches colors to your skin tone</p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="text-center p-6 rounded-xl bg-gradient-to-br from-styleklick-soft-green/50 to-white">
+              <div className="w-12 h-12 mx-auto mb-4 bg-styleklick-purple/10 rounded-lg flex items-center justify-center">
+                <Zap className="h-6 w-6 text-styleklick-purple" />
+              </div>
+              <h4 className="font-semibold mb-2">Body Type AI</h4>
+              <p className="text-sm text-gray-600">Identifies flattering silhouettes</p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="text-center p-6 rounded-xl bg-gradient-to-br from-styleklick-soft-peach/50 to-white">
+              <div className="w-12 h-12 mx-auto mb-4 bg-styleklick-purple/10 rounded-lg flex items-center justify-center">
+                <Heart className="h-6 w-6 text-styleklick-purple" />
+              </div>
+              <h4 className="font-semibold mb-2">Style Learning</h4>
+              <p className="text-sm text-gray-600">Adapts to your preferences</p>
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="text-center p-6 rounded-xl bg-gradient-to-br from-styleklick-soft-pink/50 to-white">
+              <div className="w-12 h-12 mx-auto mb-4 bg-styleklick-purple/10 rounded-lg flex items-center justify-center">
+                <Stars className="h-6 w-6 text-styleklick-purple" />
+              </div>
+              <h4 className="font-semibold mb-2">Trend Analysis</h4>
+              <p className="text-sm text-gray-600">Keeps you fashion-forward</p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-styleklick-purple to-styleklick-purple-dark">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Transform Your Style?
+            </h2>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Join thousands of users who've discovered their perfect style with StyleNKlick
+            </p>
+            <Button 
+              className="bg-white text-styleklick-purple hover:bg-gray-50 text-lg px-8 py-4 rounded-full font-semibold" 
+              asChild
+            >
+              <Link to="/questionnaire" className="flex items-center space-x-2">
+                <span>Start Your Style Journey</span>
+                <ArrowRight size={20} />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
     </Layout>
   );
 };
