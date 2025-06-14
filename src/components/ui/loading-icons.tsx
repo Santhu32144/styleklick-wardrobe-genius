@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Camera, Hanger, Search } from 'lucide-react';
+import { Camera, Shirt, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface LoadingIconsProps {
@@ -39,7 +39,7 @@ const LoadingIcons = ({ size = 24, className = "" }: LoadingIconsProps) => {
         <Camera size={size} className="text-purple-500" />
       </motion.div>
       <motion.div variants={iconVariants}>
-        <Hanger size={size} className="text-pink-500" />
+        <Shirt size={size} className="text-pink-500" />
       </motion.div>
       <motion.div variants={iconVariants}>
         <Search size={size} className="text-indigo-500" />
