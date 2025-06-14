@@ -1,11 +1,11 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Heart, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Eye, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface OutfitImage {
   id: string;
@@ -25,6 +25,7 @@ interface OutfitGalleryProps {
 
 const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook, showTabsFirst = false }: OutfitGalleryProps) => {
   const { toast } = useToast();
+  const [selectedImage, setSelectedImage] = useState<OutfitImage | null>(null);
 
   // Mock data for outfit images - categorized by type
   const getOutfitImages = (styleId: string): { items: OutfitImage[], footwear: OutfitImage[], poses: OutfitImage[] } => {
@@ -168,13 +169,9 @@ const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook, show
   const { items, footwear, poses } = getOutfitImages(styleId);
 
   const handleImageClick = (image: OutfitImage) => {
+    setSelectedImage(image);
     if (onImageClick) {
       onImageClick(image);
-    } else {
-      toast({
-        title: "Image Selected",
-        description: `Viewing ${image.title}`,
-      });
     }
   };
 
@@ -189,96 +186,182 @@ const OutfitGallery = ({ styleId, styleName, onImageClick, onAddToLookbook, show
     }
   };
 
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   const renderImageGrid = (images: OutfitImage[]) => (
-    <ScrollArea className="w-full">
-      <div className="flex space-x-4 pb-4">
-        {images.map((image) => (
-          <Card 
-            key={image.id} 
-            className="flex-none w-32 h-40 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
-            onClick={() => handleImageClick(image)}
-          >
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {images.map((image, index) => (
+        <motion.div
+          key={image.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          <Card className="group relative aspect-[3/4] overflow-hidden cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-xl transition-all duration-500">
             <div className="relative h-full">
               <img
                 src={image.url}
                 alt={image.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               
-              {/* Overlay with actions */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end">
-                <div className="w-full p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex justify-between items-end">
-                    <div className="text-white text-xs">
-                      <p className="font-medium truncate">{image.title}</p>
-                      {image.price && (
-                        <p className="text-gray-200">${image.price}</p>
-                      )}
-                    </div>
-                    
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 w-6 p-0 text-white hover:text-red-400 hover:bg-transparent"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToLookbook(image);
-                      }}
-                    >
-                      <Heart className="h-3 w-3" />
-                    </Button>
-                  </div>
+              {/* Aesthetic overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Action buttons */}
+              <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="h-8 w-8 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleImageClick(image);
+                  }}
+                >
+                  <ZoomIn className="h-4 w-4 text-gray-700" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="h-8 w-8 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToLookbook(image);
+                  }}
+                >
+                  <Heart className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
+
+              {/* Bottom info */}
+              <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="text-white">
+                  <p className="font-medium text-sm truncate">{image.title}</p>
+                  {image.price && (
+                    <p className="text-xs text-gray-200">${image.price}</p>
+                  )}
                 </div>
               </div>
             </div>
           </Card>
-        ))}
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+        </motion.div>
+      ))}
+    </div>
   );
 
   const TabsSection = () => (
     <Tabs defaultValue="items" className="w-full">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="items">Items ({items.length})</TabsTrigger>
-        <TabsTrigger value="footwear">Footwear ({footwear.length})</TabsTrigger>
-        <TabsTrigger value="poses">Poses ({poses.length})</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-3 bg-gray-100 rounded-lg p-1">
+        <TabsTrigger 
+          value="items" 
+          className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm"
+        >
+          Items ({items.length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="footwear"
+          className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm"
+        >
+          Footwear ({footwear.length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="poses"
+          className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm"
+        >
+          Poses ({poses.length})
+        </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="items" className="mt-4">
+      <TabsContent value="items" className="mt-6">
         {renderImageGrid(items)}
       </TabsContent>
       
-      <TabsContent value="footwear" className="mt-4">
+      <TabsContent value="footwear" className="mt-6">
         {renderImageGrid(footwear)}
       </TabsContent>
       
-      <TabsContent value="poses" className="mt-4">
+      <TabsContent value="poses" className="mt-6">
         {renderImageGrid(poses)}
       </TabsContent>
     </Tabs>
   );
 
-  if (showTabsFirst) {
-    return (
-      <div className="mt-4">
-        <h4 className="text-sm font-medium mb-3 text-gray-700">
+  return (
+    <>
+      <div className="mt-6">
+        <motion.h4 
+          className="text-lg font-semibold mb-4 text-gray-800"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Outfit Inspiration for {styleName}
-        </h4>
+        </motion.h4>
+        
         <TabsSection />
       </div>
-    );
-  }
 
-  return (
-    <div className="mt-4">
-      <h4 className="text-sm font-medium mb-3 text-gray-700">
-        Outfit Inspiration for {styleName}
-      </h4>
-      
-      <TabsSection />
-    </div>
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-4xl max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 z-10 h-8 w-8 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                onClick={closeModal}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              
+              <div className="aspect-[4/5] max-h-[80vh]">
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              <div className="p-6 bg-white">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900">{selectedImage.title}</h3>
+                    {selectedImage.price && (
+                      <p className="text-lg font-medium text-green-600 mt-1">${selectedImage.price}</p>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleAddToLookbook(selectedImage)}
+                    className="flex items-center gap-2"
+                  >
+                    <Heart className="h-4 w-4" />
+                    Add to Lookbook
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
