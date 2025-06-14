@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lightbulb, Send, Sparkles, Camera, ArrowRight } from 'lucide-react';
+import { Lightbulb, Send, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import OutfitGallery from '../components/recommendations/OutfitGallery';
 
@@ -13,7 +12,6 @@ const SuggestionsPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,16 +45,6 @@ const SuggestionsPage = () => {
       setSuggestions(mockSuggestions);
       setIsLoading(false);
     }, 1500);
-  };
-
-  const handleGetStarted = () => {
-    navigate('/questionnaire');
-  };
-
-  const handleARResult = () => {
-    // Placeholder for AR functionality
-    console.log('AR Result clicked');
-    // In a real app, this would integrate with AR capabilities
   };
 
   return (
@@ -148,28 +136,6 @@ const SuggestionsPage = () => {
                   </Card>
                 </motion.div>
               ))}
-
-              {/* AR Result Option */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="text-center mt-12"
-              >
-                <Card className="max-w-md mx-auto">
-                  <CardContent className="p-6">
-                    <Camera className="h-12 w-12 mx-auto mb-4 text-purple-500" />
-                    <h3 className="text-lg font-semibold mb-2">Try AR Experience</h3>
-                    <p className="text-gray-600 mb-4">
-                      See how these outfits look on you with our AR feature
-                    </p>
-                    <Button onClick={handleARResult} className="w-full">
-                      <Camera className="mr-2 h-4 w-4" />
-                      Try AR Result
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
             </motion.div>
           )}
 
@@ -181,20 +147,7 @@ const SuggestionsPage = () => {
               className="text-center text-gray-500 mt-12"
             >
               <Lightbulb className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg mb-6">Enter your style preferences above to get personalized suggestions!</p>
-              
-              <Card className="max-w-md mx-auto">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900">Want More Detailed Recommendations?</h3>
-                  <p className="text-gray-600 mb-4">
-                    Take our comprehensive style questionnaire for personalized outfit suggestions
-                  </p>
-                  <Button onClick={handleGetStarted} className="w-full">
-                    <ArrowRight className="mr-2 h-4 w-4" />
-                    Get Started
-                  </Button>
-                </CardContent>
-              </Card>
+              <p className="text-lg">Enter your style preferences above to get personalized suggestions!</p>
             </motion.div>
           )}
         </div>
