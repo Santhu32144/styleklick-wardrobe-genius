@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="text-2xl font-bold gradient-heading">Bob</Link>
+            <Link to="/" className="text-2xl font-bold gradient-heading">Jack</Link>
             <p className="mt-4 text-gray-600">Your AI-powered personal stylist for any occasion.</p>
             <div className="flex space-x-4 mt-6">
               <a href="#" className="text-gray-500 hover:text-styleklick-purple">

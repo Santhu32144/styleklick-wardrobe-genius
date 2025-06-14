@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,7 @@ export const PersonalizationModal: React.FC<PersonalizationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-xl md:max-w-2xl lg:max-w-4xl min-h-[70vh] md:min-h-[75vh] lg:min-h-[80vh] flex flex-col justify-center items-center p-0 overflow-hidden border-0 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
+      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-0 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-200/30 rounded-full blur-xl"></div>
@@ -53,7 +54,7 @@ export const PersonalizationModal: React.FC<PersonalizationModalProps> = ({
         </div>
 
         {/* Header with Gradient */}
-        <div className="relative w-full bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 p-6 md:p-8 text-white">
+        <div className="relative bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 p-8 text-white">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -78,8 +79,8 @@ export const PersonalizationModal: React.FC<PersonalizationModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="relative w-full flex-1 flex flex-col justify-center items-center p-4 md:p-8">
-          <form onSubmit={handleSubmit} className="space-y-8 w-full max-w-md md:max-w-lg lg:max-w-2xl mx-auto">
+        <div className="relative p-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -207,8 +208,9 @@ export const PersonalizationModal: React.FC<PersonalizationModalProps> = ({
               </Button>
             </DialogFooter>
           </form>
+          
           <motion.div 
-            className="text-center text-sm mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-purple-200/30 w-full max-w-md md:max-w-lg lg:max-w-2xl mx-auto"
+            className="text-center text-sm mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-purple-200/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
