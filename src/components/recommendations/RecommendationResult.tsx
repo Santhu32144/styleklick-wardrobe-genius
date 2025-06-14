@@ -458,7 +458,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     styleName={selectedRecommendation.title}
                     onImageClick={handleOutfitImageClick}
                     onAddToLookbook={handleAddImageToLookbook}
-                    showTabsFirst={true}
                   />
                 </div>
               </ScrollArea>
