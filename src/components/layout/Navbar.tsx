@@ -13,9 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PersonalizationModal } from '@/components/personalization/PersonalizationModal';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [showPersonalizationModal, setShowPersonalizationModal] = React.useState(false);
   const { user, profile, signOut } = useAuth();
 
   const toggleMenu = () => {
@@ -49,9 +51,12 @@ const Navbar = () => {
           <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium">How It Works</Link>
           <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium">Get Started</Link>
           <Link to="/suggestions" className="text-gray-700 hover:text-styleklick-purple font-medium">Suggestions</Link>
-          <Link to="/personalization" className="text-gray-700 hover:text-styleklick-purple font-medium">
+          <button 
+            onClick={() => setShowPersonalizationModal(true)}
+            className="text-gray-700 hover:text-styleklick-purple font-medium"
+          >
             Personalization
-          </Link>
+          </button>
           
           {user ? (
             <div className="flex items-center space-x-4">
@@ -115,13 +120,15 @@ const Navbar = () => {
             <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>How It Works</Link>
             <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Get Started</Link>
             <Link to="/suggestions" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Suggestions</Link>
-            <Link 
-              to="/personalization" 
-              className="text-gray-700 hover:text-styleklick-purple font-medium py-2"
-              onClick={toggleMenu}
+            <button 
+              onClick={() => {
+                setShowPersonalizationModal(true);
+                toggleMenu();
+              }}
+              className="text-gray-700 hover:text-styleklick-purple font-medium py-2 text-left"
             >
               Personalization
-            </Link>
+            </button>
             
             {user ? (
               <>
@@ -147,6 +154,12 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Personalization Modal */}
+      <PersonalizationModal 
+        isOpen={showPersonalizationModal} 
+        onClose={() => setShowPersonalizationModal(false)} 
+      />
     </nav>
   );
 };
