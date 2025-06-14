@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, LogOut, User, BookOpen } from 'lucide-react';
+import { Menu, X, LogIn, LogOut, User, BookOpen, Lightbulb } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -50,6 +50,7 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-styleklick-purple font-medium">Home</Link>
           <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium">How It Works</Link>
           <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium">Get Started</Link>
+          <Link to="/suggestions" className="text-gray-700 hover:text-styleklick-purple font-medium">Suggestions</Link>
           <button 
             onClick={() => setShowPersonalizationModal(true)}
             className="text-gray-700 hover:text-styleklick-purple font-medium"
@@ -118,6 +119,7 @@ const Navbar = () => {
             <Link to="/" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Home</Link>
             <Link to="/how-it-works" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>How It Works</Link>
             <Link to="/questionnaire" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Get Started</Link>
+            <Link to="/suggestions" className="text-gray-700 hover:text-styleklick-purple font-medium py-2" onClick={toggleMenu}>Suggestions</Link>
             <button 
               onClick={() => {
                 setShowPersonalizationModal(true);
