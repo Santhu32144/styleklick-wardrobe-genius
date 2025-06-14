@@ -25,6 +25,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import StyleCalendarPage from "./pages/StyleCalendarPage";
 import SuggestionsPage from "./pages/SuggestionsPage";
+import PersonalizationPage from "./pages/PersonalizationPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/lookbook" element={<LookbookPage />} />
               <Route path="/style-calendar" element={<StyleCalendarPage />} />
               <Route path="/suggestions" element={<SuggestionsPage />} />
+              <Route path="/personalization" element={<PersonalizationPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
