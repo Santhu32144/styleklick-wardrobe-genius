@@ -85,7 +85,7 @@ const StylePreferencesStep: React.FC<StylePreferencesStepProps> = ({
                   isSelected ? "ring-2 ring-styleklick-purple" : ""
                 }`}
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-80 overflow-hidden">
                   <img
                     src={style.image}
                     alt={style.label}
