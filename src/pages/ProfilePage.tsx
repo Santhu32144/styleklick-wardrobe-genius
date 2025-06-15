@@ -224,7 +224,7 @@ const ProfilePage = () => {
                     </motion.div>
                   </motion.div>
                   <div className="mt-6 lg:mt-0 lg:ml-8 flex-grow">
-                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
+                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-white-600 to-white-600 text-transparent bg-clip-text">
                       {getUserDisplayName()}
                     </CardTitle>
                     <CardDescription className="text-lg mt-2">
