@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -13,36 +12,57 @@ const SuggestionsPage = () => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const styleSuggestions = [
+    "Casual summer outfit for a beach vacation",
+    "Business casual look for the office",
+    "Trendy streetwear for city nights",
+    "Minimalist style for everyday wear",
+    "Elegant evening dress for a party",
+    "Sporty and comfortable gym outfit",
+    "Vintage-inspired weekend look",
+    "Bohemian festival outfit",
+    "Classic formalwear for a wedding",
+    "Cozy loungewear for home"
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
     setIsLoading(true);
-    
     // Simulate API call
     setTimeout(() => {
+      // Only return suggestions that match the input (case-insensitive, partial match)
       const mockSuggestions = [
         {
           id: 'suggestion-1',
           title: 'Casual Street Style',
           description: 'Perfect for everyday wear with comfort and style',
-          styleId: 'casual-street'
+          styleId: 'casual-street',
+          keywords: ['casual', 'street', 'everyday', 'comfort']
         },
         {
-          id: 'suggestion-2', 
+          id: 'suggestion-2',
           title: 'Business Casual',
           description: 'Professional yet approachable look for work',
-          styleId: 'business-casual'
+          styleId: 'business-casual',
+          keywords: ['business', 'casual', 'office', 'work']
         },
         {
           id: 'suggestion-3',
           title: 'Weekend Vibes',
           description: 'Relaxed and trendy for your leisure time',
-          styleId: 'weekend-vibes'
+          styleId: 'weekend-vibes',
+          keywords: ['weekend', 'relaxed', 'trendy', 'leisure']
         }
       ];
-      
-      setSuggestions(mockSuggestions);
+      const input = inputValue.toLowerCase();
+      const filtered = mockSuggestions.filter(suggestion =>
+        suggestion.title.toLowerCase().includes(input) ||
+        suggestion.description.toLowerCase().includes(input) ||
+        (suggestion.keywords && suggestion.keywords.some(k => input.includes(k)))
+      );
+      setSuggestions(filtered);
       setIsLoading(false);
     }, 1500);
   };
@@ -66,6 +86,25 @@ const SuggestionsPage = () => {
             <p className="text-gray-600 max-w-2xl mx-auto">
               Describe what you're looking for and get instant style recommendations
             </p>
+          </motion.div>
+
+          {/* Suggestion Chips */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="flex flex-wrap gap-2 justify-center mb-6"
+          >
+            {styleSuggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                className="px-3 py-1 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-sm transition-colors duration-150 shadow-sm"
+                onClick={() => setInputValue(suggestion)}
+              >
+                {suggestion}
+              </button>
+            ))}
           </motion.div>
 
           <motion.div
@@ -112,7 +151,7 @@ const SuggestionsPage = () => {
               <h2 className="text-xl font-bold text-center text-gray-900 mb-6">
                 Your Style Suggestions
               </h2>
-              
+              {/* Only show suggestions that match the input */}
               {suggestions.map((suggestion, index) => (
                 <motion.div
                   key={suggestion.id}
