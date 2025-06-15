@@ -312,17 +312,17 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4 gradient-heading">
+      <div className="text-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-3 gradient-heading">
           Your AI Style Recommendations
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-gray-600 max-w-2xl mx-auto">
           Get personalized outfit suggestions and chat with our AI stylist.
         </p>
       </div>
 
       {/* Mode Selector */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center justify-center">
           <div className="bg-white rounded-full p-1 shadow-lg border-2 border-gray-200">
             <ToggleGroup 
@@ -333,14 +333,14 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
             >
               <ToggleGroupItem 
                 value="suggestions" 
-                className="px-6 py-3 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
+                className="px-4 py-2 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
               >
                 <Brain className="h-4 w-4 mr-2" />
                 AI Style Suggestions
               </ToggleGroupItem>
               <ToggleGroupItem 
                 value="chat" 
-                className="px-6 py-3 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
+                className="px-4 py-2 rounded-full data-[state=on]:bg-gradient-to-r data-[state=on]:from-purple-500 data-[state=on]:to-pink-500 data-[state=on]:text-white transition-colors duration-200"
               >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 AI Chat Expert
@@ -458,7 +458,6 @@ const RecommendationResult = ({ formData, activeTheme, setActiveTheme, onSaveToL
                     styleName={selectedRecommendation.title}
                     onImageClick={handleOutfitImageClick}
                     onAddToLookbook={handleAddImageToLookbook}
-                    showTabsFirst={true}
                   />
                 </div>
               </ScrollArea>

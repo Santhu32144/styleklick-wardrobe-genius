@@ -49,39 +49,39 @@ const SuggestionsPage = () => {
 
   return (
     <Layout>
-      <div className="py-12 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+      <div className="py-6 bg-gradient-to-b from-gray-50 to-white min-h-screen">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.5 }}
+            className="text-center mb-6"
           >
-            <div className="flex items-center justify-center mb-4">
-              <Lightbulb className="h-8 w-8 text-yellow-500 mr-2" />
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <div className="flex items-center justify-center mb-2">
+              <Lightbulb className="h-6 w-6 text-yellow-500 mr-2" />
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Style Suggestions
               </h1>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto">
               Describe what you're looking for and get instant style recommendations
             </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-2xl mx-auto mb-12"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="max-w-2xl mx-auto mb-8"
           >
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Sparkles className="h-5 w-5 mr-2 text-purple-500" />
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <Sparkles className="h-4 w-4 mr-2 text-purple-500" />
                   What kind of style are you looking for?
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <form onSubmit={handleSubmit} className="flex gap-4">
                   <Input
                     type="text"
@@ -104,30 +104,30 @@ const SuggestionsPage = () => {
 
           {suggestions.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
+              transition={{ duration: 0.5 }}
+              className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
+              <h2 className="text-xl font-bold text-center text-gray-900 mb-6">
                 Your Style Suggestions
               </h2>
               
               {suggestions.map((suggestion, index) => (
                 <motion.div
                   key={suggestion.id}
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <Card className="mb-8">
-                    <CardHeader>
-                      <CardTitle className="text-xl text-purple-700">
+                  <Card className="mb-6">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg text-purple-700">
                         {suggestion.title}
                       </CardTitle>
-                      <p className="text-gray-600">{suggestion.description}</p>
+                      <p className="text-gray-600 text-sm">{suggestion.description}</p>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                       <OutfitGallery
                         styleId={suggestion.styleId}
                         styleName={suggestion.title}
@@ -143,11 +143,11 @@ const SuggestionsPage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-center text-gray-500 mt-12"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-center text-gray-500 mt-8"
             >
-              <Lightbulb className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg">Enter your style preferences above to get personalized suggestions!</p>
+              <Lightbulb className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+              <p>Enter your style preferences above to get personalized suggestions!</p>
             </motion.div>
           )}
         </div>
